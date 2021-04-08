@@ -7,30 +7,30 @@ namespace Linker.ScenarioTests.Tests
     public class ScenarioContextTests
     {
         [Fact]
-        public void TestFact_MultipleFacts_InvokesWhenHit()
+        public void Fact_ScenarioWithMultipleFacts_InvokesWhenHit()
         {
             var context = new ScenarioContext(1);
 
-            context.TestFact(() => throw new Exception());
+            context.Fact(() => throw new Exception());
 
             var invoked = false;
-            context.TestFact(() =>
+            context.Fact(() =>
             {
                 invoked = true;
             });
 
-            context.TestFact(() => throw new Exception());
+            context.Fact(() => throw new Exception());
 
             Assert.True(invoked);
         }
 
         [Fact]
-        public void TestFact_NoReturnType_InvokesWhenHit()
+        public void Fact_NoReturnType_InvokesWhenHit()
         {
             var context = new ScenarioContext(0);
 
             var invoked = false;
-            context.TestFact(() =>
+            context.Fact(() =>
             {
                 invoked = true;
             });
@@ -39,12 +39,12 @@ namespace Linker.ScenarioTests.Tests
         }
 
         [Fact]
-        public void TestFact_WithReturnType_InvokesWhenHit()
+        public void Fact_WithReturnType_InvokesWhenHit()
         {
             var context = new ScenarioContext(0);
 
             var invoked = false;
-            context.TestFact(() =>
+            context.Fact(() =>
             {
                 invoked = true;
                 return 1;
@@ -54,12 +54,12 @@ namespace Linker.ScenarioTests.Tests
         }
 
         [Fact]
-        public void TestFact_WithAsyncNoReturnType_InvokesWhenHit()
+        public void Fact_WithAsyncNoReturnType_InvokesWhenHit()
         {
             var context = new ScenarioContext(0);
 
             var invoked = false;
-            context.TestFact(() =>
+            context.Fact(() =>
             {
                 invoked = true;
                 return Task.CompletedTask;
@@ -69,12 +69,12 @@ namespace Linker.ScenarioTests.Tests
         }
 
         [Fact]
-        public void TestFact_WithAsyncAndReturnType_InvokesWhenHit()
+        public void Fact_WithAsyncAndReturnType_InvokesWhenHit()
         {
             var context = new ScenarioContext(0);
 
             var invoked = false;
-            context.TestFact(() =>
+            context.Fact(() =>
             {
                 invoked = true;
                 return Task.FromResult(1);
@@ -84,12 +84,12 @@ namespace Linker.ScenarioTests.Tests
         }
 
         [Fact]
-        public void TestFact_WithNameNoReturnType_InvokesWhenHit()
+        public void Fact_WithNameNoReturnType_InvokesWhenHit()
         {
             var context = new ScenarioContext(0);
 
             var invoked = false;
-            context.TestFact("X", () =>
+            context.Fact("X", () =>
             {
                 invoked = true;
             });
@@ -98,12 +98,12 @@ namespace Linker.ScenarioTests.Tests
         }
 
         [Fact]
-        public void TestFact_WithNameWithReturnType_InvokesWhenHit()
+        public void Fact_WithNameWithReturnType_InvokesWhenHit()
         {
             var context = new ScenarioContext(0);
 
             var invoked = false;
-            context.TestFact("X", () =>
+            context.Fact("X", () =>
             {
                 invoked = true;
                 return 1;
@@ -113,12 +113,12 @@ namespace Linker.ScenarioTests.Tests
         }
 
         [Fact]
-        public void TestFact_WithNameWithAsyncNoReturnType_InvokesWhenHit()
+        public void Fact_WithNameWithAsyncNoReturnType_InvokesWhenHit()
         {
             var context = new ScenarioContext(0);
 
             var invoked = false;
-            context.TestFact("X", () =>
+            context.Fact("X", () =>
             {
                 invoked = true;
                 return Task.CompletedTask;
@@ -128,12 +128,12 @@ namespace Linker.ScenarioTests.Tests
         }
 
         [Fact]
-        public void TestFact_WithNameWithAsyncAndReturnType_InvokesWhenHit()
+        public void Fact_WithNameWithAsyncAndReturnType_InvokesWhenHit()
         {
             var context = new ScenarioContext(0);
 
             var invoked = false;
-            context.TestFact("X", () =>
+            context.Fact("X", () =>
             {
                 invoked = true;
                 return Task.FromResult(1);

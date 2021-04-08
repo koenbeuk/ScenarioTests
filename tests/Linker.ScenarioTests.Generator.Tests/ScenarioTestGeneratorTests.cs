@@ -81,7 +81,7 @@ partial class C {
 public partial class C {
     [Linker.ScenarioTests.Scenario]
     public void Scenario(Linker.ScenarioTests.ScenarioContext s) {
-        s.TestFact(""T1"", () => { });
+        s.Fact(""T1"", () => { });
     }
 }
 ");
@@ -101,8 +101,8 @@ public partial class C {
 public partial class C {
     [Linker.ScenarioTests.Scenario]
     public void Scenario(Linker.ScenarioTests.ScenarioContext s) {
-        s.TestFact(""T1"", () => { });
-        s.TestFact(""T2"", () => { });
+        s.Fact(""T1"", () => { });
+        s.Fact(""T2"", () => { });
     }
 }
 ");
@@ -122,7 +122,7 @@ public partial class C {
 public partial class C {
     [Linker.ScenarioTests.Scenario]
     public void Scenario(Linker.ScenarioTests.ScenarioContext s) {
-        s.TestFact(""T1"", () => 1);
+        s.Fact(""T1"", () => 1);
     }
 }
 ");
@@ -142,7 +142,7 @@ public partial class C {
 public partial class C {
     [Linker.ScenarioTests.Scenario]
     public async System.Threading.Tasks.Task Scenario(Linker.ScenarioTests.ScenarioContext s) {
-        await s.TestFact(""T1"", () => System.Threading.Tasks.Task.CompletedTask);
+        await s.Fact(""T1"", () => System.Threading.Tasks.Task.CompletedTask);
     }
 }
 ");
@@ -162,9 +162,9 @@ public partial class C {
 public partial class C {
     [Linker.ScenarioTests.Scenario]
     public async System.Threading.Tasks.Task Scenario(Linker.ScenarioTests.ScenarioContext s) {
-        s.TestFact(""T1"", () => { });
-        s.TestFact(""T2"", () => 1);
-        await s.TestFact(""T3"", () => System.Threading.Tasks.Task.CompletedTask);
+        s.Fact(""T1"", () => { });
+        s.Fact(""T2"", () => 1);
+        await s.Fact(""T3"", () => System.Threading.Tasks.Task.CompletedTask);
     }
 }
 ");
