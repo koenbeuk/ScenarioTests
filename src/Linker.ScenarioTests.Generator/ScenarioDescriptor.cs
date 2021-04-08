@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ScenarioTests.Generator
+namespace Linker.ScenarioTests.Generator
 {
     public class ScenarioDescriptor
     {

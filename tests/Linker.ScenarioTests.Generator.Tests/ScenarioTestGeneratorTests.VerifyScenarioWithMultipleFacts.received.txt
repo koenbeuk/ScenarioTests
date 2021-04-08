@@ -1,0 +1,28 @@
+using System;
+using Xunit;
+
+namespace ScenarioTestsGenerated
+{
+    public partial class C
+    {        
+
+        [Fact(DisplayName = "Scenario_T1")]
+        [System.Runtime.CompilerServices.CompilerGenerated]
+        [System.Diagnostics.DebuggerStepThrough]
+        public void Scenario_Fact0()
+        {
+            var scenarioContext = new Linker.ScenarioTests.ScenarioContext(0, "T1");
+            Scenario(scenarioContext);
+        }
+                        
+        [Fact(DisplayName = "Scenario_T2")]
+        [System.Runtime.CompilerServices.CompilerGenerated]
+        [System.Diagnostics.DebuggerStepThrough]
+        public void Scenario_Fact1()
+        {
+            var scenarioContext = new Linker.ScenarioTests.ScenarioContext(1, "T2");
+            Scenario(scenarioContext);
+        }
+                              
+    }
+}

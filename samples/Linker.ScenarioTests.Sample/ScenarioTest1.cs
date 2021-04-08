@@ -1,8 +1,6 @@
-using ScenarioTests;
+using Linker.ScenarioTests;
 using System;
 using Xunit;
-
-
 
 namespace TestProject1
 {
@@ -11,7 +9,7 @@ namespace TestProject1
         [Scenario]
         public void Scenario1(ScenarioContext scenario)
         {
-            var state = false;
+            bool state = false;
 
             scenario.TestFact(() =>
             {
@@ -25,7 +23,7 @@ namespace TestProject1
                 state = false; // Modifying state in this fact does not break the next fact
             });
 
-            scenario.TestFact("EnsureTestsRunInIsolation with a complex name \"foo ", () =>
+            scenario.TestFact("EnsureTestsRunInIsolation", () =>
             {
                 Assert.True(state);
             });

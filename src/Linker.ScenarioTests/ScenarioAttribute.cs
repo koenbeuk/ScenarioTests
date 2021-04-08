@@ -3,7 +3,7 @@ using Linker.ScenarioTests.Internal;
 using Xunit;
 using Xunit.Sdk;
 
-namespace ScenarioTests
+namespace Linker.ScenarioTests
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     [IgnoreXunitAnalyzersRule1013]

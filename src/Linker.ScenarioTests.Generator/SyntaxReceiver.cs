@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ScenarioTests.Generator
+namespace Linker.ScenarioTests.Generator
 {
     public class SyntaxReceiver : ISyntaxReceiver
     {
@@ -16,7 +16,7 @@ namespace ScenarioTests.Generator
             {
                 var hasScenarioAttribute = methodDeclarationSyntax.AttributeLists
                     .SelectMany(x => x.Attributes)
-                    .Any(x => x.Name.ToString() is "Scenario" or "ScenarioTests.Scenario");
+                    .Any(x => x.Name.ToString() is "Scenario" or "Linker.ScenarioTests.Scenario");
 
                 if (hasScenarioAttribute)
                 {

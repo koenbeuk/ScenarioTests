@@ -9,9 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Syntax = Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
-
-namespace ScenarioTests.Generator
+namespace Linker.ScenarioTests.Generator
 {
     [Generator]
     public class ScenarioTestGenerator : ISourceGenerator
@@ -53,15 +51,15 @@ namespace ScenarioTests.Generator
                         {
                             var invocationName = invocation.FactName ?? $"Fact_{invocation.FactIndex}";
 
-                             if (scenarioMethodGroup.Key.IsAsync)
+                            if (scenarioMethodGroup.Key.IsAsync)
                             {
                                 scenarioSourceBuilder.Append($@"
-        [ScenarioTests.ScenarioFact(DisplayName = {Syntax.Literal($"{scenarioMethodGroup.Key.MethodName}_{invocationName}")}, FileName = {Syntax.Literal(invocation.FileName)}, LineNumber = {invocation.LineNumber})]
+        [Fact(DisplayName = ""{scenarioMethodGroup.Key.MethodName}_{invocationName}"")]
         [System.Runtime.CompilerServices.CompilerGenerated]
         [System.Diagnostics.DebuggerStepThrough]
         public async ValueTask {scenarioMethodGroup.Key.MethodName}_Fact{invocation.FactIndex}()
         {{
-            var scenarioContext = new ScenarioTests.ScenarioContext({invocation.FactIndex}, {Syntax.Literal(invocationName)});
+            var scenarioContext = new Linker.ScenarioTests.ScenarioContext({invocation.FactIndex}, ""{invocationName}"");
             await {scenarioMethodGroup.Key.MethodName}(scenarioContext).ConfigureAwait(false);
         }}
                         ");
@@ -70,12 +68,12 @@ namespace ScenarioTests.Generator
                             {
 
                                 scenarioSourceBuilder.Append($@"
-        [ScenarioTests.ScenarioFact(DisplayName = {Syntax.Literal($"{scenarioMethodGroup.Key.MethodName}_{invocationName}")}, FileName = {Syntax.Literal(invocation.FileName)}, LineNumber = {invocation.LineNumber})]
+        [Fact(DisplayName = ""{scenarioMethodGroup.Key.MethodName}_{invocationName}"")]
         [System.Runtime.CompilerServices.CompilerGenerated]
         [System.Diagnostics.DebuggerStepThrough]
         public void {scenarioMethodGroup.Key.MethodName}_Fact{invocation.FactIndex}()
         {{
-            var scenarioContext = new ScenarioTests.ScenarioContext({invocation.FactIndex}, {Syntax.Literal(invocationName)});
+            var scenarioContext = new Linker.ScenarioTests.ScenarioContext({invocation.FactIndex}, ""{invocationName}"");
             {scenarioMethodGroup.Key.MethodName}(scenarioContext);
         }}
                         ");
@@ -85,7 +83,7 @@ namespace ScenarioTests.Generator
 
                     return scenarioSourceBuilder.ToString();
                 }
-                 
+
                 var result = 
 $@"using System;
 using Xunit;
@@ -111,8 +109,8 @@ namespace {(string.IsNullOrEmpty(scenarioGroup.Key.ClassNamespace) ? "ScenarioTe
                 return null;
             }
 
-            var scenarioAttributeTypeSymbol = context.Compilation.GetTypeByMetadataName("ScenarioTests.ScenarioAttribute");
-            var scenarioContextTypeSymbol = context.Compilation.GetTypeByMetadataName("ScenarioTests.ScenarioContext");
+            var scenarioAttributeTypeSymbol = context.Compilation.GetTypeByMetadataName("Linker.ScenarioTests.ScenarioAttribute");
+            var scenarioContextTypeSymbol = context.Compilation.GetTypeByMetadataName("Linker.ScenarioTests.ScenarioContext");
 
             var scenarioAttributeClass = methodSymbol.GetAttributes()
                 .Where(x => x.AttributeClass.Name == "ScenarioAttribute")
@@ -155,9 +153,7 @@ namespace {(string.IsNullOrEmpty(scenarioGroup.Key.ClassNamespace) ? "ScenarioTe
                     invocations.Add(new ScenarioInvocationDescriptor
                     {
                         FactName = factName,
-                        FactIndex = invocations.Count,
-                        FileName = methodDeclarationSyntax.SyntaxTree.FilePath,
-                        LineNumber = invocationCandidate.GetLocation().GetMappedLineSpan().StartLinePosition.Line + 1
+                        FactIndex = invocations.Count
                     });
                 }
             }
