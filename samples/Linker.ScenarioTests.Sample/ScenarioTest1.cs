@@ -9,23 +9,31 @@ namespace TestProject1
         [Scenario]
         public void Scenario1(ScenarioContext scenario)
         {
-            var state = false;
+            var initialCount = 0;
+            var count = initialCount;
 
-            scenario.Fact(() =>
+            scenario.Fact("ProveInitialState", () =>
             {
-                Assert.False(state);
+                Assert.Equal(initialCount, count);
             });
 
-            state = true;
-            scenario.Fact(() =>
+            count++;
+            scenario.Fact("ShouldHaveIncreasedByOne", () =>
             {
-                Assert.True(state);
-                state = false; // Modifying state in this fact does not break the next fact
+                Assert.Equal(1, count);
             });
 
-            scenario.Fact("EnsureTestsRunInIsolation with a complex name \"foo ", () =>
+            scenario.Fact("BeAbleToDecreaseBy1", () =>
             {
-                Assert.True(state);
+                // Manipulate count as part of this fact. this will have no impact on other facts in this scenario
+                count--;
+                Assert.Equal(initialCount, count);
+            });
+
+            count++;
+            scenario.Fact("ProveThatWeCanKeepCountingUp", () =>
+            {
+                Assert.Equal(2, count);
             });
         }
     }

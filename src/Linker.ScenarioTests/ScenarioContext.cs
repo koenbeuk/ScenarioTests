@@ -23,41 +23,41 @@ namespace Linker.ScenarioTests
         public string? TargetName { get; }
 
         [DebuggerStepThrough]
-        public void Fact(string name, Action factInvocation)
-            => Fact(factInvocation);
+        public void Fact(string name, Action invocation)
+            => Fact(invocation);
 
         [DebuggerStepThrough]
-        public void Fact(Action factInvocation)
+        public void Fact(Action invocation)
             => Fact(() =>
             {
-                factInvocation();
+                invocation();
                 return Task.CompletedTask;
             });
 
         [DebuggerStepThrough]
-        public void Fact<TResult>(string name, Func<TResult> factInvocation)
-            => Fact(factInvocation);
+        public void Fact<TResult>(string name, Func<TResult> invocation)
+            => Fact(invocation);
 
         [DebuggerStepThrough]
-        public void Fact<TResult>(Func<TResult> factInvocation)
+        public void Fact<TResult>(Func<TResult> invocation)
             => Fact(() =>
             {
-                factInvocation();
+                invocation();
                 return Task.CompletedTask;
             });
 
         [DebuggerStepThrough]
-        public Task Fact(string name, Func<Task> factInvocation)
-            => Fact(factInvocation);
+        public Task Fact(string name, Func<Task> invocation)
+            => Fact(invocation);
 
         [DebuggerStepThrough]
-        public Task Fact(Func<Task> factInvocation)
+        public Task Fact(Func<Task> invocation)
         {
             CurrentIndex += 1;
 
             if (CurrentIndex == TargetIndex)
             {
-                return factInvocation();
+                return invocation();
             }
 
             return Task.CompletedTask;
