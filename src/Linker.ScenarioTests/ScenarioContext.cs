@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ScenarioTests
+namespace Linker.ScenarioTests
 {
 #pragma warning disable IDE0060 // Remove unused parameter
     public sealed class ScenarioContext

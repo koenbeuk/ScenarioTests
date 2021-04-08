@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
-namespace ScenarioTests.Internal
+namespace Linker.ScenarioTests.Internal
 {
     sealed internal class ScenarioFactTestCase : XunitTestCase
     {

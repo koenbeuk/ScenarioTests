@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace ScenarioTests.Tests
+namespace Linker.ScenarioTests.Tests
 {
     public class ScenarioContextTests
     {
