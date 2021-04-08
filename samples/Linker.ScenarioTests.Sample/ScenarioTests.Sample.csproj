@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-
     <IsPackable>false</IsPackable>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,5 +23,4 @@
     <ProjectReference Include="..\..\src\Linker.ScenarioTests\Linker.ScenarioTests.csproj" />
     <ProjectReference Include="..\..\src\Linker.ScenarioTests.Generator\Linker.ScenarioTests.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
-
 </Project>

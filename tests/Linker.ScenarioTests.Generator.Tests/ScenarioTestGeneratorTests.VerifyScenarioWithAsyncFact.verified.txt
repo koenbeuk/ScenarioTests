@@ -6,7 +6,7 @@ namespace ScenarioTestsGenerated
     public partial class C
     {        
 
-        [Fact(DisplayName = "Scenario_T1")]
+        [ScenarioTests.ScenarioFact(DisplayName = "Scenario_T1", FileName = "", LineNumber = 5)]
         [System.Runtime.CompilerServices.CompilerGenerated]
         [System.Diagnostics.DebuggerStepThrough]
         public async ValueTask Scenario_Fact0()

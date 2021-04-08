@@ -2,6 +2,8 @@ using ScenarioTests;
 using System;
 using Xunit;
 
+
+
 namespace TestProject1
 {
     public partial class ScenarioTest1
@@ -9,7 +11,7 @@ namespace TestProject1
         [Scenario]
         public void Scenario1(ScenarioContext scenario)
         {
-            bool state = false;
+            var state = false;
 
             scenario.TestFact(() =>
             {
@@ -23,7 +25,7 @@ namespace TestProject1
                 state = false; // Modifying state in this fact does not break the next fact
             });
 
-            scenario.TestFact("EnsureTestsRunInIsolation", () =>
+            scenario.TestFact("EnsureTestsRunInIsolation with a complex name \"foo ", () =>
             {
                 Assert.True(state);
             });
