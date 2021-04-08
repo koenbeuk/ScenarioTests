@@ -8,8 +8,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Description>TODO</Description>
+    <Description>Scenario testing with XUnit</Description>
     <RepositoryType>Git</RepositoryType>
+    <RepositoryUrl>https://github.com/linkerio/Linker.ScenarioTests</RepositoryUrl>
     <Authors>Koen Bekkenutte</Authors>
   </PropertyGroup>
 

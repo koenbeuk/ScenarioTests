@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Linker.ScenarioTests.Generator\Linker.ScenarioTests.Generator.csproj" />
+    <ProjectReference Include="..\..\src\Linker.ScenarioTests\Linker.ScenarioTests.csproj" />
   </ItemGroup>
 
 </Project>

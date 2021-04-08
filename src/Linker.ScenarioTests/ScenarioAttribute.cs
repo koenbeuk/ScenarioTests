@@ -1,13 +1,16 @@
 ﻿using System;
+using Linker.ScenarioTests.Internal;
 using Xunit;
 using Xunit.Sdk;
 
 namespace ScenarioTests
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    [XunitTestCaseDiscoverer("ScenarioTests.Internal.ScenarioTestDiscoverer", "ScenarioTests")]
-    public sealed class ScenarioAttribute : FactAttribute
+    [IgnoreXunitAnalyzersRule1013]
+    public sealed class ScenarioAttribute : Attribute
     {
-     
+        public ScenarioAttribute()
+        {
+        }
     }
 }
