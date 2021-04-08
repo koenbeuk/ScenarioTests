@@ -11,6 +11,5 @@ namespace Linker.ScenarioTests.Generator
         public string FileName { get; set; }
         public int LineNumber { get; set; }
         public string FactName { get; set; }
-        public int FactIndex { get; set; }
     }
 }

@@ -9,9 +9,9 @@ namespace ScenarioTestsGenerated
         [Linker.ScenarioTests.ScenarioFact(DisplayName = "Scenario_T1", FileName = "", LineNumber = 5)]
         [System.Runtime.CompilerServices.CompilerGenerated]
         [System.Diagnostics.DebuggerStepThrough]
-        public void Scenario_Fact0()
+        public void Scenario_Test0()
         {
-            var scenarioContext = new Linker.ScenarioTests.ScenarioContext(0, "T1");
+            var scenarioContext = new Linker.ScenarioTests.ScenarioContext("T1");
             Scenario(scenarioContext);
         }
                               

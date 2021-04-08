@@ -33,8 +33,17 @@ namespace TestProject1
             count++;
             scenario.Fact("ProveThatWeCanKeepCountingUp", () =>
             {
+                // Even through the previous fact decreased our counter, we still remain true to the scenario
                 Assert.Equal(2, count);
             });
+
+            for (var i = 0; i < 5; i++)
+            {
+                scenario.Fact("We can repeat the fact as long as we stay constant", () =>
+                {
+                    Assert.Equal(2, count);
+                });
+            }
         }
     }
 }

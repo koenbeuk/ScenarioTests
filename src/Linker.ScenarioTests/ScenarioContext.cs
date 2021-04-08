@@ -10,25 +10,16 @@ namespace Linker.ScenarioTests
 #pragma warning disable IDE0060 // Remove unused parameter
     public sealed class ScenarioContext
     {
-        public ScenarioContext(int targetIndex, string? targetName = null)
+        public ScenarioContext(string targetName = null)
         {
-            TargetIndex = targetIndex;
             TargetName = targetName;
         }
-
-        public int CurrentIndex { get; private set; } = -1;
-
-        public int TargetIndex { get; }
 
         public string? TargetName { get; }
 
         [DebuggerStepThrough]
         public void Fact(string name, Action invocation)
-            => Fact(invocation);
-
-        [DebuggerStepThrough]
-        public void Fact(Action invocation)
-            => Fact(() =>
+            => Fact(name, () =>
             {
                 invocation();
                 return Task.CompletedTask;
@@ -36,11 +27,7 @@ namespace Linker.ScenarioTests
 
         [DebuggerStepThrough]
         public void Fact<TResult>(string name, Func<TResult> invocation)
-            => Fact(invocation);
-
-        [DebuggerStepThrough]
-        public void Fact<TResult>(Func<TResult> invocation)
-            => Fact(() =>
+            => Fact(name, () =>
             {
                 invocation();
                 return Task.CompletedTask;
@@ -48,14 +35,8 @@ namespace Linker.ScenarioTests
 
         [DebuggerStepThrough]
         public Task Fact(string name, Func<Task> invocation)
-            => Fact(invocation);
-
-        [DebuggerStepThrough]
-        public Task Fact(Func<Task> invocation)
         {
-            CurrentIndex += 1;
-
-            if (CurrentIndex == TargetIndex)
+            if (name == TargetName)
             {
                 return invocation();
             }

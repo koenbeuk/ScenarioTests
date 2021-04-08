@@ -50,19 +50,19 @@ namespace Linker.ScenarioTests.Generator
                         var invocations = scenarioMethodGroup
                             .SelectMany(x => x.Invocations);
 
-                        foreach (var invocation in invocations)
+                        foreach (var (invocation, index) in invocations.Select((invocation, index) => (invocation, index)))
                         {
-                            var invocationName = invocation.FactName ?? $"Fact_{invocation.FactIndex}";
+                            var invocationName = invocation.FactName;
 
-                             if (scenarioMethodGroup.Key.IsAsync)
+                            if (scenarioMethodGroup.Key.IsAsync)
                             {
                                 scenarioSourceBuilder.Append($@"
         [Linker.ScenarioTests.ScenarioFact(DisplayName = {Syntax.Literal($"{scenarioMethodGroup.Key.MethodName}_{invocationName}")}, FileName = {Syntax.Literal(invocation.FileName)}, LineNumber = {invocation.LineNumber})]
         [System.Runtime.CompilerServices.CompilerGenerated]
         [System.Diagnostics.DebuggerStepThrough]
-        public async ValueTask {scenarioMethodGroup.Key.MethodName}_Fact{invocation.FactIndex}()
+        public async ValueTask {scenarioMethodGroup.Key.MethodName}_Test{index}()
         {{
-            var scenarioContext = new Linker.ScenarioTests.ScenarioContext({invocation.FactIndex}, {Syntax.Literal(invocationName)});
+            var scenarioContext = new Linker.ScenarioTests.ScenarioContext({Syntax.Literal(invocationName)});
             await {scenarioMethodGroup.Key.MethodName}(scenarioContext).ConfigureAwait(false);
         }}
                         ");
@@ -74,9 +74,9 @@ namespace Linker.ScenarioTests.Generator
         [Linker.ScenarioTests.ScenarioFact(DisplayName = {Syntax.Literal($"{scenarioMethodGroup.Key.MethodName}_{invocationName}")}, FileName = {Syntax.Literal(invocation.FileName)}, LineNumber = {invocation.LineNumber})]
         [System.Runtime.CompilerServices.CompilerGenerated]
         [System.Diagnostics.DebuggerStepThrough]
-        public void {scenarioMethodGroup.Key.MethodName}_Fact{invocation.FactIndex}()
+        public void {scenarioMethodGroup.Key.MethodName}_Test{index}()
         {{
-            var scenarioContext = new Linker.ScenarioTests.ScenarioContext({invocation.FactIndex}, {Syntax.Literal(invocationName)});
+            var scenarioContext = new Linker.ScenarioTests.ScenarioContext({Syntax.Literal(invocationName)});
             {scenarioMethodGroup.Key.MethodName}(scenarioContext);
         }}
                         ");
@@ -156,7 +156,6 @@ namespace {(string.IsNullOrEmpty(scenarioGroup.Key.ClassNamespace) ? "ScenarioTe
                     invocations.Add(new ScenarioInvocationDescriptor
                     {
                         FactName = factName,
-                        FactIndex = invocations.Count,
                         FileName = methodDeclarationSyntax.SyntaxTree.FilePath,
                         LineNumber = invocationCandidate.GetLocation().GetMappedLineSpan().StartLinePosition.Line + 1
                     });
