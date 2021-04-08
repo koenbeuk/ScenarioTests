@@ -1,8 +1,8 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.Extensions.DependencyModel;
-using ScenarioTests;
-using ScenarioTests.Generator;
+using Linker.ScenarioTests;
+using Linker.ScenarioTests.Generator;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,7 +14,7 @@ using VerifyXunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace TestGenerator.Tests
+namespace Linker.ScenarioTests.Tests
 {
     [UsesVerify]
     public class ScenarioTestGeneratorTests
@@ -43,7 +43,7 @@ class C { }
         public void EmptyScenario_AddsScenarioTestHarness()
         {
             var compilation = CreateCompilation(@"
-using ScenarioTests;
+using Linker.ScenarioTests;
 
 partial class C {
     [Scenario]
@@ -63,7 +63,7 @@ partial class C {
         {
             var compilation = CreateCompilation(@"
 partial class C {
-    [ScenarioTests.Scenario]
+    [Linker.ScenarioTests.Scenario]
     public void Scenario() {
     }
 }
@@ -79,8 +79,8 @@ partial class C {
         {
             var compilation = CreateCompilation(@"
 public partial class C {
-    [ScenarioTests.Scenario]
-    public void Scenario(ScenarioTests.ScenarioContext s) {
+    [Linker.ScenarioTests.Scenario]
+    public void Scenario(Linker.ScenarioTests.ScenarioContext s) {
         s.TestFact(""T1"", () => { });
     }
 }
@@ -99,8 +99,8 @@ public partial class C {
         {
             var compilation = CreateCompilation(@"
 public partial class C {
-    [ScenarioTests.Scenario]
-    public void Scenario(ScenarioTests.ScenarioContext s) {
+    [Linker.ScenarioTests.Scenario]
+    public void Scenario(Linker.ScenarioTests.ScenarioContext s) {
         s.TestFact(""T1"", () => { });
         s.TestFact(""T2"", () => { });
     }
@@ -120,8 +120,8 @@ public partial class C {
         {
             var compilation = CreateCompilation(@"
 public partial class C {
-    [ScenarioTests.Scenario]
-    public void Scenario(ScenarioTests.ScenarioContext s) {
+    [Linker.ScenarioTests.Scenario]
+    public void Scenario(Linker.ScenarioTests.ScenarioContext s) {
         s.TestFact(""T1"", () => 1);
     }
 }
@@ -140,8 +140,8 @@ public partial class C {
         {
             var compilation = CreateCompilation(@"
 public partial class C {
-    [ScenarioTests.Scenario]
-    public async System.Threading.Tasks.Task Scenario(ScenarioTests.ScenarioContext s) {
+    [Linker.ScenarioTests.Scenario]
+    public async System.Threading.Tasks.Task Scenario(Linker.ScenarioTests.ScenarioContext s) {
         await s.TestFact(""T1"", () => System.Threading.Tasks.Task.CompletedTask);
     }
 }
@@ -160,8 +160,8 @@ public partial class C {
         {
             var compilation = CreateCompilation(@"
 public partial class C {
-    [ScenarioTests.Scenario]
-    public async System.Threading.Tasks.Task Scenario(ScenarioTests.ScenarioContext s) {
+    [Linker.ScenarioTests.Scenario]
+    public async System.Threading.Tasks.Task Scenario(Linker.ScenarioTests.ScenarioContext s) {
         s.TestFact(""T1"", () => { });
         s.TestFact(""T2"", () => 1);
         await s.TestFact(""T3"", () => System.Threading.Tasks.Task.CompletedTask);

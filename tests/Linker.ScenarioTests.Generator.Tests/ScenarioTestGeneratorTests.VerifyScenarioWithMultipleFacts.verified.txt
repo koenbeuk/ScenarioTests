@@ -6,21 +6,21 @@ namespace ScenarioTestsGenerated
     public partial class C
     {        
 
-        [ScenarioTests.ScenarioFact(DisplayName = "Scenario_T1", FileName = "", LineNumber = 5)]
+        [Linker.ScenarioTests.ScenarioFact(DisplayName = "Scenario_T1", FileName = "", LineNumber = 5)]
         [System.Runtime.CompilerServices.CompilerGenerated]
         [System.Diagnostics.DebuggerStepThrough]
         public void Scenario_Fact0()
         {
-            var scenarioContext = new ScenarioTests.ScenarioContext(0, "T1");
+            var scenarioContext = new Linker.ScenarioTests.ScenarioContext(0, "T1");
             Scenario(scenarioContext);
         }
                         
-        [ScenarioTests.ScenarioFact(DisplayName = "Scenario_T2", FileName = "", LineNumber = 6)]
+        [Linker.ScenarioTests.ScenarioFact(DisplayName = "Scenario_T2", FileName = "", LineNumber = 6)]
         [System.Runtime.CompilerServices.CompilerGenerated]
         [System.Diagnostics.DebuggerStepThrough]
         public void Scenario_Fact1()
         {
-            var scenarioContext = new ScenarioTests.ScenarioContext(1, "T2");
+            var scenarioContext = new Linker.ScenarioTests.ScenarioContext(1, "T2");
             Scenario(scenarioContext);
         }
                               

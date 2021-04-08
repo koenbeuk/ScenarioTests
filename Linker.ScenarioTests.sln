@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Linker.ScenarioTests.Genera
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{1C377CAE-770D-4135-B4EE-ED09D1D6E821}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScenarioTests.Sample", "samples\Linker.ScenarioTests.Sample\ScenarioTests.Sample.csproj", "{FE80F908-465B-49C2-96E8-056E2294505D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Linker.ScenarioTests.Sample", "samples\Linker.ScenarioTests.Sample\Linker.ScenarioTests.Sample.csproj", "{FE80F908-465B-49C2-96E8-056E2294505D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
