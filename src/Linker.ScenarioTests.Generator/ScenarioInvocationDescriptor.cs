@@ -8,8 +8,9 @@ namespace Linker.ScenarioTests.Generator
 {
     public class ScenarioInvocationDescriptor
     {
+        public string TestMethodName { get; set; }
+        public string Name { get; set; }
         public string FileName { get; set; }
         public int LineNumber { get; set; }
-        public string FactName { get; set; }
     }
 }

@@ -177,6 +177,26 @@ public partial class C {
             return Verifier.Verify(result.GeneratedTrees[0].ToString());
         }
 
+        [Fact]
+        public Task VerifyScenarioWithComplexFactName()
+        {
+            var compilation = CreateCompilation(@"
+public partial class C {
+    [Linker.ScenarioTests.Scenario]
+    public void Scenario(Linker.ScenarioTests.ScenarioContext s) {
+        s.Fact(""Name with a $!@$@!"", () => { });
+    }
+}
+");
+
+            var result = RunGenerator(compilation);
+
+            Assert.Empty(result.Diagnostics);
+            Assert.Single(result.GeneratedTrees);
+
+            return Verifier.Verify(result.GeneratedTrees[0].ToString());
+        }
+
         #region Helpers
 
         Compilation CreateCompilation(string source, bool expectedToCompile = true)

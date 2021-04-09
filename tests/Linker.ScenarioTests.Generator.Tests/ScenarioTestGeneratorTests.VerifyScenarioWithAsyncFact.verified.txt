@@ -5,15 +5,14 @@ namespace ScenarioTestsGenerated
 {
     public partial class C
     {        
-
-        [Linker.ScenarioTests.ScenarioFact(DisplayName = "Scenario_T1", FileName = "", LineNumber = 5)]
-        [System.Runtime.CompilerServices.CompilerGenerated]
-        [System.Diagnostics.DebuggerStepThrough]
-        public async ValueTask Scenario_Test0()
-        {
-            var scenarioContext = new Linker.ScenarioTests.ScenarioContext("T1");
-            await Scenario(scenarioContext).ConfigureAwait(false);
-        }
-                              
+		[System.Runtime.CompilerServices.CompilerGenerated]
+		[System.Diagnostics.DebuggerStepThrough]
+		[Linker.ScenarioTests.ScenarioFact(DisplayName = "Scenario_T1", FileName = "", LineNumber = 5)]
+		public async System.Threading.Tasks.Task Scenario_T1()
+		{
+			var scenarioContext = new Linker.ScenarioTests.ScenarioContext("T1");
+			await Scenario(scenarioContext).ConfigureAwait(false);
+		}
+      
     }
 }
