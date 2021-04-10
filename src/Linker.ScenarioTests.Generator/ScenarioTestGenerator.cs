@@ -1,6 +1,5 @@
 ﻿using Linker.ScenarioTests.Generator;
 using Linker.ScenarioTests.Generator.TestMethodNamingStrategies;
-using Linker.ScenarioTests.Generator.TestMethodWriters;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -43,6 +42,7 @@ namespace Linker.ScenarioTests.Generator
                 string RenderScenarios()
                 {
                     var resultBuilder = new StringBuilder();
+                    var testMethodWriter = new TestMethodWriter(resultBuilder);
 
                     var scenarioMethodGroups = scenarioGroup
                        .GroupBy(x => x.MethodName);
@@ -55,10 +55,7 @@ namespace Linker.ScenarioTests.Generator
 
                         foreach (var invocation in invocations)
                         {
-                            var invocationName = invocation.Name;
-
-                            var testMethodWriter = new TestMethodWriter(resultBuilder, scenario, invocation);
-                            testMethodWriter.Write();
+                            testMethodWriter.Write(scenario, invocation);
                         }
                     }
 

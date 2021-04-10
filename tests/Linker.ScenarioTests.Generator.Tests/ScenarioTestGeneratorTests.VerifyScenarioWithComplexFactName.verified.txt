@@ -7,12 +7,10 @@ namespace ScenarioTestsGenerated
     {        
 		[System.Runtime.CompilerServices.CompilerGenerated]
 		[System.Diagnostics.DebuggerStepThrough]
-		[Linker.ScenarioTests.ScenarioFact(DisplayName = "Scenario_Name with a $!@$@!", FileName = "", LineNumber = 5)]
-		public async System.Threading.Tasks.Task Scenario_Name_with_a_()
+		[Linker.ScenarioTests.ScenarioFact(DisplayName = "Scenario_Name with a $!@$@!", FactName = "Name with a $!@$@!", FileName = "", LineNumber = 5, IsTheory = false)]
+		public void Scenario_Name_with_a_(Linker.ScenarioTests.ScenarioContext scenarioContext)
 		{
-			var scenarioContext = new Linker.ScenarioTests.ScenarioContext("Name with a $!@$@!");
 			Scenario(scenarioContext);
-			await System.Threading.Tasks.Task.CompletedTask;
 		}
       
     }

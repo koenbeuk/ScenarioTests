@@ -1,19 +1,31 @@
 using Linker.ScenarioTests;
 using System;
+using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace TestProject1
 {
     public partial class ScenarioTest1
     {
+        readonly ITestOutputHelper _testOutputHelper;
+
+        public ScenarioTest1(ITestOutputHelper testOutputHelper)
+        {
+            _testOutputHelper = testOutputHelper;
+        }
+
         [Scenario]
         public void Scenario1(ScenarioContext scenario)
         {
+            _testOutputHelper.WriteLine("Setting initial count to 0");
+
             var initialCount = 0;
             var count = initialCount;
 
             scenario.Fact("ProveInitialState", () =>
             {
+                _testOutputHelper.WriteLine("Proving that initial count is still 0");
                 Assert.Equal(initialCount, count);
             });
 
@@ -39,9 +51,11 @@ namespace TestProject1
 
             for (var i = 0; i < 5; i++)
             {
-                scenario.Fact("We can repeat the fact as long as we stay constant", () =>
+                scenario.Theory("TheorySample", () =>
                 {
-                    Assert.Equal(2, count);
+                    var newCount = count + i;
+
+                    Assert.Equal(count, newCount - i);
                 });
             }
         }

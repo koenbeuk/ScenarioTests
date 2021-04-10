@@ -32,6 +32,7 @@ namespace Linker.ScenarioTests.Generator
 
             var scenarioAttributeTypeSymbol = context.Compilation.GetTypeByMetadataName("Linker.ScenarioTests.ScenarioAttribute");
             var scenarioContextTypeSymbol = context.Compilation.GetTypeByMetadataName("Linker.ScenarioTests.ScenarioContext");
+            var asynResultType = context.Compilation.GetSpecialType(SpecialType.System_IAsyncResult);
 
             var scenarioAttributeClass = methodSymbol.GetAttributes()
                 .Where(x => x.AttributeClass.Name == "ScenarioAttribute")
@@ -62,7 +63,7 @@ namespace Linker.ScenarioTests.Generator
                     {
                         if (invocationCandidate.ArgumentList.Arguments.FirstOrDefault()?.Expression is not LiteralExpressionSyntax factIdExpression)
                         {
-                            var diagnostic = Diagnostic.Create(Diagnostics.FactNameNeedsToBeAConstant, invocationCandidate.GetLocation(), methodSymbol.Name);
+                            var diagnostic = Diagnostic.Create(Diagnostics.FactOrTheoryNameNeedsToBeAConstant, invocationCandidate.GetLocation(), methodSymbol.Name);
                             context.ReportDiagnostic(diagnostic);
                         }
                         else
@@ -86,6 +87,7 @@ namespace Linker.ScenarioTests.Generator
                     {
                         TestMethodName = testMethodName,
                         Name = factName,
+                        IsTheory = invocationSymbol.Name == "Theory",
                         FileName = methodDeclarationSyntax.SyntaxTree.FilePath,
                         LineNumber = invocationCandidate.GetLocation().GetMappedLineSpan().StartLinePosition.Line + 1
                     });
@@ -97,7 +99,7 @@ namespace Linker.ScenarioTests.Generator
                 ClassName = methodSymbol.ContainingType.Name,
                 ClassNamespace = methodSymbol.ContainingType.ContainingNamespace.Name,
                 MethodName = methodSymbol.Name,
-                IsAsync = !methodSymbol.ReturnsVoid,
+                IsAsync = methodSymbol.ReturnsVoid ? false : methodSymbol.ReturnType.AllInterfaces.Any(i => SymbolEqualityComparer.Default.Equals(i, asynResultType)),
                 Invocations = invocations
             };
         }

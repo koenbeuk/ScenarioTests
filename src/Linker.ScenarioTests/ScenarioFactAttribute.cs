@@ -13,7 +13,9 @@ namespace Linker.ScenarioTests
     [XunitTestCaseDiscoverer("Linker.ScenarioTests.Internal.ScenarioFactTestCaseDiscoverer", "Linker.ScenarioTests")]
     public sealed class ScenarioFactAttribute : FactAttribute
     {
+        public string FactName { get; set; }
         public string FileName { get; set; }
         public int LineNumber { get; set; }
+        public bool IsTheory { get; set; }
     }
 }

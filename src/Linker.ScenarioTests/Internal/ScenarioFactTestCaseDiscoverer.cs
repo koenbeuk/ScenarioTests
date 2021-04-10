@@ -26,7 +26,14 @@ namespace Linker.ScenarioTests.Internal
                 LineNumber = factAttribute.GetNamedArgument<int>(nameof(ScenarioFactAttribute.LineNumber))
             };
 
-            yield return new ScenarioFactTestCase(_messageSink, discoveryOptions.MethodDisplayOrDefault(), discoveryOptions.MethodDisplayOptionsOrDefault(), testMethod, null, sourceInformation);
+            yield return new ScenarioFactTestCase(_messageSink, 
+                discoveryOptions.MethodDisplayOrDefault(), 
+                discoveryOptions.MethodDisplayOptionsOrDefault(), 
+                testMethod, 
+                null,
+                factAttribute.GetNamedArgument<string>(nameof(ScenarioFactAttribute.FactName)),
+                sourceInformation, 
+                factAttribute.GetNamedArgument<bool>(nameof(ScenarioFactAttribute.IsTheory)));
         }
     }
 }
