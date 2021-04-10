@@ -5,6 +5,16 @@
     <NoWarn>$(NoWarn);nullable;NU5128</NoWarn>
     <!-- Do not include the generator as a lib dependency -->
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeP2PAssets</TargetsForTfmSpecificBuildOutput>
+    <PackageId>Linker.ScenarioTests.XUnit</PackageId>
+    <PackageTags>Generator;Source Generator;XUnit;ScenarioTests;UnitTesting;IntegrationTesting</PackageTags>
+    <PackageProjectUrl>https://github.com/linkerio/Linker.ScenarioTests</PackageProjectUrl>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   
   <ItemGroup>
@@ -27,4 +37,12 @@
       <BuildOutputInPackage Include="$(OutputPath)Linker.ScenarioTests.dll" />
     </ItemGroup>
   </Target>
+
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+  </ItemGroup>
 </Project>
