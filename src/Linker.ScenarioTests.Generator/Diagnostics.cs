@@ -9,26 +9,18 @@ namespace Linker.ScenarioTests.Generator
 {
     public static class Diagnostics
     {
-        public static readonly DiagnosticDescriptor RequiresPartialClassError = new(
-            id: "ST0001",
-            title: "Requires class to be partial",
-            messageFormat: "Class needs to be partial '{0}'.",
-            category: "Design",
-            DiagnosticSeverity.Error,
-            isEnabledByDefault: true);
-
         public static readonly DiagnosticDescriptor RequiresSingleArgumentMethodError = new(
-            id: "ST0002",
+            id: "ST0001",
             title: "Scenario should accept a single argument of type ScenarioContext",
             messageFormat: "Scenario '{0}' should accept a single argument of type ScenarioContext.",
             category: "Design",
             DiagnosticSeverity.Error,
             isEnabledByDefault: true);
 
-        public static readonly DiagnosticDescriptor FactNameNeedsToBeAConstant = new(
-            id: "ST0003",
-            title: "Any facts names need to be expressed as constants",
-            messageFormat: "Scenario '{3}' has a fact expression that lacks a constant name",
+        public static readonly DiagnosticDescriptor FactOrTheoryNameNeedsToBeAConstant = new(
+            id: "ST0002",
+            title: "Any fact or theory names need to be expressed as constant literals",
+            messageFormat: "Scenario '{3}' has a fact/theory expression that lacks a constant literal name",
             category: "Design",
             DiagnosticSeverity.Error,
             isEnabledByDefault: true);

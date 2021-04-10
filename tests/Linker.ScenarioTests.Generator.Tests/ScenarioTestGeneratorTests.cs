@@ -71,7 +71,7 @@ partial class C {
 
             var result = RunGenerator(compilation);
 
-            Assert.Contains(result.Diagnostics, x => x.Id == "ST0002");
+            Assert.Contains(result.Diagnostics, x => x.Id == "ST0001");
         }
 
         [Fact]
@@ -165,6 +165,48 @@ public partial class C {
         s.Fact(""T1"", () => { });
         s.Fact(""T2"", () => 1);
         await s.Fact(""T3"", () => System.Threading.Tasks.Task.CompletedTask);
+    }
+}
+");
+
+            var result = RunGenerator(compilation);
+
+            Assert.Empty(result.Diagnostics);
+            Assert.Single(result.GeneratedTrees);
+
+            return Verifier.Verify(result.GeneratedTrees[0].ToString());
+        }
+
+        [Fact]
+        public Task VerifyScenarioWithComplexFactName()
+        {
+            var compilation = CreateCompilation(@"
+public partial class C {
+    [Linker.ScenarioTests.Scenario]
+    public void Scenario(Linker.ScenarioTests.ScenarioContext s) {
+        s.Fact(""Name with a $!@$@!"", () => { });
+    }
+}
+");
+
+            var result = RunGenerator(compilation);
+
+            Assert.Empty(result.Diagnostics);
+            Assert.Single(result.GeneratedTrees);
+
+            return Verifier.Verify(result.GeneratedTrees[0].ToString());
+        }
+
+        [Fact]
+        public Task VerifyScenarioWithSingleTheory()
+        {
+            var compilation = CreateCompilation(@"
+public partial class C {
+    [Linker.ScenarioTests.Scenario]
+    public void Scenario(Linker.ScenarioTests.ScenarioContext s) {
+        s.Theory(""T1"", () => { 
+            return System.Threading.Tasks.Task.CompletedTask;
+        });
     }
 }
 ");
