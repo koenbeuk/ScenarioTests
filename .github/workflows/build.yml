@@ -19,8 +19,6 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
-    - name: Clean
-      run: dotnet clean && dotnet nuget locals all --clear
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
@@ -33,6 +31,7 @@ jobs:
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: Pack
         run: | 
           dotnet pack -v normal -c Debug --include-symbols --include-source -p:PackageVersion=1.0.0-pre-$GITHUB_RUN_ID -o nupkg src/Linker.ScenarioTests.Generator/Linker.ScenarioTests.Generator.csproj
