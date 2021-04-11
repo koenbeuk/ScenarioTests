@@ -39,5 +39,5 @@ jobs:
         run: |
           for f in ./nupkg/*.nupkg
           do
-            dotnet nuget push $f --source $GITHUB_FEED --api-key ${{github.token}} --skip-duplicate --no-symbols true
+            dotnet nuget push $f --source $GITHUB_FEED --api-key $GITHUB_TOKEN --skip-duplicate --no-symbols true
           done
