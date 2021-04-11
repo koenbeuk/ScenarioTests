@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using VerifyXunit;
 using Xunit;
 using Xunit.Abstractions;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Linker.ScenarioTests.Tests
 {
@@ -73,6 +74,31 @@ partial class C {
 
             Assert.Contains(result.Diagnostics, x => x.Id == "ST0001");
         }
+
+
+        [Fact]
+        public Task ScenarioInNamespaces_AddsScenarioTestHarnessInSameNamespace()
+        {
+            var compilation = CreateCompilation(@"
+using Linker.ScenarioTests;
+
+namespace Foo.Bar {
+    partial class C {
+        [Scenario]
+        public void Scenario(ScenarioContext scenario) {
+        }
+    }
+}
+");
+
+            var result = RunGenerator(compilation);
+
+            Assert.Empty(result.Diagnostics);
+            Assert.Single(result.GeneratedTrees);
+
+            return Verifier.Verify(result.GeneratedTrees[0].ToString());
+        }
+
 
         [Fact]
         public Task VerifyScenarioWithSingleFact()

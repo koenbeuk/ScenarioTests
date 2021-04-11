@@ -97,7 +97,7 @@ namespace Linker.ScenarioTests.Generator
             return new ScenarioDescriptor
             {
                 ClassName = methodSymbol.ContainingType.Name,
-                ClassNamespace = methodSymbol.ContainingType.ContainingNamespace.Name,
+                ClassNamespace = methodSymbol.ContainingType.ContainingNamespace.IsGlobalNamespace ? null : methodSymbol.ContainingType.ContainingNamespace.ToDisplayString(),
                 MethodName = methodSymbol.Name,
                 IsAsync = methodSymbol.ReturnsVoid ? false : methodSymbol.ReturnType.AllInterfaces.Any(i => SymbolEqualityComparer.Default.Equals(i, asynResultType)),
                 Invocations = invocations
