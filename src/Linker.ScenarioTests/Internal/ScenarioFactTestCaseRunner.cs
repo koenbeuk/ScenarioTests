@@ -45,6 +45,7 @@ namespace Linker.ScenarioTests.Internal
 
             TestMethodArguments = new object[] { _scenarioContext };
 
+            var capturedMessages = new List<IMessageSinkMessage>();
             var filteredMessageBus = new FilteredMessageBus(MessageBus, message =>
             {
                 if (message is TestOutput testOutput)
@@ -59,17 +60,33 @@ namespace Linker.ScenarioTests.Internal
                     }
                 }
 
-                return message is not ITestMessage;
+                if (message is not ITestMessage)
+                {
+                    return true;
+                }
+                else
+                {
+                    capturedMessages.Add(message);
+                    return false;
+                }
             });
 
             _isRecording = false;
             _parentTestOutputBuilder.Clear();
             _recordingTestOutputBuilder.Clear();
 
-            var result = await CreateTestRunner(CreateTest(TestCase, DisplayName), filteredMessageBus, TestClass, ConstructorArguments, TestMethod, TestMethodArguments,
-                                           SkipReason, BeforeAfterAttributes, Aggregator, CancellationTokenSource).RunAsync();
-
+            var test = CreateTest(TestCase, DisplayName);
+            var result = await CreateTestRunner(test, filteredMessageBus, TestClass, ConstructorArguments, TestMethod, TestMethodArguments, SkipReason, BeforeAfterAttributes, Aggregator, CancellationTokenSource).RunAsync();
+            if (result.Failed > 0)
+            {
+                foreach (var message in capturedMessages)
+                {
+                    MessageBus.QueueMessage(message);
+                }
+            }
+            
             return result;
+            
         }
 
         async Task RecordTestCase(object[] arguments, Func<Task> invocation)
