@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace TestProject1
+namespace BasicSample
 {
     public partial class ScenarioTest1
     {
