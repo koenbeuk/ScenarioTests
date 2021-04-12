@@ -68,7 +68,7 @@ partial class ScenarioTests
 ### How it works
 We have a source generator that checks for methods in your test class marked with the `[Scenario]` attribute. When it finds one, it ensures that it has a single argument that accepts a `ScenarioContext`. 
 
-It will then keep on discovering calls in the shape of `ScenarioContext.Fact` or `ScenarioContext.Theory` and generate individual test cases for those. If you add `<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>` in your csproj, you can see the code that gets generated. Each generated test case is harnassed to not affect other test cases.
+It will then keep on discovering calls in the shape of `ScenarioContext.Fact` or `ScenarioContext.Theory` and generate individual test cases for those. If you add `<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>` in your csproj, you can see the code that gets generated. Each generated test case is harnassed to not affect other test cases. (Each test case will run your scenario from start to bottom).
 
 Theory test cases are internally isolated. A theory in the shape of:
 
@@ -148,3 +148,6 @@ public async Task Scenario1(ScenarioContext scenario) {
     });
 }
 ```
+
+#### Is this compatible with MSTest/NUnit/....
+Currently we only expose a generator for XUnit. We'd like to produce generators for different testing frameworks in the future however we have no direct need for this. If this is important for you then please go ahead and open an issue or take a swing at it yourself!
