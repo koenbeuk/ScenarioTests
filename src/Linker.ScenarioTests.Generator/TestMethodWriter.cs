@@ -27,7 +27,7 @@ namespace Linker.ScenarioTests.Generator
         {
             var testMethodName = scenarioDescriptor.NamingPolicy switch
             {
-                ScenarioTestMethodNamingPolicy.Member => scenarioInvocationDescriptor.Name,
+                ScenarioTestMethodNamingPolicy.Test => scenarioInvocationDescriptor.Name,
                 _ => $"{scenarioDescriptor.MethodName}_{scenarioInvocationDescriptor.Name}"
             };
 

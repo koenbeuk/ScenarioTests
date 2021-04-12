@@ -24,7 +24,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\Linker.ScenarioTests\Linker.ScenarioTests.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\Linker.ScenarioTests\Linker.ScenarioTests.csproj" OutputItemType="Analyzer" />
   </ItemGroup>
 
   <ItemGroup>

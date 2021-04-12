@@ -46,17 +46,9 @@ namespace Linker.ScenarioTests.Generator
             var namingPolicy = scenarioAttributeClass.NamedArguments
                 .Where(x => x.Key == nameof(ScenarioAttribute.NamingPolicy))
                 .Where(x => x.Value.Kind == TypedConstantKind.Enum)
-                .Select(x =>
-                {
-                    if (Enum.TryParse<ScenarioTestMethodNamingPolicy>(x.Value.ToCSharpString(), out var namingPolicy))
-                    {
-                        return namingPolicy;
-                    }
-                    else
-                    {
-                        return default;
-                    }
-                })
+                .Select(x => x.Value.Value)
+                .Where(x => Enum.IsDefined(typeof(ScenarioTestMethodNamingPolicy), x))
+                .Cast<ScenarioTestMethodNamingPolicy>()
                 .FirstOrDefault();
 
             if (methodSymbol.Parameters.Length != 1 || !SymbolEqualityComparer.Default.Equals(methodSymbol.Parameters[0].Type, scenarioContextTypeSymbol))

@@ -9,6 +9,6 @@ namespace Linker.ScenarioTests
     [IgnoreXunitAnalyzersRule1013]
     public sealed class ScenarioAttribute : Attribute
     {
-        public ScenarioTestMethodNamingPolicy NamingPolicy { get; set; } = ScenarioTestMethodNamingPolicy.TypeAndMember;
+        public ScenarioTestMethodNamingPolicy NamingPolicy { get; set; } = ScenarioTestMethodNamingPolicy.MethodAndTest;
     }
 }

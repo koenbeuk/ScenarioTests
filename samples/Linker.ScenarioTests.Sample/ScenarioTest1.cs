@@ -15,7 +15,7 @@ namespace TestProject1
             _testOutputHelper = testOutputHelper;
         }
 
-        [Scenario(NamingPolicy = ScenarioTestMethodNamingPolicy.Member)]
+        [Scenario(NamingPolicy = ScenarioTestMethodNamingPolicy.Test)]
         public void Scenario1(ScenarioContext scenario)
         {
             _testOutputHelper.WriteLine("Setting initial count to 0");

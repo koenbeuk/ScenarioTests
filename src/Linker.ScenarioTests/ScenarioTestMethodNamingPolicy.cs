@@ -8,7 +8,7 @@ namespace Linker.ScenarioTests
 {
     public enum ScenarioTestMethodNamingPolicy
     {
-        TypeAndMember,
-        Member
+        MethodAndTest,
+        Test
     }
 }
