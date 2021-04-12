@@ -10,7 +10,7 @@ namespace DbIntegrationSample
 {
     public partial class ScenarioTests
     {
-        [Scenario]
+        [Scenario(NamingPolicy = ScenarioTestMethodNamingPolicy.Test)]
         public void ICanAddAndRemoveUsers(ScenarioContext scenario)
         {
             var serviceProvider = new ServiceCollection()
