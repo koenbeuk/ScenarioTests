@@ -12,13 +12,14 @@ namespace Linker.ScenarioTests.Internal
 {
     public class ScenarioFactTestCaseRunner : XunitTestCaseRunner
     {
-        static readonly object[] NoArguments = new object[0];
-
         readonly StringBuilder _parentTestOutputBuilder = new StringBuilder();
         readonly StringBuilder _recordingTestOutputBuilder = new StringBuilder();
 
         ScenarioContext _scenarioContext;
         bool _isRecording;
+        bool _skipAdditionalTests;
+        bool _pendingRestart;
+        HashSet<object> _testedArguments = new();
 
         public ScenarioFactTestCaseRunner(IXunitTestCase testCase,
                                          string displayName,
@@ -28,7 +29,7 @@ namespace Linker.ScenarioTests.Internal
                                          IMessageBus messageBus,
                                          ExceptionAggregator aggregator,
                                          CancellationTokenSource cancellationTokenSource)
-            : base(testCase, displayName, skipReason, constructorArguments, NoArguments, messageBus, aggregator, cancellationTokenSource)
+            : base(testCase, displayName, skipReason, constructorArguments, Array.Empty<object>(), messageBus, aggregator, cancellationTokenSource)
         {
             DiagnosticMessageSink = diagnosticMessageSink;
         }
@@ -71,26 +72,64 @@ namespace Linker.ScenarioTests.Internal
                 }
             });
 
-            _isRecording = false;
-            _parentTestOutputBuilder.Clear();
-            _recordingTestOutputBuilder.Clear();
 
-            var test = CreateTest(TestCase, DisplayName);
-            var result = await CreateTestRunner(test, filteredMessageBus, TestClass, ConstructorArguments, TestMethod, TestMethodArguments, SkipReason, BeforeAfterAttributes, Aggregator, CancellationTokenSource).RunAsync();
-            if (result.Failed > 0)
+
+            RunSummary aggregatedResult = new();
+
+            _testedArguments.Clear();
+
+            //do
             {
-                foreach (var message in capturedMessages)
+                // safeguarding against abuse
+                if (_testedArguments.Count > 1000)
                 {
-                    MessageBus.QueueMessage(message);
+                    //throw new ApplicationException("Theory scenario tests are currently capped at 1000 cases (to prevent infinite loops). Feel free to open up an issue if you have a good reason for relaxing this restriction");
+                    return aggregatedResult;
                 }
+
+                _isRecording = false;
+                _skipAdditionalTests = false;
+                _pendingRestart = false;
+                _parentTestOutputBuilder.Clear();
+                _recordingTestOutputBuilder.Clear();
+
+                var test = CreateTest(TestCase, DisplayName);
+                var result = await CreateTestRunner(test, filteredMessageBus, TestClass, ConstructorArguments, TestMethod, TestMethodArguments, SkipReason, BeforeAfterAttributes, Aggregator, CancellationTokenSource).RunAsync();
+                if (result.Failed > 0)
+                {
+                    foreach (var message in capturedMessages)
+                    {
+                        MessageBus.QueueMessage(message);
+                    }
+                }
+
+                aggregatedResult.Aggregate(result);
             }
-            
-            return result;
-            
+            // while (_pendingRestart);
+
+            Console.WriteLine(_pendingRestart);
+
+            return aggregatedResult;
         }
 
-        async Task RecordTestCase(object[] arguments, Func<Task> invocation)
+        async Task RecordTestCase(object argument, Func<Task> invocation)
         {
+            if (_skipAdditionalTests)
+            {
+                _pendingRestart = true; // when we discovered more tests after a test completed, allow us to restart
+                return;
+            }
+
+            if (argument is not null)
+            {
+                if (_testedArguments.Contains(argument))
+                {
+                    return;
+                }
+
+                _testedArguments.Add(argument);
+            }
+
             string BuildOutput()
             {
                 return _parentTestOutputBuilder.ToString() + _recordingTestOutputBuilder.ToString();
@@ -112,7 +151,7 @@ namespace Linker.ScenarioTests.Internal
                 _recordingTestOutputBuilder.Clear();
 
                 await invocation();
-                
+
                 stopwatch.Stop();
                 if (!MessageBus.QueueMessage(new TestPassed(test, (decimal)stopwatch.Elapsed.TotalSeconds, BuildOutput())))
                 {
@@ -132,6 +171,7 @@ namespace Linker.ScenarioTests.Internal
             finally
             {
                 _isRecording = false;
+                _skipAdditionalTests = true;
             }
 
             if (!MessageBus.QueueMessage(new TestFinished(test, (decimal)stopwatch.Elapsed.TotalSeconds, BuildOutput())))

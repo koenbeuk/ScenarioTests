@@ -51,7 +51,7 @@ namespace TestProject1
 
             for (var i = 0; i < 5; i++)
             {
-                scenario.Theory("TheorySample", () =>
+                scenario.Theory("TheorySample", 1, () =>
                 {
                     var newCount = count + i;
 
