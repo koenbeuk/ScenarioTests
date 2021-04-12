@@ -1,5 +1,5 @@
 # Linker.ScenarioTests
-Triggers for EF Core. Respond to changes in your DbContext before and after they are committed to the database.
+ScenarioTests are a different way of writing tests with XUnit. The goal is to be able to write tests like you would write notebooks. ScenarioTests are great for documentation and integration/e2e tests.
 
 [![NuGet version (Linker.ScenarioTests)](https://img.shields.io/nuget/v/Linker.ScenarioTests.XUnit.svg?style=flat-square)](https://www.nuget.org/packages/Linker.ScenarioTests.XUnit/)
 [![Build status](https://github.com/koenbeuk/EntityFrameworkCore.Triggered/workflows/.NET%20Core/badge.svg)](https://github.com/linkerio/Linker.ScenarioTests/actions?query=workflow%3A%22.NET+Core%22)
