@@ -6,17 +6,18 @@ namespace AwesomeCalculator
 {
     public class Calculator
     {
-        readonly Stack<Func<decimal, decimal>> _commandHistory = new();
+        readonly Stack<Func<double, double>> _commandHistory = new();
 
-        void Apply(Func<decimal, decimal> command) => _commandHistory.Push(command);
+        void Apply(Func<double, double> command) => _commandHistory.Push(command);
 
         public void Reset() => _commandHistory.Clear();
         public void Undo() => _commandHistory.Pop();
-        public void Add(decimal number) => Apply(state => state + number);
-        public void Subtract(decimal number) => Apply(state => state - number);
-        public void Multiply(decimal number) => Apply(state => state * number);
-        public void Divide(decimal number) => Apply(state => state / number);
+        public void Add(double number) => Apply(state => state + number);
+        public void Subtract(double number) => Apply(state => state - number);
+        public void Multiply(double number) => Apply(state => state * number);
+        public void Divide(double number) => Apply(state => number == 0 ? double.NaN : state / number);
 
-        public decimal State => _commandHistory.Aggregate(0m, (state, command) => command(state));
+        public bool HasError => double.IsNaN(State);
+        public double State => _commandHistory.Aggregate(0d, (state, command) => command(state));
     }
 }

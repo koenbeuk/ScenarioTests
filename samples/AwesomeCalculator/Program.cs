@@ -28,15 +28,41 @@ namespace AwesomeCalculator
                 Assert.Equal(0, calculator.State);
             });
 
-            var specialNumbers = new[] { decimal.Zero, decimal.MinusOne, decimal.One, decimal.MinValue, decimal.MaxValue };
+            var specialNumbers = new[] { 0d, -1d, 1d, double.MinValue, double.MaxValue, double.PositiveInfinity, double.NegativeInfinity };
             foreach (var specialNumber in specialNumbers)
             {
                 scenario.Theory("We can add a special number without issues", specialNumber, () =>
                 {
+                    // As each test runs in isolution, we do not need to undo or reset the calculator after our manipulation
                     calculator.Add(specialNumber);
                     Assert.Equal(calculator.State, specialNumber);
                 });
             }
+
+            calculator.Divide(0);
+
+            scenario.Fact("Division by 0 leaves the calculated in a NaN state", () =>
+            {
+                Assert.True(double.IsNaN(calculator.State));
+            });
+
+            scenario.Fact("Calculator is now in an error state", () =>
+            {
+                Assert.True(calculator.HasError);
+            });
+
+            scenario.Fact("Undoing the division will bring the calculator out of the error state", () =>
+            {
+                calculator.Undo();
+                Assert.False(calculator.HasError);
+            });
+
+            calculator.Reset();
+            scenario.Fact("Reset also breaks it out of the error state", () =>
+            {
+                calculator.Reset();
+                Assert.False(calculator.HasError);
+            });
         }
     }
 }

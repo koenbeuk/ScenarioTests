@@ -78,7 +78,7 @@ namespace Linker.ScenarioTests.Internal
 
             _testedArguments.Clear();
 
-            //do
+            do
             {
                 // safeguarding against abuse
                 if (_testedArguments.Count > 1000)
@@ -105,7 +105,7 @@ namespace Linker.ScenarioTests.Internal
 
                 aggregatedResult.Aggregate(result);
             }
-            // while (_pendingRestart);
+            while (_pendingRestart);
 
             Console.WriteLine(_pendingRestart);
 

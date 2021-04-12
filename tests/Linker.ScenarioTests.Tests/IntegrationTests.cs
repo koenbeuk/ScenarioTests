@@ -28,8 +28,7 @@ namespace Linker.ScenarioTests.Tests
             {
                 scenarioContext.Theory("X", repeat, () =>
                 {
-                    invocations++;
-                    Assert.Equal("X", scenarioContext.TargetName);
+                    Assert.Equal(0, invocations++);
                 });
             }
 
