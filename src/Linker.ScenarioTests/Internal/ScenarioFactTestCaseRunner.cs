@@ -14,8 +14,8 @@ namespace Linker.ScenarioTests.Internal
     {
         static readonly object[] NoArguments = new object[0];
 
-        readonly StringBuilder _parentTestOutputBuilder = new StringBuilder();
-        readonly StringBuilder _recordingTestOutputBuilder = new StringBuilder();
+        readonly StringBuilder _parentTestOutputBuilder = new();
+        readonly StringBuilder _recordingTestOutputBuilder = new();
 
         ScenarioContext _scenarioContext;
         bool _isRecording;
@@ -135,7 +135,9 @@ namespace Linker.ScenarioTests.Internal
             }
 
             if (!MessageBus.QueueMessage(new TestFinished(test, (decimal)stopwatch.Elapsed.TotalSeconds, BuildOutput())))
+            {
                 CancellationTokenSource.Cancel();
+            }
         }
     }
 }

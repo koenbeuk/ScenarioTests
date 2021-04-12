@@ -11,6 +11,7 @@ namespace Linker.ScenarioTests
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     [XunitTestCaseDiscoverer("Linker.ScenarioTests.Internal.ScenarioFactTestCaseDiscoverer", "Linker.ScenarioTests")]
+    [TestCaseOrderer("Linker.ScenarioTests.Internal.ScenarioFactTestCaseOrderer", "Linker.ScenarioTests")]
     public sealed class ScenarioFactAttribute : FactAttribute
     {
         public string FactName { get; set; }
