@@ -68,7 +68,7 @@ partial class ScenarioTests
 ### How it works
 We have a source generator that checks for methods in your test class marked with the `[Scenario]` attribute. When it finds one, it ensures that it has a single argument that accepts a `ScenarioContext`. 
 
-It will then keep on discovering calls in the shape of `ScenarioContext.Fact` or `ScenarioContext.Theory` and generate individual test cases for those. If you add `<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>` in your csproj, you can see the code that gets generated. Each generated test case is harnassed to now affect other test cases.
+It will then keep on discovering calls in the shape of `ScenarioContext.Fact` or `ScenarioContext.Theory` and generate individual test cases for those. If you add `<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>` in your csproj, you can see the code that gets generated. Each generated test case is harnassed to not affect other test cases.
 
 Theory test cases are internally isolated. A theory in the shape of:
 
@@ -82,7 +82,69 @@ for (var index = 0; index < 3; i++) {
 
 will generate 3 test cases: 0, 1, and 2 of which 1 will fail. Theories require an identifier for each individual test case, in this example the identifier is the value of `index`. An identifier can be anything that is constant within an app domain. This can include a number, string, database identifier or even a tuple composing multiple values.
 
+### FAQ
 
-### TODO
+#### How can I log additional output
+As this is an extension on XUnit, you can you add a constructor accepting an `ITestOutputHelper` which is an XUnit primitive for writing additional output. As an example:
+```csharp
+class TestHost {
+    readonly ITestOutputHelper _out;
 
-Export more in this readme soon
+    public TestHost(ITestOutputHelper testOutputHelper) { _out = testOutputHelper; }    
+
+    public void Scenario1(ScenarioContext scenario) {
+        _out.WriteLine("Something that gets written for all tests...");
+
+        scenario.Fact("Fact1", () => {
+            _out.WriteLine("This only gets written for Fact1");
+        });
+
+        scenario.Theory("Theory1", 1, () => {
+            _out.WriteLine("This is only written for a test case for this theory with identity 1");
+        });
+    }
+}
+```
+
+#### Can I return data from my facts and theories
+Yes and no, its perfectly valid for a fact or theory to return something but it will get ignored. You can do a return from within a Fact or theory but you cant capture its value. You can manipulate the state of outside components from within a fact or theory however this will not affect other tests and theories.
+
+#### Can I have preconditions and postconditions that are validated for all tests
+Yes; you can Assert both within and outside of tests. Consider this example:
+```csharp
+public void Scenario1(ScenarioContext scenario) {
+    // Prefix running for each test case
+    var database = CreateTestDatabase();
+    Assert.True(database.IsCreated);
+
+    scenario.Fact("Ensure that we start with 0 users", () => {
+        Assert.Equal(0, database.Users.Count());
+    });
+
+    // Add a single users, our subsequent facts will need it...
+    database.Users.Add(new User("Scott"));
+
+    scenario.Fact("Ensure that we added a user", () => {
+        Assert.Equal(1, database.Users.Count());
+    });
+
+    
+    // Postfix running for each test case
+    database.Destoy();
+    Assert.True(database.IsDestroyed);
+}
+```
+
+Facts will fail if the database fails to be created or destroyed
+
+#### Can I have async facts
+Certainly, there are overloads for facts and theories that return a task; an example:
+```csharp
+public async Task Scenario1(ScenarioContext scenario) {
+    var database = await CreateTestDatabase();
+
+    await scenario.Fact("Ensure that we start with 0 users", async () => {
+        Assert.Equal(0, await database.Users.CountAsync());
+    });
+}
+```
