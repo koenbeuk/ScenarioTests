@@ -12,7 +12,7 @@ ScenarioTests are a different way of writing tests with XUnit. The goal is to be
 2. Install the package from [NuGet](https://www.nuget.org/packages/Linker.ScenarioTests.XUnit)
 3. Make your test class
 3. Register your triggers with your DbContext
-4. View our [samples](https://github.com/linkerio/Linker.ScenarioTests/blob/master/samples/AwesomeCalculator/Program.cs)
+4. View our [samples](https://github.com/linkerio/Linker.ScenarioTests/blob/master/samples/)
 
 ### Example
 ```csharp
