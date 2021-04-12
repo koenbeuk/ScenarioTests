@@ -150,7 +150,7 @@ namespace Linker.ScenarioTests.Tests
             var context = new ScenarioContext("X", (_, i) => i());
 
             var invoked = false;
-            context.Theory("X", () =>
+            context.Theory("X", 1, () =>
             {
                 invoked = true;
                 return Task.FromResult(1);

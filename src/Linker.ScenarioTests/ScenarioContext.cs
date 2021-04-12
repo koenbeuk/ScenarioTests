@@ -11,9 +11,9 @@ namespace Linker.ScenarioTests
 #pragma warning disable IDE0060 // Remove unused parameter
     public sealed class ScenarioContext
     {
-        readonly Func<object[], Func<Task>, Task> _recorder;
+        readonly Func<object, Func<Task>, Task> _recorder;
 
-        public ScenarioContext(string targetName, Func<object[], Func<Task>, Task> recorder)
+        public ScenarioContext(string targetName, Func<object, Func<Task>, Task> recorder)
         {
             TargetName = targetName;
             _recorder = recorder;
@@ -42,34 +42,34 @@ namespace Linker.ScenarioTests
         {
             if (name == TargetName)
             {
-                return _recorder(new object[] { }, invocation);
+                return _recorder(Array.Empty<object>(), invocation);
             }
 
             return Task.CompletedTask;
         }
 
         [DebuggerStepThrough]
-        public void Theory(string name, Action invocation)
-            => Theory(name, () =>
+        public void Theory<T1>(string name, T1 argument, Action invocation)
+            => Theory(name, argument, () =>
             {
                 invocation();
                 return Task.CompletedTask;
             });
 
         [DebuggerStepThrough]
-        public void Theory<TResult>(string name, Func<TResult> invocation)
-            => Theory(name, () =>
+        public void Theory<T1, TResult>(string name, T1 argument, Func<TResult> invocation)
+            => Theory(name, argument, () =>
             {
                 invocation();
                 return Task.CompletedTask;
             });
 
         [DebuggerStepThrough]
-        public Task Theory(string name, Func<Task> invocation)
+        public Task Theory<T1>(string name, T1 argument, Func<Task> invocation)
         {
             if (name == TargetName)
             {
-                return _recorder(new object[] { }, invocation);
+                return _recorder(argument, invocation);
             }
 
             return Task.CompletedTask;

@@ -230,7 +230,7 @@ public partial class C {
 public partial class C {
     [Linker.ScenarioTests.Scenario]
     public void Scenario(Linker.ScenarioTests.ScenarioContext s) {
-        s.Theory(""T1"", () => { 
+        s.Theory(""T1"", 1, () => { 
             return System.Threading.Tasks.Task.CompletedTask;
         });
     }

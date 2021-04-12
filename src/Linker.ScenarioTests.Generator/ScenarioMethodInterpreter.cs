@@ -108,7 +108,7 @@ namespace Linker.ScenarioTests.Generator
                 ClassName = methodSymbol.ContainingType.Name,
                 ClassNamespace = methodSymbol.ContainingType.ContainingNamespace.IsGlobalNamespace ? null : methodSymbol.ContainingType.ContainingNamespace.ToDisplayString(),
                 MethodName = methodSymbol.Name,
-                IsAsync = methodSymbol.ReturnsVoid ? false : methodSymbol.ReturnType.AllInterfaces.Any(i => SymbolEqualityComparer.Default.Equals(i, asynResultType)),
+                IsAsync = !methodSymbol.ReturnsVoid && methodSymbol.ReturnType.AllInterfaces.Any(i => SymbolEqualityComparer.Default.Equals(i, asynResultType)),
                 Invocations = invocations
             };
         }
