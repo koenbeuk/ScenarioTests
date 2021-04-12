@@ -25,9 +25,15 @@ namespace Linker.ScenarioTests.Generator
 
         public void Write(ScenarioDescriptor scenarioDescriptor, ScenarioInvocationDescriptor scenarioInvocationDescriptor)
         {
+            var testMethodName = scenarioDescriptor.NamingPolicy switch
+            {
+                ScenarioTestMethodNamingPolicy.Member => scenarioInvocationDescriptor.Name,
+                _ => $"{scenarioDescriptor.MethodName}_{scenarioInvocationDescriptor.Name}"
+            };
+
             WriteLine("[System.Runtime.CompilerServices.CompilerGenerated]");
             WriteLine("[System.Diagnostics.DebuggerStepThrough]");
-            WriteLine($"[Linker.ScenarioTests.ScenarioFact(DisplayName = {Syntax.Literal($"{scenarioDescriptor.MethodName}_{scenarioInvocationDescriptor.Name}")}, FactName = {Syntax.Literal(scenarioInvocationDescriptor.Name)}, FileName = {Syntax.Literal(scenarioInvocationDescriptor.FileName)}, LineNumber = {scenarioInvocationDescriptor.LineNumber}, IsTheory = {Syntax.LiteralExpression(scenarioInvocationDescriptor.IsTheory ? SyntaxKind.TrueLiteralExpression : SyntaxKind.FalseLiteralExpression)})]");
+            WriteLine($"[Linker.ScenarioTests.ScenarioFact(DisplayName = {Syntax.Literal(testMethodName)}, FactName = {Syntax.Literal(scenarioInvocationDescriptor.Name)}, FileName = {Syntax.Literal(scenarioInvocationDescriptor.FileName)}, LineNumber = {scenarioInvocationDescriptor.LineNumber}, IsTheory = {Syntax.LiteralExpression(scenarioInvocationDescriptor.IsTheory ? SyntaxKind.TrueLiteralExpression : SyntaxKind.FalseLiteralExpression)})]");
 
             if (scenarioDescriptor.IsAsync)
             {

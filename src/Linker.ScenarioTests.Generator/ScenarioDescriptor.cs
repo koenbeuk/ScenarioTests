@@ -8,6 +8,8 @@ namespace Linker.ScenarioTests.Generator
 {
     public class ScenarioDescriptor
     {
+        public ScenarioTestMethodNamingPolicy NamingPolicy { get; set; }
+
         public string ClassNamespace { get; set; }
         public string ClassName { get; set; }
 

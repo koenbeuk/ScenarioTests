@@ -43,6 +43,22 @@ namespace Linker.ScenarioTests.Generator
                 return null;
             }
 
+            var namingPolicy = scenarioAttributeClass.NamedArguments
+                .Where(x => x.Key == nameof(ScenarioAttribute.NamingPolicy))
+                .Where(x => x.Value.Kind == TypedConstantKind.Enum)
+                .Select(x =>
+                {
+                    if (Enum.TryParse<ScenarioTestMethodNamingPolicy>(x.Value.ToCSharpString(), out var namingPolicy))
+                    {
+                        return namingPolicy;
+                    }
+                    else
+                    {
+                        return default;
+                    }
+                })
+                .FirstOrDefault();
+
             if (methodSymbol.Parameters.Length != 1 || !SymbolEqualityComparer.Default.Equals(methodSymbol.Parameters[0].Type, scenarioContextTypeSymbol))
             {
                 var diagnostic = Diagnostic.Create(Diagnostics.RequiresSingleArgumentMethodError, methodDeclarationSyntax.GetLocation(), methodSymbol.Name);
@@ -96,6 +112,7 @@ namespace Linker.ScenarioTests.Generator
 
             return new ScenarioDescriptor
             {
+                NamingPolicy = namingPolicy,
                 ClassName = methodSymbol.ContainingType.Name,
                 ClassNamespace = methodSymbol.ContainingType.ContainingNamespace.IsGlobalNamespace ? null : methodSymbol.ContainingType.ContainingNamespace.ToDisplayString(),
                 MethodName = methodSymbol.Name,
