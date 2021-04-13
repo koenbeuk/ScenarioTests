@@ -1,15 +1,15 @@
 # ScenarioTests
 ScenarioTests are a different way of writing tests with XUnit. The goal is to be able to write tests like you would write notebooks. ScenarioTests are great for documentation and integration/e2e tests.
 
-[![NuGet version (ScenarioTests)](https://img.shields.io/nuget/v/Linker.ScenarioTests.XUnit.svg?style=flat-square)](https://www.nuget.org/packages/Linker.ScenarioTests.XUnit/)
-[![Build status](https://github.com/koenbeuk/EntityFrameworkCore.Triggered/workflows/.NET%20Core/badge.svg)](https://github.com/linkerio/ScenarioTests/actions?query=workflow%3A%22.NET+Core%22)
+[![NuGet version (ScenarioTests)](https://img.shields.io/nuget/v/ScenarioTests.XUnit.svg?style=flat-square)](https://www.nuget.org/packages/ScenarioTests.XUnit/)
+[![Build status](https://github.com/koenbeuk/EntityFrameworkCore.Triggered/workflows/.NET%20Core/badge.svg)](https://github.com/koenbeuk/ScenarioTests/actions?query=workflow%3A%22.NET+Core%22)
 
 ## NuGet packages
-- Linker.ScenarioTests.XUnit [![NuGet version](https://img.shields.io/nuget/v/Linker.ScenarioTests.XUnit.svg?style=flat-square)](https://www.nuget.org/packages/Linker.ScenarioTests.XUnit/) [![NuGet](https://img.shields.io/nuget/dt/Linker.ScenarioTests.XUnit.svg?style=flat-square)](https://www.nuget.org/packages/Linker.ScenarioTests.XUnit/)
+- ScenarioTests.XUnit [![NuGet version](https://img.shields.io/nuget/v/ScenarioTests.XUnit.svg?style=flat-square)](https://www.nuget.org/packages/ScenarioTests.XUnit/) [![NuGet](https://img.shields.io/nuget/dt/ScenarioTests.XUnit.svg?style=flat-square)](https://www.nuget.org/packages/ScenarioTests.XUnit/)
 
 ## Getting started
 1. Create a new XUnit test project
-2. Install the nuget package from [NuGet](https://www.nuget.org/packages/Linker.ScenarioTests.XUnit)
+2. Install the nuget package from [NuGet](https://www.nuget.org/packages/ScenarioTests.XUnit)
 3. Create a new test class and implement a scenario
 5. View our [samples](https://github.com/koenbeuk/ScenarioTests/blob/master/samples/)
 
