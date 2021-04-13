@@ -1,4 +1,4 @@
-﻿using Linker.ScenarioTests;
+﻿using ScenarioTests;
 using Xunit;
 
 namespace AwesomeCalculator

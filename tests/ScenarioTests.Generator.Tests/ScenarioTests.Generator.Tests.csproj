@@ -1,13 +1,16 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <IsPackable>false</IsPackable>
-    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Basic.Reference.Assemblies.NetStandard20" Version="1.1.1" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.8.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="5.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
+    <PackageReference Include="Verify.Xunit" Version="11.5.0" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -20,7 +23,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\ScenarioTests\ScenarioTests.csproj" />
-    <ProjectReference Include="..\..\src\ScenarioTests.Generator\ScenarioTests.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <None Remove="**\*.verified.txt" />
+    <None Remove="**\*.received.txt" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\ScenarioTests.Generator\ScenarioTests.Generator.csproj" />
+    <ProjectReference Include="..\..\src\ScenarioTests\ScenarioTests.csproj" />
+  </ItemGroup>
+
 </Project>

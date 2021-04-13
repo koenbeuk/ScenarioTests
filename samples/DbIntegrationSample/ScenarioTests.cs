@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using DbIntegrationSample.Models;
-using Linker.ScenarioTests;
+using ScenarioTests;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
