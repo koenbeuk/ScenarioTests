@@ -8,11 +8,10 @@ ScenarioTests are a different way of writing tests with XUnit. The goal is to be
 - Linker.ScenarioTests.XUnit [![NuGet version](https://img.shields.io/nuget/v/Linker.ScenarioTests.XUnit.svg?style=flat-square)](https://www.nuget.org/packages/Linker.ScenarioTests.XUnit/) [![NuGet](https://img.shields.io/nuget/dt/Linker.ScenarioTests.XUnit.svg?style=flat-square)](https://www.nuget.org/packages/Linker.ScenarioTests.XUnit/)
 
 ## Getting started
-1. Run `dotnet new xunit`
-2. Install the package from [NuGet](https://www.nuget.org/packages/Linker.ScenarioTests.XUnit)
-3. Make your test class
-3. Register your triggers with your DbContext
-4. View our [samples](https://github.com/linkerio/Linker.ScenarioTests/blob/master/samples/)
+1. Create a new XUnit test project
+2. Install the nuget package from [NuGet](https://www.nuget.org/packages/Linker.ScenarioTests.XUnit)
+3. Create a new test class and implement a scenario
+5. View our [samples](https://github.com/linkerio/Linker.ScenarioTests/blob/master/samples/)
 
 ### Example
 ```csharp
