@@ -7,7 +7,7 @@
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeP2PAssets</TargetsForTfmSpecificBuildOutput>
     <PackageId>ScenarioTests.XUnit</PackageId>
     <PackageTags>Generator;Source Generator;XUnit;ScenarioTests;UnitTesting;IntegrationTesting</PackageTags>
-    <PackageProjectUrl>https://github.com/linkerio/Linker.ScenarioTests</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/koenbeuk/ScenarioTests</PackageProjectUrl>
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

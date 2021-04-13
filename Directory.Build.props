@@ -10,7 +10,7 @@
   <PropertyGroup>
     <Description>Scenario testing with XUnit</Description>
     <RepositoryType>Git</RepositoryType>
-    <RepositoryUrl>https://github.com/linkerio/Linker.ScenarioTests</RepositoryUrl>
+    <RepositoryUrl>https://github.com/koenbeuk/ScenarioTests</RepositoryUrl>
     <Authors>Koen Bekkenutte</Authors>
   </PropertyGroup>
 
