@@ -9,13 +9,22 @@ namespace Linker.ScenarioTests.Internal
 {
     class ScenarioFactTestCaseOrderer : ITestCaseOrderer
     {
+
         public IEnumerable<TTestCase> OrderTestCases<TTestCase>(IEnumerable<TTestCase> testCases) where TTestCase : ITestCase
         {
             return testCases
-                .OrderBy(x => x.TestMethod.TestClass.Class.Name)
-                .ThenBy(x => x.TestMethod.Method.Name)
-                .ThenBy(x => x.SourceInformation.FileName)
-                .ThenBy(x => x.SourceInformation.LineNumber);
+                .Select(testCase => (
+                    testCase,
+                    testCaseAttribute: testCase.TestMethod
+                        .Method
+                        .GetCustomAttributes(typeof(ScenarioFactAttribute))
+                        .FirstOrDefault()
+                ))
+                .OrderBy(x => x.testCase.TestMethod.TestClass.Class.Name)
+                .ThenBy(x => x.testCase.TestMethod.Method.Name)
+                .ThenBy(x => x.testCaseAttribute?.GetNamedArgument<string>(nameof(ScenarioFactAttribute.FileName)))
+                .OrderBy(x => x.testCaseAttribute?.GetNamedArgument<int>(nameof(ScenarioFactAttribute.LineNumber)))
+                .Select(x => x.testCase);
         }
     }
 }

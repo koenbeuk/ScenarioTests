@@ -3,6 +3,7 @@ using Xunit;
 
 namespace ScenarioTestsGenerated
 {
+    [TestCaseOrderer("Linker.ScenarioTests.Internal.ScenarioFactTestCaseOrderer", "Linker.ScenarioTests")]
     public partial class C
     {        
 		[System.Runtime.CompilerServices.CompilerGenerated]
