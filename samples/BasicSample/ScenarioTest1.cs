@@ -1,4 +1,4 @@
-using Linker.ScenarioTests;
+using ScenarioTests;
 using System;
 using System.Threading.Tasks;
 using Xunit;

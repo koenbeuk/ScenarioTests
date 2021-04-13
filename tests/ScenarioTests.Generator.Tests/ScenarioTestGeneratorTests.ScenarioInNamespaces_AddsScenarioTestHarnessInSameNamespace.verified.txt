@@ -1,0 +1,9 @@
+namespace Foo.Bar
+{
+
+    [global::Xunit.TestCaseOrderer("ScenarioTests.Internal.ScenarioFactTestCaseOrderer", "ScenarioTests")]
+    public partial class C
+    {
+
+    }
+}
