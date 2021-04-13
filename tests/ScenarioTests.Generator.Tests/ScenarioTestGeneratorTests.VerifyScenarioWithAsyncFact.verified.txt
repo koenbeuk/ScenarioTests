@@ -1,18 +1,13 @@
-using System;
-using Xunit;
 
-namespace ScenarioTestsGenerated
-{
-    [TestCaseOrderer("Linker.ScenarioTests.Internal.ScenarioFactTestCaseOrderer", "Linker.ScenarioTests")]
+    [global::Xunit.TestCaseOrderer("ScenarioTests.Internal.ScenarioFactTestCaseOrderer", "ScenarioTests")]
     public partial class C
-    {        
-		[System.Runtime.CompilerServices.CompilerGenerated]
-		[System.Diagnostics.DebuggerStepThrough]
-		[ScenarioTests.ScenarioFact(DisplayName = "Scenario_T1", FactName = "T1", FileName = "", LineNumber = 5, IsTheory = false)]
+    {
+		[global::System.Runtime.CompilerServices.CompilerGenerated]
+		[global::System.Diagnostics.DebuggerStepThrough]
+		[global::ScenarioTests.Internal.ScenarioFact(DisplayName = "Scenario_T1", FactName = "T1", FileName = "", LineNumber = 5, IsTheory = false)]
 		public async System.Threading.Tasks.Task Scenario_T1(ScenarioTests.ScenarioContext scenarioContext)
 		{
 			await Scenario(scenarioContext).ConfigureAwait(false);
 		}
-      
+
     }
-}

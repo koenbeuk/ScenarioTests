@@ -1,18 +1,13 @@
-using System;
-using Xunit;
 
-namespace ScenarioTestsGenerated
-{
-    [TestCaseOrderer("Linker.ScenarioTests.Internal.ScenarioFactTestCaseOrderer", "Linker.ScenarioTests")]
+    [global::Xunit.TestCaseOrderer("ScenarioTests.Internal.ScenarioFactTestCaseOrderer", "ScenarioTests")]
     public partial class C
-    {        
-		[System.Runtime.CompilerServices.CompilerGenerated]
-		[System.Diagnostics.DebuggerStepThrough]
-		[ScenarioTests.ScenarioFact(DisplayName = "Scenario_Name with a $!@$@!", FactName = "Name with a $!@$@!", FileName = "", LineNumber = 5, IsTheory = false)]
-		public void Scenario_Name_with_a_(ScenarioTests.ScenarioContext scenarioContext)
+    {
+		[global::System.Runtime.CompilerServices.CompilerGenerated]
+		[global::System.Diagnostics.DebuggerStepThrough]
+		[global::ScenarioTests.Internal.ScenarioFact(DisplayName = "Scenario_Name with a $!@$@!", FactName = "Name with a $!@$@!", FileName = "", LineNumber = 5, IsTheory = false)]
+		public void Scenario_Name_with_a_(global::ScenarioTests.ScenarioContext scenarioContext)
 		{
 			Scenario(scenarioContext);
 		}
-      
+
     }
-}

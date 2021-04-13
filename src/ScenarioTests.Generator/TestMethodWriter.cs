@@ -31,9 +31,9 @@ namespace ScenarioTests.Generator
                 _ => $"{scenarioDescriptor.MethodName}_{scenarioInvocationDescriptor.Name}"
             };
 
-            WriteLine("[System.Runtime.CompilerServices.CompilerGenerated]");
-            WriteLine("[System.Diagnostics.DebuggerStepThrough]");
-            WriteLine($"[ScenarioTests.ScenarioFact(DisplayName = {Syntax.Literal(testMethodName)}, FactName = {Syntax.Literal(scenarioInvocationDescriptor.Name)}, FileName = {Syntax.Literal(scenarioInvocationDescriptor.FileName)}, LineNumber = {scenarioInvocationDescriptor.LineNumber}, IsTheory = {Syntax.LiteralExpression(scenarioInvocationDescriptor.IsTheory ? SyntaxKind.TrueLiteralExpression : SyntaxKind.FalseLiteralExpression)})]");
+            WriteLine("[global::System.Runtime.CompilerServices.CompilerGenerated]");
+            WriteLine("[global::System.Diagnostics.DebuggerStepThrough]");
+            WriteLine($"[global::ScenarioTests.Internal.ScenarioFact(DisplayName = {Syntax.Literal(testMethodName)}, FactName = {Syntax.Literal(scenarioInvocationDescriptor.Name)}, FileName = {Syntax.Literal(scenarioInvocationDescriptor.FileName)}, LineNumber = {scenarioInvocationDescriptor.LineNumber}, IsTheory = {Syntax.LiteralExpression(scenarioInvocationDescriptor.IsTheory ? SyntaxKind.TrueLiteralExpression : SyntaxKind.FalseLiteralExpression)})]");
 
             if (scenarioDescriptor.IsAsync)
             {
@@ -41,7 +41,7 @@ namespace ScenarioTests.Generator
             }
             else
             {
-                WriteLine($"public void {scenarioInvocationDescriptor.TestMethodName}(ScenarioTests.ScenarioContext scenarioContext)");
+                WriteLine($"public void {scenarioInvocationDescriptor.TestMethodName}(global::ScenarioTests.ScenarioContext scenarioContext)");
             }
             WriteLine("{");
             

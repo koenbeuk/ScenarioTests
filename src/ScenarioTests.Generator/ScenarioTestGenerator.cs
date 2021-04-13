@@ -37,44 +37,49 @@ namespace ScenarioTests.Generator
                 .Where(x => x is not null)
                 .GroupBy(x => (x.ClassNamespace, x.ClassName));
 
+            var resultBuilder = new StringBuilder();
             foreach (var scenarioGroup in scenarioGroups)
             {
-                string RenderScenarios()
+                resultBuilder.Clear();
+                if (!string.IsNullOrEmpty(scenarioGroup.Key.ClassNamespace))
                 {
-                    var resultBuilder = new StringBuilder();
-                    var testMethodWriter = new TestMethodWriter(resultBuilder);
-
-                    var scenarioMethodGroups = scenarioGroup
-                       .GroupBy(x => x.MethodName);
-
-                    foreach (var scenarioMethodGroup in scenarioMethodGroups)
-                    {
-                        var scenario = scenarioMethodGroup.First();
-                        var invocations = scenarioMethodGroup
-                            .SelectMany(x => x.Invocations);
-
-                        foreach (var invocation in invocations)
-                        {
-                            testMethodWriter.Write(scenario, invocation);
-                        }
-                    }
-
-                    return resultBuilder.ToString();
+                    resultBuilder.Append("namespace ");
+                    resultBuilder.AppendLine(scenarioGroup.Key.ClassNamespace);
+                    resultBuilder.AppendLine("{");
                 }
-                 
-                var result = 
-$@"using System;
-using Xunit;
 
-namespace {(string.IsNullOrEmpty(scenarioGroup.Key.ClassNamespace) ? "ScenarioTestsGenerated" : scenarioGroup.Key.ClassNamespace)}
-{{
-    [TestCaseOrderer(""Linker.ScenarioTests.Internal.ScenarioFactTestCaseOrderer"", ""Linker.ScenarioTests"")]
+                resultBuilder.AppendLine($@"
+    [global::Xunit.TestCaseOrderer(""ScenarioTests.Internal.ScenarioFactTestCaseOrderer"", ""ScenarioTests"")]
     public partial class {scenarioGroup.Key.ClassName}
-    {{        
-{RenderScenarios()}      
-    }}
-}}";
-                context.AddSource($"{scenarioGroup.Key.ClassName}.Generated", SourceText.From(result, Encoding.UTF8));
+    {{");
+
+                var testMethodWriter = new TestMethodWriter(resultBuilder);
+
+                var scenarioMethodGroups = scenarioGroup
+                   .GroupBy(x => x.MethodName);
+
+                foreach (var scenarioMethodGroup in scenarioMethodGroups)
+                {
+                    var scenario = scenarioMethodGroup.First();
+                    var invocations = scenarioMethodGroup
+                        .SelectMany(x => x.Invocations);
+
+                    foreach (var invocation in invocations)
+                    {
+                        testMethodWriter.Write(scenario, invocation);
+                    }
+                }
+
+                resultBuilder.Append(@"
+    }");
+
+                if (!string.IsNullOrEmpty(scenarioGroup.Key.ClassNamespace))
+                {
+                    resultBuilder.Append(@"
+}");
+                }
+
+                context.AddSource($"{scenarioGroup.Key.ClassName}.Generated", SourceText.From(resultBuilder.ToString(), Encoding.UTF8));
             }
         }
     }

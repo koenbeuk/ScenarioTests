@@ -1,9 +1,12 @@
 ﻿using ScenarioTests;
+using System;
+using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace AwesomeCalculator
 {
-    partial class ScenarioTests
+    public partial class ScenarioTests
     {
         [Scenario(NamingPolicy = ScenarioTestMethodNamingPolicy.Test)]
         public void BasicUsage(ScenarioContext scenario)

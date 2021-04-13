@@ -9,7 +9,7 @@ namespace ScenarioTests.Tests
 {
     public class IntegrationTests
     {
-        [ScenarioFact(DisplayName = nameof(SimpleFact), FactName = "X")]
+        [Internal.ScenarioFact(DisplayName = nameof(SimpleFact), FactName = "X")]
         public void SimpleFact(ScenarioContext scenarioContext)
         {
             scenarioContext.Fact("X", () =>
@@ -19,7 +19,7 @@ namespace ScenarioTests.Tests
         }
 
 
-        [ScenarioFact(DisplayName = nameof(SimpleTheory), FactName = "X", IsTheory = true)]
+        [Internal.ScenarioFact(DisplayName = nameof(SimpleTheory), FactName = "X", IsTheory = true)]
         public void SimpleTheory(ScenarioContext scenarioContext)
         {
             var invocations = 0;

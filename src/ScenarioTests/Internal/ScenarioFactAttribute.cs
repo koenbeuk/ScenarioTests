@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Sdk;
 
-namespace ScenarioTests
+namespace ScenarioTests.Internal
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     [XunitTestCaseDiscoverer("ScenarioTests.Internal.ScenarioFactTestCaseDiscoverer", "ScenarioTests")]
