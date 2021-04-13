@@ -68,6 +68,7 @@ using Xunit;
 
 namespace {(string.IsNullOrEmpty(scenarioGroup.Key.ClassNamespace) ? "ScenarioTestsGenerated" : scenarioGroup.Key.ClassNamespace)}
 {{
+    [TestCaseOrderer(""Linker.ScenarioTests.Internal.ScenarioFactTestCaseOrderer"", ""Linker.ScenarioTests"")]
     public partial class {scenarioGroup.Key.ClassName}
     {{        
 {RenderScenarios()}      
