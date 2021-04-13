@@ -15,7 +15,7 @@ env:
   # GitHub Packages Feed settings
   GITHUB_FEED: https://nuget.pkg.github.com/koenbeuk/
   GITHUB_USER: koenbeuk
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GITHUB_TOKEN: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
   # Official NuGet Feed settings
   NUGET_FEED: https://api.nuget.org/v3/index.json
   NUGET_KEY: ${{ secrets.NUGET_KEY }}
@@ -39,7 +39,7 @@ jobs:
         run: |
           for f in ./nupkg/*.nupkg
           do
-            dotnet nuget push $f --source $GITHUB_FEED --api-key ${{github.token}} --skip-duplicate --no-symbols true
+            dotnet nuget push $f --source $GITHUB_FEED --api-key $GITHUB_TOKEN --skip-duplicate --no-symbols true
           done
       - name: Push to NuGet Feed
         run: |
