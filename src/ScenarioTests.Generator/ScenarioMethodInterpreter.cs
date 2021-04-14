@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ScenarioTests.Generator.TestMethodNamingStrategies;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -11,16 +10,9 @@ using Microsoft.CodeAnalysis.Text;
 
 namespace ScenarioTests.Generator
 {
-    public sealed class ScenarioMethodInterpreter
+    public static class ScenarioMethodInterpreter
     {
-        readonly ITestMethodNamingStrategy _testMethodNamingStrategy;
-
-        public ScenarioMethodInterpreter(ITestMethodNamingStrategy testMethodNamingStrategy)
-        {
-            _testMethodNamingStrategy = testMethodNamingStrategy;
-        }
-
-        public ScenarioDescriptor? GetDescriptor(MethodDeclarationSyntax methodDeclarationSyntax, GeneratorExecutionContext context)
+        public static ScenarioDescriptor? GetDescriptor(MethodDeclarationSyntax methodDeclarationSyntax, GeneratorExecutionContext context)
         {
             var semanticModel = context.Compilation.GetSemanticModel(methodDeclarationSyntax.SyntaxTree);
             var methodSymbol = semanticModel.GetDeclaredSymbol(methodDeclarationSyntax);
@@ -44,7 +36,7 @@ namespace ScenarioTests.Generator
             }
 
             var namingPolicy = scenarioAttributeClass.NamedArguments
-                .Where(x => x.Key == nameof(ScenarioAttribute.NamingPolicy))
+                .Where(x => x.Key == "NamingPolicy")
                 .Where(x => x.Value.Kind == TypedConstantKind.Enum)
                 .Select(x => x.Value.Value)
                 .Where(x => Enum.IsDefined(typeof(ScenarioTestMethodNamingPolicy), x))
@@ -80,7 +72,7 @@ namespace ScenarioTests.Generator
                         }
                     }
 
-                    var testMethodName = _testMethodNamingStrategy.GetName(methodSymbol.ContainingType.Name, methodSymbol.Name, factName);
+                    var testMethodName = TestMethodNamingStrategy.GetName(methodSymbol.ContainingType.Name, methodSymbol.Name, factName);
                     var originalTestMethodName = testMethodName;
                     var queryDuplicated = invocations.Where(x => x.TestMethodName.Equals(testMethodName, StringComparison.Ordinal));
                     var duplicatedCounter = 0;

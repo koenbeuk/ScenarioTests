@@ -34,7 +34,7 @@ jobs:
           arrTag=(${GITHUB_REF//\// })
           VERSION="${arrTag[2]}"
           VERSION="${VERSION//v}"
-          dotnet pack -v normal -c release --include-symbols --include-source -p:PackageVersion=$VERSION -o nupkg src/ScenarioTests.Generator/
+          dotnet pack -v normal -c release --include-symbols --include-source -p:PackageVersion=$VERSION -o nupkg src/ScenarioTests/
       - name: Push to GitHub Feed
         run: |
           for f in ./nupkg/*.nupkg

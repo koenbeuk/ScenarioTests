@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ScenarioTests.Generator.TestMethodNamingStrategies
+namespace ScenarioTests.Generator
 {
-    public sealed class DefaultTestMethodNamingStrategy : ITestMethodNamingStrategy
+    public static class TestMethodNamingStrategy
     {
-        string Sanitize(string literal)
+        static string Sanitize(string literal)
         {
             return string.Join("", literal
                 .Where(c => char.IsLetterOrDigit(c) || char.IsWhiteSpace(c) || c == '_')
@@ -16,7 +16,7 @@ namespace ScenarioTests.Generator.TestMethodNamingStrategies
             );
         }
 
-        public string GetName(string className, string scenarioName, string invocationName)
+        public static string GetName(string className, string scenarioName, string invocationName)
         {
             return Sanitize($"{scenarioName}_{invocationName}");
         }

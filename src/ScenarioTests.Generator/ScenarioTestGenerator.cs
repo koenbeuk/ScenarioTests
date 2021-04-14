@@ -1,5 +1,4 @@
 ﻿using ScenarioTests.Generator;
-using ScenarioTests.Generator.TestMethodNamingStrategies;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -30,10 +29,8 @@ namespace ScenarioTests.Generator
                 return;
             }
 
-            var scenarioMethodInterpreter = new ScenarioMethodInterpreter(new DefaultTestMethodNamingStrategy());
-
             var scenarioGroups = receiver.ScenarioCandidates
-                .Select(x => scenarioMethodInterpreter.GetDescriptor(x, context))
+                .Select(x => ScenarioMethodInterpreter.GetDescriptor(x, context))
                 .Where(x => x is not null)
                 .GroupBy(x => (x.ClassNamespace, x.ClassName));
 
