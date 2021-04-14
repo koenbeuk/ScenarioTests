@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace ScenarioTests.Internal
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public sealed class IgnoreXunitAnalyzersRule1013Attribute : Attribute
+    sealed internal class IgnoreXunitAnalyzersRule1013Attribute : Attribute
     {
         
     }

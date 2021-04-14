@@ -8,7 +8,7 @@ using Xunit.Sdk;
 
 namespace ScenarioTests.Internal
 {
-    public sealed class FilteredMessageBus : IMessageBus
+    sealed internal class FilteredMessageBus : IMessageBus
     {
         readonly IMessageBus _messageBus;
         readonly Func<IMessageSinkMessage, bool> _filter;

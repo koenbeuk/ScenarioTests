@@ -10,16 +10,16 @@ using Xunit.Sdk;
 
 namespace ScenarioTests.Internal
 {
-    public sealed class ScenarioFactTestCaseRunner : XunitTestCaseRunner
+    sealed internal class ScenarioFactTestCaseRunner : XunitTestCaseRunner
     {
-        readonly StringBuilder _parentTestOutputBuilder = new StringBuilder();
-        readonly StringBuilder _recordingTestOutputBuilder = new StringBuilder();
+        readonly StringBuilder _parentTestOutputBuilder = new();
+        readonly StringBuilder _recordingTestOutputBuilder = new();
+        readonly HashSet<object> _testedArguments = new();
 
         ScenarioContext _scenarioContext;
         bool _isRecording;
         bool _skipAdditionalTests;
         bool _pendingRestart;
-        HashSet<object> _testedArguments = new();
 
         public ScenarioFactTestCaseRunner(IXunitTestCase testCase,
                                          string displayName,
@@ -37,7 +37,7 @@ namespace ScenarioTests.Internal
         /// <summary>
         /// Gets the message sink used to report <see cref="IDiagnosticMessage"/> messages.
         /// </summary>
-        IMessageSink DiagnosticMessageSink { get; }
+        public IMessageSink DiagnosticMessageSink { get; }
 
         protected override async Task<RunSummary> RunTestAsync()
         {

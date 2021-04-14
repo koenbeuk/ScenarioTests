@@ -11,7 +11,7 @@ using Xunit.Sdk;
 
 namespace ScenarioTests.Internal
 {
-    public sealed class ScenarioFactTestCase : XunitTestCase
+    sealed internal class ScenarioFactTestCase : XunitTestCase
     {
         string _factName;
         bool _isTheory;
@@ -47,8 +47,6 @@ namespace ScenarioTests.Internal
         public string FactName => _factName;
 
         public override Task<RunSummary> RunAsync(IMessageSink diagnosticMessageSink, IMessageBus messageBus, object[] constructorArguments, ExceptionAggregator aggregator, CancellationTokenSource cancellationTokenSource) 
-        {
-            return new ScenarioFactTestCaseRunner(this, DisplayName, SkipReason, constructorArguments, diagnosticMessageSink, messageBus, aggregator, cancellationTokenSource).RunAsync();
-        }
+            => new ScenarioFactTestCaseRunner(this, DisplayName, SkipReason, constructorArguments, diagnosticMessageSink, messageBus, aggregator, cancellationTokenSource).RunAsync();
     }
 }

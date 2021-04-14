@@ -9,7 +9,7 @@ using Xunit.Sdk;
 
 namespace ScenarioTests.Internal
 {
-    public sealed class ScenarioFactTestCaseDiscoverer : IXunitTestCaseDiscoverer
+    sealed internal class ScenarioFactTestCaseDiscoverer : IXunitTestCaseDiscoverer
     {
         readonly IMessageSink _messageSink;
 

@@ -7,12 +7,11 @@ using Xunit.Sdk;
 
 namespace ScenarioTests.Internal
 {
-    public class ScenarioFactTestCaseOrderer : ITestCaseOrderer
+    internal class ScenarioFactTestCaseOrderer : ITestCaseOrderer
     {
 
-        public IEnumerable<TTestCase> OrderTestCases<TTestCase>(IEnumerable<TTestCase> testCases) where TTestCase : ITestCase
-        {
-            return testCases
+        public IEnumerable<TTestCase> OrderTestCases<TTestCase>(IEnumerable<TTestCase> testCases) where TTestCase : ITestCase =>
+            testCases
                 .Select(testCase => (
                     testCase,
                     testCaseAttribute: testCase.TestMethod
@@ -25,6 +24,5 @@ namespace ScenarioTests.Internal
                 .ThenBy(x => x.testCaseAttribute?.GetNamedArgument<string>(nameof(ScenarioFactAttribute.FileName)))
                 .OrderBy(x => x.testCaseAttribute?.GetNamedArgument<int>(nameof(ScenarioFactAttribute.LineNumber)))
                 .Select(x => x.testCase);
-        }
     }
 }
