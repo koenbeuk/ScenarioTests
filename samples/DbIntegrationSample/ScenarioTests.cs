@@ -11,7 +11,7 @@ namespace DbIntegrationSample
     public partial class ScenarioTests
     {
         [Scenario(NamingPolicy = ScenarioTestMethodNamingPolicy.Test)]
-        public void ICanAddAndRemoveUsers(ScenarioContext scenario)
+        public void AddingAndRemovingUsers(ScenarioContext scenario)
         {
             var serviceProvider = new ServiceCollection()
                 .AddDbContext<ApplicationDbContext>(options =>
