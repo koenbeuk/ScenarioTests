@@ -11,7 +11,7 @@ using Xunit.Sdk;
 
 namespace ScenarioTests.Internal
 {
-    sealed internal class ScenarioFactTestCase : XunitTestCase
+    public sealed class ScenarioFactTestCase : XunitTestCase
     {
         string _factName;
         bool _isTheory;

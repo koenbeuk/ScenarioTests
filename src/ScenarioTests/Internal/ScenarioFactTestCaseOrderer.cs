@@ -7,7 +7,7 @@ using Xunit.Sdk;
 
 namespace ScenarioTests.Internal
 {
-    class ScenarioFactTestCaseOrderer : ITestCaseOrderer
+    public class ScenarioFactTestCaseOrderer : ITestCaseOrderer
     {
 
         public IEnumerable<TTestCase> OrderTestCases<TTestCase>(IEnumerable<TTestCase> testCases) where TTestCase : ITestCase
