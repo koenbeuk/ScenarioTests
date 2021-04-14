@@ -8,6 +8,13 @@
     <PackageProjectUrl>https://github.com/koenbeuk/ScenarioTests</PackageProjectUrl>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <EmbedUntrackedSources>True</EmbedUntrackedSources>
+    <SignAssembly>true</SignAssembly>
+    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+    <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
+    <EmbedUntrackedSources>True</EmbedUntrackedSources>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,7 +24,7 @@
 
   <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
-      <_Parameter1>ScenarioTests.Tests</_Parameter1>
+      <_Parameter1>ScenarioTests.Tests, PublicKey=0024000004800000940000000602000000240000525341310004000001000100ad5fb08b53ea6aade3fddf35b30903075348ee4b463a3938d239e307ba15bde231367e341c17eb6932d8b4b46ab2cb366e6e148ac9385b061d915c249a680f74d66c9907fa9656512982122a1f1e78b775b2c4bf7d977e240ae281b2bf6d52d3d8e02d710c99571c426a1555e7a90ad5cc65e810fe00fdcf08efe232c4aa85b8</_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
 
@@ -33,5 +40,14 @@
     <!-- Package the generator in the analyzer directory of the nuget package -->
     <None Include="$(OutputPath)\$(AssemblyName).Generator.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>
+
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
 
 </Project>
