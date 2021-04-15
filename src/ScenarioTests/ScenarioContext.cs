@@ -8,7 +8,6 @@ using ScenarioTests.Internal;
 
 namespace ScenarioTests
 {
-#pragma warning disable IDE0060 // Remove unused parameter
     public sealed class ScenarioContext
     {
         readonly Func<object, Func<Task>, Task> _recorder;
@@ -75,5 +74,4 @@ namespace ScenarioTests
             return Task.CompletedTask;
         }
     }
-#pragma warning restore IDE0060 // Remove unused parameter
 }
