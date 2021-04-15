@@ -16,6 +16,6 @@ namespace ScenarioTests
         /// <summary>
         /// Get or set the naming policy for the generated test methods
         /// </summary>
-        public ScenarioTestMethodNamingPolicy NamingPolicy { get; set; } = ScenarioTestMethodNamingPolicy.MethodAndTest;
+        public ScenarioTestMethodNamingPolicy NamingPolicy { get; set; } = ScenarioTestMethodNamingPolicy.Test;
     }
 }
