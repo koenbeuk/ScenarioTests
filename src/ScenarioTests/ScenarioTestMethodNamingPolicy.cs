@@ -8,7 +8,13 @@ namespace ScenarioTests
 {
     public enum ScenarioTestMethodNamingPolicy
     {
+        /// <summary>
+        /// TestMethods are generated in the form of [ScenarioName]_[FactName]
+        /// </summary>
         MethodAndTest,
+        /// <summary>
+        /// TestMethods are generated in the form of [FactName]
+        /// </summary>
         Test
     }
 }

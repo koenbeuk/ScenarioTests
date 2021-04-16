@@ -8,7 +8,9 @@ using ScenarioTests.Internal;
 
 namespace ScenarioTests
 {
-#pragma warning disable IDE0060 // Remove unused parameter
+    /// <summary>
+    /// Register facts and theories with your scenario
+    /// </summary>
     public sealed class ScenarioContext
     {
         readonly Func<object, Func<Task>, Task> _recorder;
@@ -19,8 +21,11 @@ namespace ScenarioTests
             _recorder = recorder;
         }
 
+        /// <summary>
+        /// Get the name of the current fact or theory that is being executed
+        /// </summary>
         public string TargetName { get; }
-
+        
         [DebuggerStepThrough]
         public void Fact(string name, Action invocation)
             => Fact(name, () =>
@@ -29,6 +34,12 @@ namespace ScenarioTests
                 return Task.CompletedTask;
             });
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="name"></param>
+        /// <param name="invocation"></param>
         [DebuggerStepThrough]
         public void Fact<TResult>(string name, Func<TResult> invocation)
             => Fact(name, () =>
@@ -75,5 +86,4 @@ namespace ScenarioTests
             return Task.CompletedTask;
         }
     }
-#pragma warning restore IDE0060 // Remove unused parameter
 }
