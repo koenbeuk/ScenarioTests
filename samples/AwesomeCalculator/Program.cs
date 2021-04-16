@@ -8,7 +8,7 @@ namespace AwesomeCalculator
 {
     public partial class ScenarioTests
     {
-        [Scenario(NamingPolicy = ScenarioTestMethodNamingPolicy.Test)]
+        [Scenario]
         public void BasicUsage(ScenarioContext scenario)
         {
             var calculator = new Calculator();
