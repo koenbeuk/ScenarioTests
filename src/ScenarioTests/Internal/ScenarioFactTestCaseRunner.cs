@@ -12,14 +12,39 @@ namespace ScenarioTests.Internal
 {
     sealed internal class ScenarioFactTestCaseRunner : XunitTestCaseRunner
     {
-        readonly StringBuilder _parentTestOutputBuilder = new();
-        readonly StringBuilder _recordingTestOutputBuilder = new();
         readonly HashSet<object> _testedArguments = new();
+        readonly Queue<IMessageSinkMessage> _queuedMessages = new();
 
         ScenarioContext _scenarioContext;
-        bool _isRecording;
         bool _skipAdditionalTests;
         bool _pendingRestart;
+
+        void FlushQueuedMessages()
+        {
+            var outputBuilder = new StringBuilder();
+
+            foreach (var outputMessage in _queuedMessages.OfType<TestOutput>())
+            {
+                outputBuilder.Append(outputMessage.Output);
+            }
+
+            var output = outputBuilder.ToString();
+
+            while (_queuedMessages.Count > 0)
+            {
+                var message = _queuedMessages.Dequeue();
+
+                var transformedMessage = message switch
+                {
+                    TestPassed testPassed => new TestPassed(testPassed.Test, testPassed.ExecutionTime, output),
+                    TestFailed testFailed => new TestFailed(testFailed.Test, testFailed.ExecutionTime, output, testFailed.ExceptionTypes, testFailed.Messages, testFailed.StackTraces, testFailed.ExceptionParentIndices),
+                    TestFinished testFinished => new TestFinished(testFinished.Test, testFinished.ExecutionTime, output),
+                    _ => message
+                };
+
+                MessageBus.QueueMessage(transformedMessage);
+            }
+        }
 
         public ScenarioFactTestCaseRunner(IXunitTestCase testCase,
                                          string displayName,
@@ -46,33 +71,15 @@ namespace ScenarioTests.Internal
 
             TestMethodArguments = new object[] { _scenarioContext };
 
-            var capturedMessages = new List<IMessageSinkMessage>();
             var filteredMessageBus = new FilteredMessageBus(MessageBus, message =>
             {
-                if (message is TestOutput testOutput)
+                if (message is not ITestStarting and not ITestPassed and not ITestFailed and not ITestFinished )
                 {
-                    if (_isRecording)
-                    {
-                        _recordingTestOutputBuilder.Append(testOutput.Output);
-                    }
-                    else
-                    {
-                        _parentTestOutputBuilder.Append(testOutput.Output);
-                    }
+                    _queuedMessages.Enqueue(message);
                 }
 
-                if (message is not ITestMessage)
-                {
-                    return true;
-                }
-                else
-                {
-                    capturedMessages.Add(message);
-                    return false;
-                }
+                return false;
             });
-
-
 
             RunSummary aggregatedResult = new();
 
@@ -87,21 +94,13 @@ namespace ScenarioTests.Internal
                     return aggregatedResult;
                 }
 
-                _isRecording = false;
+                _queuedMessages.Clear();
                 _skipAdditionalTests = false;
                 _pendingRestart = false;
-                _parentTestOutputBuilder.Clear();
-                _recordingTestOutputBuilder.Clear();
 
                 var test = CreateTest(TestCase, DisplayName);
                 var result = await CreateTestRunner(test, filteredMessageBus, TestClass, ConstructorArguments, TestMethod, TestMethodArguments, SkipReason, BeforeAfterAttributes, Aggregator, CancellationTokenSource).RunAsync();
-                if (result.Failed > 0)
-                {
-                    foreach (var message in capturedMessages)
-                    {
-                        MessageBus.QueueMessage(message);
-                    }
-                }
+                FlushQueuedMessages();
 
                 aggregatedResult.Aggregate(result);
             }
@@ -130,55 +129,34 @@ namespace ScenarioTests.Internal
                 _testedArguments.Add(argument);
             }
 
-            string BuildOutput()
-            {
-                return _parentTestOutputBuilder.ToString() + _recordingTestOutputBuilder.ToString();
-            }
-
             var testDisplayName = argument is not null ? $"{DisplayName}({argument})" : DisplayName;
             var test = CreateTest(TestCase, testDisplayName);
             var stopwatch = new Stopwatch();
 
-            if (!MessageBus.QueueMessage(new TestStarting(test)))
-            {
-                CancellationTokenSource.Cancel();
-            }
+            _queuedMessages.Enqueue(new TestStarting(test));
 
             stopwatch.Start();
 
             try
             {
-                _isRecording = true;
-                _recordingTestOutputBuilder.Clear();
-
                 await invocation();
 
                 stopwatch.Stop();
-                if (!MessageBus.QueueMessage(new TestPassed(test, (decimal)stopwatch.Elapsed.TotalSeconds, BuildOutput())))
-                {
-                    CancellationTokenSource.Cancel();
-                }
+                _queuedMessages.Enqueue(new TestPassed(test, (decimal)stopwatch.Elapsed.TotalSeconds, null));
             }
             catch (Exception ex)
             {
                 stopwatch.Stop();
                 var duration = (decimal)stopwatch.Elapsed.TotalSeconds;
 
-                if (!MessageBus.QueueMessage(new TestFailed(test, duration, BuildOutput(), ex)))
-                {
-                    CancellationTokenSource.Cancel();
-                }
+                _queuedMessages.Enqueue(new TestFailed(test, duration, null, ex));
             }
             finally
             {
-                _isRecording = false;
                 _skipAdditionalTests = true;
             }
 
-            if (!MessageBus.QueueMessage(new TestFinished(test, (decimal)stopwatch.Elapsed.TotalSeconds, BuildOutput())))
-            {
-                CancellationTokenSource.Cancel();
-            }
+            _queuedMessages.Enqueue(new TestFinished(test, (decimal)stopwatch.Elapsed.TotalSeconds, null));
         }
     }
 }
