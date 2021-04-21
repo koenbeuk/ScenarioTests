@@ -15,6 +15,8 @@ namespace ScenarioTests
     {
         readonly Func<object?, Func<Task>, Task> _recorder;
 
+        string? _skippedReason;
+
         public ScenarioContext(string targetName, Func<object, Func<Task>, Task> recorder)
         {
             TargetName = targetName;
@@ -25,7 +27,14 @@ namespace ScenarioTests
         /// Get the name of the current fact or theory that is being executed
         /// </summary>
         public string TargetName { get; }
-        
+
+        /// <summary>
+        /// Get when the current test case has been skipped
+        /// </summary>
+        public bool Skipped => _skippedReason is not null;
+
+        public string? SkippedReason => _skippedReason;
+
         [DebuggerStepThrough]
         public void Fact(string name, Action invocation)
             => Fact(name, () =>
@@ -84,6 +93,12 @@ namespace ScenarioTests
             }
 
             return Task.CompletedTask;
+        }
+
+        [DebuggerStepThrough]
+        public void Skip(string reason)
+        {
+            _skippedReason = reason;
         }
     }
 }

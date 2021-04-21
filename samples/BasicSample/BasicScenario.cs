@@ -6,11 +6,11 @@ using Xunit.Abstractions;
 
 namespace BasicSample
 {
-    public partial class ScenarioTest1
+    public partial class BasicScenario
     {
         readonly ITestOutputHelper _testOutputHelper;
 
-        public ScenarioTest1(ITestOutputHelper testOutputHelper)
+        public BasicScenario(ITestOutputHelper testOutputHelper)
         {
             _testOutputHelper = testOutputHelper;
         }
