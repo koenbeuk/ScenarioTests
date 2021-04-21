@@ -33,6 +33,9 @@ namespace ScenarioTests
         /// </summary>
         public bool Skipped => _skippedReason is not null;
 
+        /// <summary>
+        /// Get the reason why the current test case was skipped
+        /// </summary>
         public string? SkippedReason => _skippedReason;
 
         [DebuggerStepThrough]
