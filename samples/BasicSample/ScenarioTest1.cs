@@ -58,6 +58,8 @@ namespace BasicSample
                     Assert.Equal(count, newCount - i);
                 });
             }
+
+            _testOutputHelper.WriteLine("End of scenario");
         }
     }
 }
