@@ -135,6 +135,12 @@ namespace ScenarioTests.Internal
 
             _queuedMessages.Enqueue(new TestStarting(test));
 
+            if (_scenarioContext.Skipped)
+            {
+                _queuedMessages.Enqueue(new TestSkipped(test, _scenarioContext.SkippedReason));
+                return; // We dont want to run this test case
+            }
+
             stopwatch.Start();
 
             try
@@ -142,14 +148,29 @@ namespace ScenarioTests.Internal
                 await invocation();
 
                 stopwatch.Stop();
-                _queuedMessages.Enqueue(new TestPassed(test, (decimal)stopwatch.Elapsed.TotalSeconds, null));
+
+                if (_scenarioContext.Skipped)
+                {
+                    _queuedMessages.Enqueue(new TestSkipped(test, _scenarioContext.SkippedReason));
+                }
+                else
+                {
+                    _queuedMessages.Enqueue(new TestPassed(test, (decimal)stopwatch.Elapsed.TotalSeconds, null));
+                }
             }
             catch (Exception ex)
             {
                 stopwatch.Stop();
-                var duration = (decimal)stopwatch.Elapsed.TotalSeconds;
 
-                _queuedMessages.Enqueue(new TestFailed(test, duration, null, ex));
+                if (_scenarioContext.Skipped)
+                {
+                    _queuedMessages.Enqueue(new TestSkipped(test, _scenarioContext.SkippedReason));
+                }
+                else
+                {
+                    var duration = (decimal)stopwatch.Elapsed.TotalSeconds;
+                    _queuedMessages.Enqueue(new TestFailed(test, duration, null, ex));
+                }
             }
             finally
             {
