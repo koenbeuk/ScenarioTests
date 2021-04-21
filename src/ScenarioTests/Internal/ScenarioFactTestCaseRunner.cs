@@ -112,7 +112,7 @@ namespace ScenarioTests.Internal
             return aggregatedResult;
         }
 
-        async Task RecordTestCase(object argument, Func<Task> invocation)
+        async Task RecordTestCase(object? argument, Func<Task> invocation)
         {
             if (_skipAdditionalTests)
             {
@@ -135,7 +135,8 @@ namespace ScenarioTests.Internal
                 return _parentTestOutputBuilder.ToString() + _recordingTestOutputBuilder.ToString();
             }
 
-            var test = CreateTest(TestCase, DisplayName);
+            var testDisplayName = argument is not null ? $"{DisplayName}({argument})" : DisplayName;
+            var test = CreateTest(TestCase, testDisplayName);
             var stopwatch = new Stopwatch();
 
             if (!MessageBus.QueueMessage(new TestStarting(test)))
