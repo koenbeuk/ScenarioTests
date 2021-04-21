@@ -13,7 +13,7 @@ namespace ScenarioTests
     /// </summary>
     public sealed class ScenarioContext
     {
-        readonly Func<object, Func<Task>, Task> _recorder;
+        readonly Func<object?, Func<Task>, Task> _recorder;
 
         public ScenarioContext(string targetName, Func<object, Func<Task>, Task> recorder)
         {
@@ -53,7 +53,7 @@ namespace ScenarioTests
         {
             if (name == TargetName)
             {
-                return _recorder(Array.Empty<object>(), invocation);
+                return _recorder(null, invocation);
             }
 
             return Task.CompletedTask;

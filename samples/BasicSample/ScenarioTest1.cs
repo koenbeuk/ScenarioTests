@@ -51,7 +51,7 @@ namespace BasicSample
 
             for (var i = 0; i < 5; i++)
             {
-                scenario.Theory("TheorySample", 1, () =>
+                scenario.Theory("TheorySample", new { index = i }, () =>
                 {
                     var newCount = count + i;
 
