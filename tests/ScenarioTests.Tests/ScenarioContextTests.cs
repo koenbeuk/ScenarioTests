@@ -158,5 +158,22 @@ namespace ScenarioTests.Tests
 
             Assert.True(invoked);
         }
+
+        [Fact]
+        public void Theory_MultipleDataRows_InvokesAll()
+        {
+            var context = new ScenarioContext("X", (_, i) => i());
+
+            var invoked = 0;
+            for (var i = 0; i < 5; i++)
+            {
+                context.Theory("X", i, () =>
+                {
+                    invoked++;
+                });
+            }
+
+            Assert.Equal(5, invoked);
+        }
     }
 }

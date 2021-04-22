@@ -44,6 +44,13 @@ namespace ScenarioTests.Generator
                 .Cast<ScenarioTestMethodNamingPolicy>()
                 .FirstOrDefault();
 
+            var theoryTestCaseLimit = scenarioAttributeClass.NamedArguments
+                .Where(x => x.Key == "TheoryTestCaseLimit")
+                .Where(x => x.Value.Kind == TypedConstantKind.Primitive)
+                .Select(x => x.Value.Value)
+                .OfType<int?>()
+                .FirstOrDefault();
+
             if (methodSymbol.Parameters.Length != 1 || !SymbolEqualityComparer.Default.Equals(methodSymbol.Parameters[0].Type, scenarioContextTypeSymbol))
             {
                 var diagnostic = Diagnostic.Create(Diagnostics.RequiresSingleArgumentMethodError, methodDeclarationSyntax.GetLocation(), methodSymbol.Name);
@@ -94,7 +101,6 @@ namespace ScenarioTests.Generator
                     {
                         TestMethodName = testMethodName,
                         Name = factName,
-                        IsTheory = invocationSymbol.Name == "Theory",
                         FileName = methodDeclarationSyntax.SyntaxTree.FilePath,
                         LineNumber = invocationCandidate.GetLocation().GetMappedLineSpan().StartLinePosition.Line + 1
                     });
@@ -108,6 +114,7 @@ namespace ScenarioTests.Generator
                 ClassNamespace = methodSymbol.ContainingType.ContainingNamespace.IsGlobalNamespace ? null : methodSymbol.ContainingType.ContainingNamespace.ToDisplayString(),
                 MethodName = methodSymbol.Name,
                 IsAsync = !methodSymbol.ReturnsVoid && methodSymbol.ReturnType.AllInterfaces.Any(i => SymbolEqualityComparer.Default.Equals(i, asynResultType)),
+                TheoryTestCaseLimit = theoryTestCaseLimit,
                 Invocations = invocations
             };
         }

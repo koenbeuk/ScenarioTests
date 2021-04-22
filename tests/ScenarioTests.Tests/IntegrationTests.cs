@@ -19,8 +19,24 @@ namespace ScenarioTests.Tests
         }
 
 
-        [Internal.ScenarioFact(DisplayName = nameof(SimpleTheory), FactName = "X", IsTheory = true)]
+        [Internal.ScenarioFact(DisplayName = nameof(SimpleTheory), FactName = "X")]
         public void SimpleTheory(ScenarioContext scenarioContext)
+        {
+            var invocations = 0;
+
+            for (var repeat = 0; repeat < 5; repeat++)
+            {
+                scenarioContext.Theory("X", repeat, () =>
+                {
+                    Assert.Equal(0, invocations++);
+                });
+            }
+
+            Assert.Equal(1, invocations);
+        }
+
+        [Internal.ScenarioFact(DisplayName = nameof(SimpleTheory), FactName = "X")]
+        public void SimpleTheory2(ScenarioContext scenarioContext)
         {
             var invocations = 0;
 

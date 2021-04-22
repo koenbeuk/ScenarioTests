@@ -4,21 +4,21 @@
     {
 		[global::System.Runtime.CompilerServices.CompilerGenerated]
 		[global::System.Diagnostics.DebuggerStepThrough]
-		[global::ScenarioTests.Internal.ScenarioFact(DisplayName = "Scenario_T1", FactName = "T1", FileName = "", LineNumber = 5, IsTheory = false)]
+		[global::ScenarioTests.Internal.ScenarioFact(DisplayName = "Scenario_T1", FactName = "T1", FileName = "", LineNumber = 5)]
 		public async System.Threading.Tasks.Task Scenario_T1(ScenarioTests.ScenarioContext scenarioContext)
 		{
 			await Scenario(scenarioContext).ConfigureAwait(false);
 		}
 		[global::System.Runtime.CompilerServices.CompilerGenerated]
 		[global::System.Diagnostics.DebuggerStepThrough]
-		[global::ScenarioTests.Internal.ScenarioFact(DisplayName = "Scenario_T2", FactName = "T2", FileName = "", LineNumber = 6, IsTheory = false)]
+		[global::ScenarioTests.Internal.ScenarioFact(DisplayName = "Scenario_T2", FactName = "T2", FileName = "", LineNumber = 6)]
 		public async System.Threading.Tasks.Task Scenario_T2(ScenarioTests.ScenarioContext scenarioContext)
 		{
 			await Scenario(scenarioContext).ConfigureAwait(false);
 		}
 		[global::System.Runtime.CompilerServices.CompilerGenerated]
 		[global::System.Diagnostics.DebuggerStepThrough]
-		[global::ScenarioTests.Internal.ScenarioFact(DisplayName = "Scenario_T3", FactName = "T3", FileName = "", LineNumber = 7, IsTheory = false)]
+		[global::ScenarioTests.Internal.ScenarioFact(DisplayName = "Scenario_T3", FactName = "T3", FileName = "", LineNumber = 7)]
 		public async System.Threading.Tasks.Task Scenario_T3(ScenarioTests.ScenarioContext scenarioContext)
 		{
 			await Scenario(scenarioContext).ConfigureAwait(false);

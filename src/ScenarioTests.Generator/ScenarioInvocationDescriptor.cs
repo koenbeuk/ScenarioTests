@@ -10,7 +10,6 @@ namespace ScenarioTests.Generator
     {
         public string TestMethodName { get; set; }
         public string Name { get; set; }
-        public bool IsTheory { get; set; }
         public string FileName { get; set; }
         public int LineNumber { get; set; }
     }

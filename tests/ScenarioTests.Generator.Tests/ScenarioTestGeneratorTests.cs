@@ -245,6 +245,27 @@ public partial class C {
             return Verifier.Verify(result.GeneratedTrees[0].ToString());
         }
 
+        [Fact]
+        public Task VerifyScenarioWithTheoryTestCaseLimit()
+        {
+            var compilation = CreateCompilation(@"
+public partial class C {
+    [ScenarioTests.Scenario(TheoryTestCaseLimit = 5)]
+    public void Scenario(ScenarioTests.ScenarioContext s) {
+        s.Theory(""T1"", 1, () => { 
+        });
+    }
+}
+");
+
+            var result = RunGenerator(compilation);
+
+            Assert.Empty(result.Diagnostics);
+            Assert.Single(result.GeneratedTrees);
+
+            return Verifier.Verify(result.GeneratedTrees[0].ToString());
+        }
+
         #region Helpers
 
         Compilation CreateCompilation(string source, bool expectedToCompile = true)

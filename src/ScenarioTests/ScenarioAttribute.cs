@@ -17,5 +17,10 @@ namespace ScenarioTests
         /// Get or set the naming policy for the generated test methods
         /// </summary>
         public ScenarioTestMethodNamingPolicy NamingPolicy { get; set; } = ScenarioTestMethodNamingPolicy.Test;
+
+        /// <summary>
+        /// Get or set an upper boundary of the max number of theory test cases that can be accepted.
+        /// </summary>
+        public int TheoryTestCaseLimit { get; set; }
     }
 }

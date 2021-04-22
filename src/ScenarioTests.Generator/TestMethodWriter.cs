@@ -20,7 +20,8 @@ namespace ScenarioTests.Generator
 
         void WriteLine(string line)
         {
-            StringBuilder.AppendLine($"\t\t{line}");
+            StringBuilder.Append("\t\t");
+            StringBuilder.AppendLine(line);
         }
 
         public void Write(ScenarioDescriptor scenarioDescriptor, ScenarioInvocationDescriptor scenarioInvocationDescriptor)
@@ -31,9 +32,11 @@ namespace ScenarioTests.Generator
                 _ => $"{scenarioDescriptor.MethodName}_{scenarioInvocationDescriptor.Name}"
             };
 
+            var theoryAttributes = scenarioDescriptor.TheoryTestCaseLimit is not null ? $", TheoryTestCaseLimit = {scenarioDescriptor.TheoryTestCaseLimit}" : string.Empty;
+
             WriteLine("[global::System.Runtime.CompilerServices.CompilerGenerated]");
             WriteLine("[global::System.Diagnostics.DebuggerStepThrough]");
-            WriteLine($"[global::ScenarioTests.Internal.ScenarioFact(DisplayName = {Syntax.Literal(testMethodName)}, FactName = {Syntax.Literal(scenarioInvocationDescriptor.Name)}, FileName = {Syntax.Literal(scenarioInvocationDescriptor.FileName)}, LineNumber = {scenarioInvocationDescriptor.LineNumber}, IsTheory = {Syntax.LiteralExpression(scenarioInvocationDescriptor.IsTheory ? SyntaxKind.TrueLiteralExpression : SyntaxKind.FalseLiteralExpression)})]");
+            WriteLine($"[global::ScenarioTests.Internal.ScenarioFact(DisplayName = {Syntax.Literal(testMethodName)}, FactName = {Syntax.Literal(scenarioInvocationDescriptor.Name)}, FileName = {Syntax.Literal(scenarioInvocationDescriptor.FileName)}, LineNumber = {scenarioInvocationDescriptor.LineNumber}{theoryAttributes})]");
 
             if (scenarioDescriptor.IsAsync)
             {
