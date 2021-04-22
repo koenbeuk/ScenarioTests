@@ -4,7 +4,7 @@
     {
 		[global::System.Runtime.CompilerServices.CompilerGenerated]
 		[global::System.Diagnostics.DebuggerStepThrough]
-		[global::ScenarioTests.Internal.ScenarioFact(DisplayName = "Scenario_Name with a $!@$@!", FactName = "Name with a $!@$@!", FileName = "", LineNumber = 5, IsTheory = false)]
+		[global::ScenarioTests.Internal.ScenarioFact(DisplayName = "Scenario_Name with a $!@$@!", FactName = "Name with a $!@$@!", FileName = "", LineNumber = 5)]
 		public void Scenario_Name_with_a_(global::ScenarioTests.ScenarioContext scenarioContext)
 		{
 			Scenario(scenarioContext);

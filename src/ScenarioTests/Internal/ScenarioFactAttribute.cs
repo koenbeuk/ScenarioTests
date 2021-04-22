@@ -17,6 +17,6 @@ namespace ScenarioTests.Internal
         public string FactName { get; set; }
         public string FileName { get; set; }
         public int LineNumber { get; set; }
-        public bool IsTheory { get; set; }
+        public int TheoryTestCaseLimit { get; set; } = 100;
     }
 }

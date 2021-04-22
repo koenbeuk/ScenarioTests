@@ -4,14 +4,14 @@
     {
 		[global::System.Runtime.CompilerServices.CompilerGenerated]
 		[global::System.Diagnostics.DebuggerStepThrough]
-		[global::ScenarioTests.Internal.ScenarioFact(DisplayName = "Scenario_T1", FactName = "T1", FileName = "", LineNumber = 5, IsTheory = false)]
+		[global::ScenarioTests.Internal.ScenarioFact(DisplayName = "Scenario_T1", FactName = "T1", FileName = "", LineNumber = 5)]
 		public void Scenario_T1(global::ScenarioTests.ScenarioContext scenarioContext)
 		{
 			Scenario(scenarioContext);
 		}
 		[global::System.Runtime.CompilerServices.CompilerGenerated]
 		[global::System.Diagnostics.DebuggerStepThrough]
-		[global::ScenarioTests.Internal.ScenarioFact(DisplayName = "Scenario_T2", FactName = "T2", FileName = "", LineNumber = 6, IsTheory = false)]
+		[global::ScenarioTests.Internal.ScenarioFact(DisplayName = "Scenario_T2", FactName = "T2", FileName = "", LineNumber = 6)]
 		public void Scenario_T2(global::ScenarioTests.ScenarioContext scenarioContext)
 		{
 			Scenario(scenarioContext);

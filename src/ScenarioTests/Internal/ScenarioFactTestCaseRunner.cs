@@ -87,21 +87,29 @@ namespace ScenarioTests.Internal
 
             do
             {
-                // safeguarding against abuse
-                if (_testedArguments.Count > 1000)
-                {
-                    //throw new ApplicationException("Theory scenario tests are currently capped at 1000 cases (to prevent infinite loops). Feel free to open up an issue if you have a good reason for relaxing this restriction");
-                    return aggregatedResult;
-                }
-
                 _queuedMessages.Clear();
                 _skipAdditionalTests = false;
                 _pendingRestart = false;
 
                 var test = CreateTest(TestCase, DisplayName);
-                var result = await CreateTestRunner(test, filteredMessageBus, TestClass, ConstructorArguments, TestMethod, TestMethodArguments, SkipReason, BeforeAfterAttributes, Aggregator, CancellationTokenSource).RunAsync();
-                FlushQueuedMessages();
+                RunSummary result;
 
+                // safeguarding against abuse
+                if (_testedArguments.Count >= scenarioFactTestCase.TheoryTestCaseLimit)
+                {
+                    _queuedMessages.Enqueue(new TestSkipped(test, "Theory tests are capped to prevent infinite loops. You can configure a different limit by setting TheoryTestCaseLimit on the Scenario attribute"));
+                    result = new RunSummary
+                    {
+                        Skipped = 1,
+                        Total = 1
+                    };
+                }
+                else
+                {
+                    result = await CreateTestRunner(test, filteredMessageBus, TestClass, ConstructorArguments, TestMethod, TestMethodArguments, SkipReason, BeforeAfterAttributes, Aggregator, CancellationTokenSource).RunAsync();
+                }
+                
+                FlushQueuedMessages();
                 aggregatedResult.Aggregate(result);
             }
             while (_pendingRestart);
