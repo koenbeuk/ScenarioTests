@@ -35,7 +35,7 @@ namespace ScenarioTests.Tests
             Assert.Equal(1, invocations);
         }
 
-        [Internal.ScenarioFact(DisplayName = nameof(SimpleTheory), FactName = "X")]
+        [Internal.ScenarioFact(DisplayName = nameof(SimpleTheory2), FactName = "X")]
         public void SimpleTheory2(ScenarioContext scenarioContext)
         {
             var invocations = 0;
