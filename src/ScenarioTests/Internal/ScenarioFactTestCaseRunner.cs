@@ -14,6 +14,7 @@ namespace ScenarioTests.Internal
     {
         readonly HashSet<object> _testedArguments = new();
         readonly Queue<IMessageSinkMessage> _queuedMessages = new();
+        readonly Queue<IMessageSinkMessage> _backupQueuedMessages = new();
 
         ScenarioContext _scenarioContext;
         bool _skipAdditionalTests;
@@ -21,28 +22,41 @@ namespace ScenarioTests.Internal
 
         void FlushQueuedMessages()
         {
-            var outputBuilder = new StringBuilder();
-
-            foreach (var outputMessage in _queuedMessages.OfType<TestOutput>())
+            // Only if we were able to run at least 1 fact/theory case
+            if (_queuedMessages.OfType<TestStarting>().Any())
             {
-                outputBuilder.Append(outputMessage.Output);
-            }
+                var outputBuilder = new StringBuilder();
 
-            var output = outputBuilder.ToString();
-
-            while (_queuedMessages.Count > 0)
-            {
-                var message = _queuedMessages.Dequeue();
-
-                var transformedMessage = message switch
+                foreach (var outputMessage in _queuedMessages.OfType<TestOutput>())
                 {
-                    TestPassed testPassed => new TestPassed(testPassed.Test, testPassed.ExecutionTime, output),
-                    TestFailed testFailed => new TestFailed(testFailed.Test, testFailed.ExecutionTime, output, testFailed.ExceptionTypes, testFailed.Messages, testFailed.StackTraces, testFailed.ExceptionParentIndices),
-                    TestFinished testFinished => new TestFinished(testFinished.Test, testFinished.ExecutionTime, output),
-                    _ => message
-                };
+                    outputBuilder.Append(outputMessage.Output);
+                }
 
-                MessageBus.QueueMessage(transformedMessage);
+                var output = outputBuilder.ToString();
+
+                while (_queuedMessages.Count > 0)
+                {
+                    var message = _queuedMessages.Dequeue();
+
+                    var transformedMessage = message switch
+                    {
+                        TestPassed testPassed => new TestPassed(testPassed.Test, testPassed.ExecutionTime, output),
+                        TestFailed testFailed => new TestFailed(testFailed.Test, testFailed.ExecutionTime, output, testFailed.ExceptionTypes, testFailed.Messages, testFailed.StackTraces, testFailed.ExceptionParentIndices),
+                        TestFinished testFinished => new TestFinished(testFinished.Test, testFinished.ExecutionTime, output),
+                        _ => message
+                    };
+
+                    MessageBus.QueueMessage(transformedMessage);
+                }
+            }
+            else
+            {
+                // We likely ran into an exception before our fact or theory could run, report here
+                while (_backupQueuedMessages.Count > 0)
+                {
+                    var message = _backupQueuedMessages.Dequeue();
+                    MessageBus.QueueMessage(message);
+                }
             }
         }
 
@@ -73,6 +87,8 @@ namespace ScenarioTests.Internal
 
             var filteredMessageBus = new FilteredMessageBus(MessageBus, message =>
             {
+                _backupQueuedMessages.Enqueue(message);
+
                 if (message is not ITestStarting and not ITestPassed and not ITestFailed and not ITestFinished )
                 {
                     _queuedMessages.Enqueue(message);
@@ -88,6 +104,7 @@ namespace ScenarioTests.Internal
             do
             {
                 _queuedMessages.Clear();
+                _backupQueuedMessages.Clear();
                 _skipAdditionalTests = false;
                 _pendingRestart = false;
 
@@ -107,10 +124,10 @@ namespace ScenarioTests.Internal
                 else
                 {
                     result = await CreateTestRunner(test, filteredMessageBus, TestClass, ConstructorArguments, TestMethod, TestMethodArguments, SkipReason, BeforeAfterAttributes, Aggregator, CancellationTokenSource).RunAsync();
+                    aggregatedResult.Aggregate(result);
                 }
-                
+
                 FlushQueuedMessages();
-                aggregatedResult.Aggregate(result);
             }
             while (_pendingRestart);
 
