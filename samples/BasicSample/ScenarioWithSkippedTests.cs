@@ -32,6 +32,14 @@ namespace BasicSample
                 Assert.True(true);
             });
 
+            return;
+
+#pragma warning disable CS0162 // Unreachable code detected
+            scenario.Fact("This test should never be reached and therefore always be skipped", () =>
+            {
+                Assert.True(true);
+            });
+#pragma warning restore CS0162 // Unreachable code detected
         }
     }
 }

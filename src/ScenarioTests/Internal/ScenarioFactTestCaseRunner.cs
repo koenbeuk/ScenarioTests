@@ -60,6 +60,7 @@ namespace ScenarioTests.Internal
                     var bufferedMessageBus = new BufferedMessageBus(MessageBus);
                     var stopwatch = Stopwatch.StartNew();
                     var skipAdditionalTests = false;
+                    var testRecorded = false;
                     pendingRestart = false; // By default we dont expect a new restart
 
                     object? capturedArgument = null;
@@ -67,6 +68,8 @@ namespace ScenarioTests.Internal
 
                     scenarioContext = new ScenarioContext(scenarioFactTestCase.FactName, async (object? argument, Func<Task> invocation) =>
                     {
+                        testRecorded = true;
+
                         if (skipAdditionalTests)
                         {
                             pendingRestart = true; // when we discovered more tests after a test completed, allow us to restart
@@ -117,6 +120,14 @@ namespace ScenarioTests.Internal
                     RunSummary result;
 
                     result = await CreateTestRunner(test, bufferedMessageBus, TestClass, ConstructorArguments, TestMethod, TestMethodArguments, SkipReason, BeforeAfterAttributes, Aggregator, CancellationTokenSource).RunAsync();
+                    
+                    // We should have expected at least one test run. We probably returned before our target test was able to run
+                    if (!testRecorded)
+                    {
+                        bufferedMessageBus.QueueMessage(new TestSkipped(test, scenarioContext.SkippedReason ?? "No applicable tests were able to run"));
+                        result = new RunSummary { Skipped = 1, Total = 1 };
+                    }
+
                     aggregatedResult.Aggregate(result);
 
                     stopwatch.Stop();
