@@ -12,54 +12,6 @@ namespace ScenarioTests.Internal
 {
     sealed internal class ScenarioFactTestCaseRunner : XunitTestCaseRunner
     {
-        readonly HashSet<object> _testedArguments = new();
-        readonly Queue<IMessageSinkMessage> _queuedMessages = new();
-        readonly Queue<IMessageSinkMessage> _backupQueuedMessages = new();
-
-        ScenarioContext _scenarioContext;
-        bool _skipAdditionalTests;
-        bool _pendingRestart;
-
-        void FlushQueuedMessages()
-        {
-            // Only if we were able to run at least 1 fact/theory case
-            if (_queuedMessages.OfType<TestStarting>().Any())
-            {
-                var outputBuilder = new StringBuilder();
-
-                foreach (var outputMessage in _queuedMessages.OfType<TestOutput>())
-                {
-                    outputBuilder.Append(outputMessage.Output);
-                }
-
-                var output = outputBuilder.ToString();
-
-                while (_queuedMessages.Count > 0)
-                {
-                    var message = _queuedMessages.Dequeue();
-
-                    var transformedMessage = message switch
-                    {
-                        TestPassed testPassed => new TestPassed(testPassed.Test, testPassed.ExecutionTime, output),
-                        TestFailed testFailed => new TestFailed(testFailed.Test, testFailed.ExecutionTime, output, testFailed.ExceptionTypes, testFailed.Messages, testFailed.StackTraces, testFailed.ExceptionParentIndices),
-                        TestFinished testFinished => new TestFinished(testFinished.Test, testFinished.ExecutionTime, output),
-                        _ => message
-                    };
-
-                    MessageBus.QueueMessage(transformedMessage);
-                }
-            }
-            else
-            {
-                // We likely ran into an exception before our fact or theory could run, report here
-                while (_backupQueuedMessages.Count > 0)
-                {
-                    var message = _backupQueuedMessages.Dequeue();
-                    MessageBus.QueueMessage(message);
-                }
-            }
-        }
-
         public ScenarioFactTestCaseRunner(IXunitTestCase testCase,
                                          string displayName,
                                          string skipReason,
@@ -81,128 +33,138 @@ namespace ScenarioTests.Internal
         protected override async Task<RunSummary> RunTestAsync()
         {
             var scenarioFactTestCase = (ScenarioFactTestCase)TestCase;
-            _scenarioContext = new ScenarioContext(scenarioFactTestCase.FactName, RecordTestCase);
+            var test = CreateTest(TestCase, DisplayName);
+            var aggregatedResult = new RunSummary();
 
-            TestMethodArguments = new object[] { _scenarioContext };
+            // Theories are called with required arguments. Keep track of what arguments we already tested so that we can skip those accordingly
+            var testedArguments = new HashSet<object>();
 
-            var filteredMessageBus = new FilteredMessageBus(MessageBus, message =>
-            {
-                _backupQueuedMessages.Enqueue(message);
-
-                if (message is not ITestStarting and not ITestPassed and not ITestFailed and not ITestFinished )
-                {
-                    _queuedMessages.Enqueue(message);
-                }
-
-                return false;
-            });
-
-            RunSummary aggregatedResult = new();
-
-            _testedArguments.Clear();
+            // Each time we find a new theory argument, we will want to restart our Test so that we can collect subsequent test cases
+            bool pendingRestart;
 
             do
             {
-                _queuedMessages.Clear();
-                _backupQueuedMessages.Clear();
-                _skipAdditionalTests = false;
-                _pendingRestart = false;
-
-                var test = CreateTest(TestCase, DisplayName);
-                RunSummary result;
-
-                // safeguarding against abuse
-                if (_testedArguments.Count >= scenarioFactTestCase.TheoryTestCaseLimit)
+                // Safeguarding against abuse
+                if (testedArguments.Count >= scenarioFactTestCase.TheoryTestCaseLimit)
                 {
-                    _queuedMessages.Enqueue(new TestSkipped(test, "Theory tests are capped to prevent infinite loops. You can configure a different limit by setting TheoryTestCaseLimit on the Scenario attribute"));
-                    result = new RunSummary
+                    pendingRestart = false;
+                    MessageBus.QueueMessage(new TestSkipped(test, "Theory tests are capped to prevent infinite loops. You can configure a different limit by setting TheoryTestCaseLimit on the Scenario attribute"));
+                    aggregatedResult.Aggregate(new RunSummary
                     {
                         Skipped = 1,
                         Total = 1
-                    };
+                    });
                 }
                 else
                 {
-                    result = await CreateTestRunner(test, filteredMessageBus, TestClass, ConstructorArguments, TestMethod, TestMethodArguments, SkipReason, BeforeAfterAttributes, Aggregator, CancellationTokenSource).RunAsync();
+                    var bufferedMessageBus = new BufferedMessageBus(MessageBus);
+                    var stopwatch = Stopwatch.StartNew();
+                    var skipAdditionalTests = false;
+                    pendingRestart = false; // By default we dont expect a new restart
+
+                    object? capturedArgument = null;
+                    ScenarioContext scenarioContext = null;
+
+                    scenarioContext = new ScenarioContext(scenarioFactTestCase.FactName, async (object? argument, Func<Task> invocation) =>
+                    {
+                        if (skipAdditionalTests)
+                        {
+                            pendingRestart = true; // when we discovered more tests after a test completed, allow us to restart
+                            return;
+                        }
+
+                        if (argument is not null)
+                        {
+                            if (testedArguments.Contains(argument))
+                            {
+                                return;
+                            }
+
+                            testedArguments.Add(argument);
+                            capturedArgument = argument;
+                        }
+
+                        // At this stage we found our first valid test case, any subsequent test case should issue a restart instead
+                        skipAdditionalTests = true;
+
+                        if (scenarioContext.Skipped)
+                        {
+                            bufferedMessageBus.QueueMessage(new TestSkipped(test, scenarioContext.SkippedReason));
+                        }
+                        else
+                        {
+                            try
+                            {
+                                await invocation();
+                            }
+                            catch (Exception ex)
+                            {
+                                bufferedMessageBus.QueueMessage(new TestFailed(test, 0, string.Empty, ex));
+                                throw;
+                            }
+                            finally
+                            {
+                                if (scenarioContext.Skipped)
+                                {
+                                    bufferedMessageBus.QueueMessage(new TestSkipped(test, scenarioContext.SkippedReason));
+                                }
+                            }
+                        }
+                    });
+
+                    TestMethodArguments = new object[] { scenarioContext };
+
+                    RunSummary result;
+
+                    result = await CreateTestRunner(test, bufferedMessageBus, TestClass, ConstructorArguments, TestMethod, TestMethodArguments, SkipReason, BeforeAfterAttributes, Aggregator, CancellationTokenSource).RunAsync();
                     aggregatedResult.Aggregate(result);
+
+                    stopwatch.Stop();
+                    var testInvocationTest = capturedArgument switch
+                    {
+                        null => CreateTest(TestCase, DisplayName),
+                        not null => CreateTest(TestCase, $"{DisplayName} ({capturedArgument})")
+                    };
+
+                    var bufferedMessages = bufferedMessageBus.QueuedMessages;
+                    if (bufferedMessages.OfType<TestSkipped>().Any())
+                    {
+                        bufferedMessages = bufferedMessages.Where(x => x is not TestPassed and not TestFailed);
+                    }
+
+                    if (bufferedMessages.OfType<TestFailed>().Any())
+                    {
+                        bufferedMessages = bufferedMessages.Where(x => x is not TestPassed);
+                    }
+
+                    var output = string.Join("", bufferedMessages
+                        .OfType<ITestOutput>()
+                        .Select(x => x.Output));
+
+                    var duration = (decimal)stopwatch.Elapsed.TotalSeconds;
+
+                    foreach (var queuedMessage in bufferedMessages)
+                    {
+                        var transformedMessage = queuedMessage switch
+                        {
+                            TestStarting testStarting => new TestStarting(testInvocationTest),
+                            TestSkipped testSkipped => new TestSkipped(testInvocationTest, testSkipped.Reason),
+                            TestPassed testPassed => new TestPassed(testInvocationTest, duration, output),
+                            TestFailed testFailed => new TestFailed(testInvocationTest, duration, output, testFailed.ExceptionTypes, testFailed.Messages, testFailed.StackTraces, testFailed.ExceptionParentIndices),
+                            TestFinished testFinished => new TestFinished(testInvocationTest, duration, output),
+                            _ => queuedMessage
+                        };
+
+                        if (!MessageBus.QueueMessage(transformedMessage))
+                        {
+                            return aggregatedResult;
+                        }
+                    }
                 }
-
-                FlushQueuedMessages();
             }
-            while (_pendingRestart);
-
-            Console.WriteLine(_pendingRestart);
+            while (pendingRestart);
 
             return aggregatedResult;
-        }
-
-        async Task RecordTestCase(object? argument, Func<Task> invocation)
-        {
-            if (_skipAdditionalTests)
-            {
-                _pendingRestart = true; // when we discovered more tests after a test completed, allow us to restart
-                return;
-            }
-
-            if (argument is not null)
-            {
-                if (_testedArguments.Contains(argument))
-                {
-                    return;
-                }
-
-                _testedArguments.Add(argument);
-            }
-
-            var testDisplayName = argument is not null ? $"{DisplayName}({argument})" : DisplayName;
-            var test = CreateTest(TestCase, testDisplayName);
-            var stopwatch = new Stopwatch();
-
-            _queuedMessages.Enqueue(new TestStarting(test));
-
-            if (_scenarioContext.Skipped)
-            {
-                _queuedMessages.Enqueue(new TestSkipped(test, _scenarioContext.SkippedReason));
-                return; // We dont want to run this test case
-            }
-
-            stopwatch.Start();
-
-            try
-            {
-                await invocation();
-
-                stopwatch.Stop();
-
-                if (_scenarioContext.Skipped)
-                {
-                    _queuedMessages.Enqueue(new TestSkipped(test, _scenarioContext.SkippedReason));
-                }
-                else
-                {
-                    _queuedMessages.Enqueue(new TestPassed(test, (decimal)stopwatch.Elapsed.TotalSeconds, null));
-                }
-            }
-            catch (Exception ex)
-            {
-                stopwatch.Stop();
-
-                if (_scenarioContext.Skipped)
-                {
-                    _queuedMessages.Enqueue(new TestSkipped(test, _scenarioContext.SkippedReason));
-                }
-                else
-                {
-                    var duration = (decimal)stopwatch.Elapsed.TotalSeconds;
-                    _queuedMessages.Enqueue(new TestFailed(test, duration, null, ex));
-                }
-            }
-            finally
-            {
-                _skipAdditionalTests = true;
-            }
-
-            _queuedMessages.Enqueue(new TestFinished(test, (decimal)stopwatch.Elapsed.TotalSeconds, null));
         }
     }
 }
