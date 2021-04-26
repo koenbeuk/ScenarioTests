@@ -42,6 +42,7 @@ partial class ScenarioTests
 
         scenario.Fact("This fact is broken...", () => {
             // This fact will fail however it will not affect other facts and theories
+            calculator.Add(5);
             Assert.Equal(1, calculator.State);
         });
 
