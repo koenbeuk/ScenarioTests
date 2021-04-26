@@ -8,26 +8,24 @@ using Xunit.Sdk;
 
 namespace ScenarioTests.Internal
 {
-    sealed internal class FilteredMessageBus : IMessageBus
+    sealed internal class BufferedMessageBus : IMessageBus
     {
         readonly IMessageBus _messageBus;
-        readonly Func<IMessageSinkMessage, bool> _filter;
+        readonly List<IMessageSinkMessage> _queue = new();
 
-        public FilteredMessageBus(IMessageBus messageBus, Func<IMessageSinkMessage, bool> filter)
+        public BufferedMessageBus(IMessageBus messageBus)
         {
             _messageBus = messageBus;
-            _filter = filter;
         }
 
         public bool QueueMessage(IMessageSinkMessage message)
         {
-            if (_filter(message))
-            {
-                return _messageBus.QueueMessage(message);
-            }
+            _queue.Add(message);
 
             return true; // prevent xunit from cancelling
         }
+
+        public IEnumerable<IMessageSinkMessage> QueuedMessages => _queue;
 
         public void Dispose() { }
     }

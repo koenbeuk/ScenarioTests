@@ -1,3 +1,4 @@
+using NuGet.Frameworks;
 using ScenarioTests;
 using System;
 using System.Threading.Tasks;

@@ -9,7 +9,7 @@ namespace ScenarioTests.Tests
 {
     public class IntegrationTests
     {
-        [Internal.ScenarioFact(DisplayName = nameof(SimpleFact), FactName = "X")]
+        [Internal.ScenarioFact(FactName = "X")]
         public void SimpleFact(ScenarioContext scenarioContext)
         {
             scenarioContext.Fact("X", () =>
@@ -19,7 +19,7 @@ namespace ScenarioTests.Tests
         }
 
 
-        [Internal.ScenarioFact(DisplayName = nameof(SimpleTheory), FactName = "X")]
+        [Internal.ScenarioFact(FactName = "X")]
         public void SimpleTheory(ScenarioContext scenarioContext)
         {
             var invocations = 0;
@@ -35,7 +35,7 @@ namespace ScenarioTests.Tests
             Assert.Equal(1, invocations);
         }
 
-        [Internal.ScenarioFact(DisplayName = nameof(SimpleTheory2), FactName = "X")]
+        [Internal.ScenarioFact(FactName = "X")]
         public void SimpleTheory2(ScenarioContext scenarioContext)
         {
             var invocations = 0;
@@ -49,6 +49,49 @@ namespace ScenarioTests.Tests
             }
 
             Assert.Equal(1, invocations);
+        }
+
+        [Internal.ScenarioFact(FactName = "X")]
+        public async Task DelayedPreconditions(ScenarioContext scenarioContext)
+        {
+            // We need to manually confirm that indeed the 200ms was added to the total test duration
+            await Task.Delay(200);
+
+            scenarioContext.Fact("X", () =>
+            {
+            });
+        }
+
+        [Internal.ScenarioFact(FactName = "X")]
+        public async Task DelayedPostconditions(ScenarioContext scenarioContext)
+        {
+            scenarioContext.Fact("X", () =>
+            {
+            });
+
+            // We need to manually confirm that indeed the 200ms was added to the total test duration
+            await Task.Delay(200);
+        }
+
+        //[Internal.ScenarioFact(FactName = "X")]
+        //public void PostException(ScenarioContext scenarioContext)
+        //{
+        //    scenarioContext.Fact("X", () =>
+        //    {
+        //    });
+
+        //    // We need to manually confirm that indeed the 200ms was added to the total test duration
+        //    throw new Exception();
+        //}
+
+        [Internal.ScenarioFact(FactName = "X")]
+        public void SkippedTest(ScenarioContext scenarioContext)
+        {
+            scenarioContext.Skip("Foo");
+
+            scenarioContext.Fact("X", () =>
+            {
+            });
         }
     }
 }
