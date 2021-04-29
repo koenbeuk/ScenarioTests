@@ -103,7 +103,6 @@ namespace ScenarioTests.Internal
                             catch (Exception ex)
                             {
                                 bufferedMessageBus.QueueMessage(new TestFailed(test, 0, string.Empty, ex));
-                                throw;
                             }
                             finally
                             {
