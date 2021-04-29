@@ -119,13 +119,6 @@ namespace ScenarioTests.Internal
                     RunSummary result;
 
                     result = await CreateTestRunner(test, bufferedMessageBus, TestClass, ConstructorArguments, TestMethod, TestMethodArguments, SkipReason, BeforeAfterAttributes, Aggregator, CancellationTokenSource).RunAsync();
-                    
-                    // We should have expected at least one test run. We probably returned before our target test was able to run
-                    if (!testRecorded)
-                    {
-                        bufferedMessageBus.QueueMessage(new TestSkipped(test, scenarioContext.SkippedReason ?? "No applicable tests were able to run"));
-                        result = new RunSummary { Skipped = 1, Total = 1 };
-                    }
 
                     aggregatedResult.Aggregate(result);
 
@@ -145,6 +138,14 @@ namespace ScenarioTests.Internal
                     if (bufferedMessages.OfType<TestFailed>().Any())
                     {
                         bufferedMessages = bufferedMessages.Where(x => x is not TestPassed);
+                    }
+
+
+                    // We should have expected at least one test run. We probably returned before our target test was able to run
+                    if (!testRecorded)
+                    {
+                        bufferedMessageBus.QueueMessage(new TestSkipped(test, scenarioContext.SkippedReason ?? "No applicable tests were able to run"));
+                        result = new RunSummary { Skipped = 1, Total = 1 };
                     }
 
                     var output = string.Join("", bufferedMessages

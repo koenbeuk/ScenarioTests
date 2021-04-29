@@ -95,12 +95,56 @@ namespace ScenarioTests.Tests
             });
         }
 
+
+        [Internal.ScenarioFact(FactName = "X")]
+        [Trait("Negate", "true")]
+        public void FailingTestMethod(ScenarioContext scenarioContext)
+        {
+            if ((Boolean)(object)true)
+                throw new Exception();
+
+            scenarioContext.Fact("X", () =>
+            {
+                Assert.False(true);
+            });
+        }
+
+
+        [Internal.ScenarioFact(FactName = "X")]
+        [Trait("Negate", "true")]
+        public async Task FailingAsyncTestMethod(ScenarioContext scenarioContext)
+        {
+            if ((Boolean)(object)true)
+                throw new Exception();
+
+            await Task.CompletedTask;
+            scenarioContext.Fact("X", () =>
+            {
+                Assert.False(true);
+            });
+        }
+
+
         [Internal.ScenarioFact(FactName = "X")]
         [Trait("Negate", "true")]
         public void FailingTestWithPostException(ScenarioContext scenarioContext)
         {
             scenarioContext.Fact("X", () =>
             {
+                Assert.False(true);
+            });
+
+            throw new Exception();
+        }
+
+
+        [Internal.ScenarioFact(FactName = "X")]
+        [Trait("Negate", "true")]
+        public async Task FailingAsyncTestWithPostException(ScenarioContext scenarioContext)
+        {
+            await scenarioContext.Fact("X", async () =>
+            {
+                await Task.CompletedTask;
                 Assert.False(true);
             });
 
