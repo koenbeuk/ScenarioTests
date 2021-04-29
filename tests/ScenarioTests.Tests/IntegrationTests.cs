@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Runners;
 
 namespace ScenarioTests.Tests
 {
@@ -73,16 +74,38 @@ namespace ScenarioTests.Tests
             await Task.Delay(200);
         }
 
-        //[Internal.ScenarioFact(FactName = "X")]
-        //public void PostException(ScenarioContext scenarioContext)
-        //{
-        //    scenarioContext.Fact("X", () =>
-        //    {
-        //    });
+        [Internal.ScenarioFact(FactName = "X")]
+        [Trait("Negate", "true")]
+        public void FailingTest(ScenarioContext scenarioContext)
+        {
+            scenarioContext.Fact("X", () =>
+            {
+                Assert.False(true);
+            });
+        }
 
-        //    // We need to manually confirm that indeed the 200ms was added to the total test duration
-        //    throw new Exception();
-        //}
+        [Internal.ScenarioFact(FactName = "X")]
+        [Trait("Negate", "true")]
+        public async Task FailingAsyncTest(ScenarioContext scenarioContext)
+        {
+            await scenarioContext.Fact("X", async () =>
+            {
+                await Task.CompletedTask;
+                Assert.False(true);
+            });
+        }
+
+        [Internal.ScenarioFact(FactName = "X")]
+        [Trait("Negate", "true")]
+        public void FailingTestWithPostException(ScenarioContext scenarioContext)
+        {
+            scenarioContext.Fact("X", () =>
+            {
+                Assert.False(true);
+            });
+
+            throw new Exception();
+        }
 
         [Internal.ScenarioFact(FactName = "X")]
         public void SkippedTest(ScenarioContext scenarioContext)
