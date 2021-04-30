@@ -4,10 +4,14 @@
     {
 		[global::System.Runtime.CompilerServices.CompilerGenerated]
 		[global::System.Diagnostics.DebuggerStepThrough]
-		[global::ScenarioTests.Internal.ScenarioFact(DisplayName = "Scenario_T1", FactName = "T1", FileName = "", LineNumber = 5, TheoryTestCaseLimit = 5)]
+		[global::ScenarioTests.Internal.ScenarioFact(DisplayName = "Scenario_T1", FactName = "T1", ExecutionPolicy = global::ScenarioTests.ScenarioTestExecutionPolicy.EndAfterConclusion, FileName = "", LineNumber = 5, TheoryTestCaseLimit = 5)]
 		public void Scenario_T1(global::ScenarioTests.ScenarioContext scenarioContext)
 		{
-			Scenario(scenarioContext);
+			try
+		{
+				Scenario(scenarioContext);
+			}
+			catch(global::ScenarioTests.Internal.ScenarioAbortException) { }
 		}
 
     }
