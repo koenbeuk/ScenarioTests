@@ -44,7 +44,7 @@ namespace ScenarioTests
             {
                 invocation();
                 return Task.CompletedTask;
-            });
+            }).GetAwaiter().GetResult();
 
         /// <summary>
         /// 
@@ -58,7 +58,7 @@ namespace ScenarioTests
             {
                 invocation();
                 return Task.CompletedTask;
-            });
+            }).GetAwaiter().GetResult();
 
         [DebuggerStepThrough]
         public Task Fact(string name, Func<Task> invocation)
@@ -77,7 +77,7 @@ namespace ScenarioTests
             {
                 invocation();
                 return Task.CompletedTask;
-            });
+            }).GetAwaiter().GetResult();
 
         [DebuggerStepThrough]
         public void Theory<T1, TResult>(string name, T1 argument, Func<TResult> invocation)
@@ -85,7 +85,7 @@ namespace ScenarioTests
             {
                 invocation();
                 return Task.CompletedTask;
-            });
+            }).GetAwaiter().GetResult();
 
         [DebuggerStepThrough]
         public Task Theory<T1>(string name, T1 argument, Func<Task> invocation)
