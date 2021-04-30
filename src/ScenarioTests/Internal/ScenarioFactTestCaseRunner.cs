@@ -112,6 +112,8 @@ namespace ScenarioTests.Internal
                                 }
                             }
                         }
+
+                        scenarioContext.IsTargetFinished = true;
                     });
 
                     TestMethodArguments = new object[] { scenarioContext };

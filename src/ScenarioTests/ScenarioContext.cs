@@ -38,6 +38,30 @@ namespace ScenarioTests
         /// </summary>
         public string? SkippedReason => _skippedReason;
 
+        /// <summary>
+        /// Get if the target test has since been passed 
+        /// </summary>
+        public bool IsTargetFinished { get; internal set; }
+
+        /// <summary>
+        /// Abort the current scenario
+        /// </summary>
+        public void Abort()
+        {
+            throw new ScenarioAbortException();
+        }
+
+        /// <summary>
+        /// Abort the current scenario if we've finished the target test
+        /// </summary>
+        public void AbortIfTargetIsFinished()
+        {
+            if (IsTargetFinished)
+            {
+                Abort();
+            }
+        }
+
         [DebuggerStepThrough]
         public void Fact(string name, Action invocation)
             => Fact(name, () =>

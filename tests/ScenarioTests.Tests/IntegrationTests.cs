@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ScenarioTests.Internal;
 using Xunit;
 using Xunit.Runners;
 
@@ -158,6 +159,35 @@ namespace ScenarioTests.Tests
 
             scenarioContext.Fact("X", () =>
             {
+                Assert.False(true);
+            });
+        }
+
+        [Internal.ScenarioFact(FactName = "X")]
+        public void AbortTest(ScenarioContext scenarioContext)
+        {
+            Assert.Throws<ScenarioAbortException>(() =>
+            {
+                scenarioContext.Abort();
+
+                scenarioContext.Fact("X", () =>
+                {
+                    Assert.False(true);
+                });
+            });
+        }
+
+        [Internal.ScenarioFact(FactName = "X")]
+        public void AbortIfTargetHasFinished(ScenarioContext scenarioContext)
+        {
+            // Should not throw
+            scenarioContext.AbortIfTargetIsFinished();
+
+            scenarioContext.Fact("X", () => { });
+
+            Assert.Throws<Internal.ScenarioAbortException>(() =>
+            {
+                scenarioContext.AbortIfTargetIsFinished();
             });
         }
     }

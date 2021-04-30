@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ScenarioTests.Generator
+namespace ScenarioTests
 {
-    public enum ScenarioTestMethodNamingPolicy
+    public enum ScenarioExecutionPolicy
     {
-        MethodAndTest,
-        Test
+        CompleteScenario,
+        AbortAfterFirstConc
     }
 }

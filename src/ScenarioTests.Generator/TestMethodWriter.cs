@@ -47,16 +47,20 @@ namespace ScenarioTests.Generator
                 WriteLine($"public void {scenarioInvocationDescriptor.TestMethodName}(global::ScenarioTests.ScenarioContext scenarioContext)");
             }
             WriteLine("{");
-            
+            WriteLine("\ttry");
+            WriteLine("{");
+
             if (scenarioDescriptor.IsAsync)
             {
-                WriteLine($"\tawait {scenarioDescriptor.MethodName}(scenarioContext).ConfigureAwait(false);");
+                WriteLine($"\t\tawait {scenarioDescriptor.MethodName}(scenarioContext).ConfigureAwait(false);");
             }
             else
             {
-                WriteLine($"\t{scenarioDescriptor.MethodName}(scenarioContext);");
+                WriteLine($"\t\t{scenarioDescriptor.MethodName}(scenarioContext);");
             }
 
+            WriteLine("\t}");
+            WriteLine("\tcatch(global::ScenarioTests.Internal.ScenarioAbortException) { }");
             WriteLine("}");
 
         }

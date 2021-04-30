@@ -19,6 +19,11 @@ namespace ScenarioTests
         public ScenarioTestMethodNamingPolicy NamingPolicy { get; set; } = ScenarioTestMethodNamingPolicy.Test;
 
         /// <summary>
+        /// Get or set wether autoabort should be enabled. With AutoAbort, the scenario will abort as soon as possible
+        /// </summary>
+        public bool AutoAbort { get; set; } = false;
+
+        /// <summary>
         /// Get or set an upper boundary of the max number of theory test cases that can be accepted.
         /// </summary>
         public int TheoryTestCaseLimit { get; set; }
