@@ -106,8 +106,8 @@ class TestHost {
 }
 ```
 
-#### Can I return data from my facts and theories
-Yes and no, its perfectly valid for a fact or theory to return something but it will get ignored. You can do a return from within a Fact or theory but you cant capture its value. You can manipulate the state of outside components from within a fact or theory however this will not affect other tests and theories.
+#### Can I return data from my tests
+Yes and no, its perfectly valid for a fact or theory to return something but it will get ignored. You can do a return from within a Fact or theory but you cant capture its value. You can manipulate the state of outside components from within a fact or theory however this will not affect other tests.
 
 #### Can I have preconditions and postconditions that are validated for all tests
 Yes; you can Assert both within and outside of tests. Consider this example:
@@ -135,7 +135,7 @@ public void Scenario1(ScenarioContext scenario) {
 }
 ```
 
-Facts will fail if the database fails to be created or destroyed
+Tests will fail if the database fails to be created or destroyed. Preconditions running before the target test will always be evaluated. Post conditions will only be evaluated based on the ExecutionPolicy of your scenario.
 
 #### Can I have async facts
 Certainly, there are overloads for facts and theories that return a task; an example:
@@ -151,3 +151,23 @@ public async Task Scenario1(ScenarioContext scenario) {
 
 #### Is this compatible with MSTest/NUnit/....
 Currently we only expose a generator for XUnit. We'd like to produce generators for different testing frameworks in the future however we have no direct need for this. If this is important for you then please go ahead and open an issue or take a swing at it yourself!
+
+#### Can I skip tests?
+You can call `scenario.Skip("reason...")` before- during or after a test.
+```csharp
+public async Task Scenario1(ScenarioContext scenario) {
+    var database = CreateTestDatabase();
+    
+    if (!database.Created) {
+        scenario.Skip("Was not able to create a test database...");
+    }
+
+    await scenario.Fact("Ensure that we start with 0 users", async () => {
+        if (....) {
+            scenario.Skip("We're skipping this test because of... reasons");
+        }
+    
+        Assert.Equal(0, await database.Users.CountAsync());
+    });
+}
+```
