@@ -39,26 +39,39 @@ namespace ScenarioTests
         public string? SkippedReason => _skippedReason;
 
         /// <summary>
-        /// Get if the target test has since been passed 
+        /// Get if the target test has since been passed or skipped
         /// </summary>
-        public bool IsTargetFinished { get; internal set; }
+        public bool IsTargetConclusive { get; internal set; }
+
+        internal bool AutoAbort { get; set; }
+
+        internal void EndScenarioConditionally()
+        {
+            if (AutoAbort)
+            {
+                if (IsTargetConclusive || Skipped)
+                {
+                    EndScenario();
+                }
+            }
+        }
 
         /// <summary>
-        /// Abort the current scenario
+        /// Ends the current scenario
         /// </summary>
-        public void Abort()
+        public void EndScenario()
         {
             throw new ScenarioAbortException();
         }
 
         /// <summary>
-        /// Abort the current scenario if we've finished the target test
+        /// Ends the current scenario if we've finished the target test or if we're skipped
         /// </summary>
-        public void AbortIfTargetIsFinished()
+        public void EndScenarioIfConclusive()
         {
-            if (IsTargetFinished)
+            if (IsTargetConclusive || Skipped)
             {
-                Abort();
+                EndScenario();
             }
         }
 
@@ -91,8 +104,11 @@ namespace ScenarioTests
             {
                 return _recorder(null, invocation);
             }
-
-            return Task.CompletedTask;
+            else
+            {
+                EndScenarioConditionally();
+                return Task.CompletedTask;
+            }
         }
 
         [DebuggerStepThrough]
@@ -118,6 +134,10 @@ namespace ScenarioTests
             {
                 return _recorder(argument, invocation);
             }
+            else
+            {
+                EndScenarioConditionally();
+            }
 
             return Task.CompletedTask;
         }
@@ -126,6 +146,7 @@ namespace ScenarioTests
         public void Skip(string reason)
         {
             _skippedReason = reason;
+            EndScenarioConditionally();
         }
     }
 }

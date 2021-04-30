@@ -33,7 +33,8 @@ namespace ScenarioTests.Internal
                 null,
                 factAttribute.GetNamedArgument<string>(nameof(ScenarioFactAttribute.FactName)),
                 sourceInformation, 
-                factAttribute.GetNamedArgument<int>(nameof(ScenarioFactAttribute.TheoryTestCaseLimit)));
+                factAttribute.GetNamedArgument<int>(nameof(ScenarioFactAttribute.TheoryTestCaseLimit)),
+                factAttribute.GetNamedArgument<ScenarioTestExecutionPolicy>(nameof(ScenarioFactAttribute.ExecutionPolicy)));
         }
     }
 }

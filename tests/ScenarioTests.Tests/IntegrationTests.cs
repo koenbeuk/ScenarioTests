@@ -11,7 +11,7 @@ namespace ScenarioTests.Tests
 {
     public class IntegrationTests
     {
-        [Internal.ScenarioFact(FactName = "X")]
+        [Internal.ScenarioFact(FactName = "X", ExecutionPolicy = ScenarioTestExecutionPolicy.EndAfterScenario)]
         public void SimpleFact(ScenarioContext scenarioContext)
         {
             scenarioContext.Fact("X", () =>
@@ -21,7 +21,7 @@ namespace ScenarioTests.Tests
         }
 
 
-        [Internal.ScenarioFact(FactName = "X")]
+        [Internal.ScenarioFact(FactName = "X", ExecutionPolicy = ScenarioTestExecutionPolicy.EndAfterScenario)]
         public void SimpleTheory(ScenarioContext scenarioContext)
         {
             var invocations = 0;
@@ -37,7 +37,7 @@ namespace ScenarioTests.Tests
             Assert.Equal(1, invocations);
         }
 
-        [Internal.ScenarioFact(FactName = "X")]
+        [Internal.ScenarioFact(FactName = "X", ExecutionPolicy = ScenarioTestExecutionPolicy.EndAfterScenario)]
         public void SimpleTheory2(ScenarioContext scenarioContext)
         {
             var invocations = 0;
@@ -53,7 +53,7 @@ namespace ScenarioTests.Tests
             Assert.Equal(1, invocations);
         }
 
-        [Internal.ScenarioFact(FactName = "X")]
+        [Internal.ScenarioFact(FactName = "X", ExecutionPolicy = ScenarioTestExecutionPolicy.EndAfterScenario)]
         public async Task DelayedPreconditions(ScenarioContext scenarioContext)
         {
             // We need to manually confirm that indeed the 200ms was added to the total test duration
@@ -64,7 +64,7 @@ namespace ScenarioTests.Tests
             });
         }
 
-        [Internal.ScenarioFact(FactName = "X")]
+        [Internal.ScenarioFact(FactName = "X", ExecutionPolicy = ScenarioTestExecutionPolicy.EndAfterScenario)]
         public async Task DelayedPostconditions(ScenarioContext scenarioContext)
         {
             scenarioContext.Fact("X", () =>
@@ -75,7 +75,7 @@ namespace ScenarioTests.Tests
             await Task.Delay(200);
         }
 
-        [Internal.ScenarioFact(FactName = "X")]
+        [Internal.ScenarioFact(FactName = "X", ExecutionPolicy = ScenarioTestExecutionPolicy.EndAfterScenario)]
         [Trait("Negate", "true")]
         public void FailingTest(ScenarioContext scenarioContext)
         {
@@ -85,7 +85,7 @@ namespace ScenarioTests.Tests
             });
         }
 
-        [Internal.ScenarioFact(FactName = "X")]
+        [Internal.ScenarioFact(FactName = "X", ExecutionPolicy = ScenarioTestExecutionPolicy.EndAfterScenario)]
         [Trait("Negate", "true")]
         public async Task FailingAsyncTest(ScenarioContext scenarioContext)
         {
@@ -97,7 +97,7 @@ namespace ScenarioTests.Tests
         }
 
 
-        [Internal.ScenarioFact(FactName = "X")]
+        [Internal.ScenarioFact(FactName = "X", ExecutionPolicy = ScenarioTestExecutionPolicy.EndAfterScenario)]
         [Trait("Negate", "true")]
         public void FailingTestMethod(ScenarioContext scenarioContext)
         {
@@ -111,11 +111,11 @@ namespace ScenarioTests.Tests
         }
 
 
-        [Internal.ScenarioFact(FactName = "X")]
+        [Internal.ScenarioFact(FactName = "X", ExecutionPolicy = ScenarioTestExecutionPolicy.EndAfterScenario)]
         [Trait("Negate", "true")]
         public async Task FailingAsyncTestMethod(ScenarioContext scenarioContext)
         {
-            if ((Boolean)(object)true)
+            if ((bool)(object)true)
                 throw new Exception();
 
             await Task.CompletedTask;
@@ -126,7 +126,7 @@ namespace ScenarioTests.Tests
         }
 
 
-        [Internal.ScenarioFact(FactName = "X")]
+        [Internal.ScenarioFact(FactName = "X", ExecutionPolicy = ScenarioTestExecutionPolicy.EndAfterScenario)]
         [Trait("Negate", "true")]
         public void FailingTestWithPostException(ScenarioContext scenarioContext)
         {
@@ -139,7 +139,7 @@ namespace ScenarioTests.Tests
         }
 
 
-        [Internal.ScenarioFact(FactName = "X")]
+        [Internal.ScenarioFact(FactName = "X", ExecutionPolicy = ScenarioTestExecutionPolicy.EndAfterScenario)]
         [Trait("Negate", "true")]
         public async Task FailingAsyncTestWithPostException(ScenarioContext scenarioContext)
         {
@@ -152,7 +152,7 @@ namespace ScenarioTests.Tests
             throw new Exception();
         }
 
-        [Internal.ScenarioFact(FactName = "X")]
+        [Internal.ScenarioFact(FactName = "X", ExecutionPolicy = ScenarioTestExecutionPolicy.EndAfterScenario)]
         public void SkippedTest(ScenarioContext scenarioContext)
         {
             scenarioContext.Skip("Foo");
@@ -163,12 +163,12 @@ namespace ScenarioTests.Tests
             });
         }
 
-        [Internal.ScenarioFact(FactName = "X")]
-        public void AbortTest(ScenarioContext scenarioContext)
+        [Internal.ScenarioFact(FactName = "X", ExecutionPolicy = ScenarioTestExecutionPolicy.EndAfterScenario)]
+        public void EndScenarioTest(ScenarioContext scenarioContext)
         {
             Assert.Throws<ScenarioAbortException>(() =>
             {
-                scenarioContext.Abort();
+                scenarioContext.EndScenario();
 
                 scenarioContext.Fact("X", () =>
                 {
@@ -177,17 +177,17 @@ namespace ScenarioTests.Tests
             });
         }
 
-        [Internal.ScenarioFact(FactName = "X")]
-        public void AbortIfTargetHasFinished(ScenarioContext scenarioContext)
+        [Internal.ScenarioFact(FactName = "X", ExecutionPolicy = ScenarioTestExecutionPolicy.EndAfterScenario)]
+        public void EndScenarioIfTargetHasFinished(ScenarioContext scenarioContext)
         {
             // Should not throw
-            scenarioContext.AbortIfTargetIsFinished();
+            scenarioContext.EndScenarioIfConclusive();
 
             scenarioContext.Fact("X", () => { });
 
             Assert.Throws<Internal.ScenarioAbortException>(() =>
             {
-                scenarioContext.AbortIfTargetIsFinished();
+                scenarioContext.EndScenarioIfConclusive();
             });
         }
     }

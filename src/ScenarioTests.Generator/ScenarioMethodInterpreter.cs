@@ -44,6 +44,14 @@ namespace ScenarioTests.Generator
                 .Cast<ScenarioTestMethodNamingPolicy>()
                 .FirstOrDefault();
 
+            var executionPolicy = scenarioAttributeClass.NamedArguments
+                .Where(x => x.Key == "ExecutionPolicy")
+                .Where(x => x.Value.Kind == TypedConstantKind.Enum)
+                .Select(x => x.Value.Value)
+                .Where(x => Enum.IsDefined(typeof(ScenarioTestExecutionPolicy), x))
+                .Cast<ScenarioTestExecutionPolicy>()
+                .FirstOrDefault();
+
             var theoryTestCaseLimit = scenarioAttributeClass.NamedArguments
                 .Where(x => x.Key == "TheoryTestCaseLimit")
                 .Where(x => x.Value.Kind == TypedConstantKind.Primitive)
@@ -115,6 +123,7 @@ namespace ScenarioTests.Generator
                 MethodName = methodSymbol.Name,
                 IsAsync = !methodSymbol.ReturnsVoid && methodSymbol.ReturnType.AllInterfaces.Any(i => SymbolEqualityComparer.Default.Equals(i, asynResultType)),
                 TheoryTestCaseLimit = theoryTestCaseLimit,
+                ExecutionPolicy = executionPolicy,
                 Invocations = invocations
             };
         }

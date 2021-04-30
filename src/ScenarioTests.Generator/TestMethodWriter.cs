@@ -36,7 +36,7 @@ namespace ScenarioTests.Generator
 
             WriteLine("[global::System.Runtime.CompilerServices.CompilerGenerated]");
             WriteLine("[global::System.Diagnostics.DebuggerStepThrough]");
-            WriteLine($"[global::ScenarioTests.Internal.ScenarioFact(DisplayName = {Syntax.Literal(testMethodName)}, FactName = {Syntax.Literal(scenarioInvocationDescriptor.Name)}, FileName = {Syntax.Literal(scenarioInvocationDescriptor.FileName)}, LineNumber = {scenarioInvocationDescriptor.LineNumber}{theoryAttributes})]");
+            WriteLine($"[global::ScenarioTests.Internal.ScenarioFact(DisplayName = {Syntax.Literal(testMethodName)}, FactName = {Syntax.Literal(scenarioInvocationDescriptor.Name)}, ExecutionPolicy = global::ScenarioTests.ScenarioTestExecutionPolicy.{scenarioDescriptor.ExecutionPolicy}, FileName = {Syntax.Literal(scenarioInvocationDescriptor.FileName)}, LineNumber = {scenarioInvocationDescriptor.LineNumber}{theoryAttributes})]");
 
             if (scenarioDescriptor.IsAsync)
             {

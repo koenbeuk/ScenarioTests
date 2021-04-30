@@ -15,8 +15,9 @@ namespace ScenarioTests.Internal
     public sealed class ScenarioFactAttribute : FactAttribute
     {
         public string FactName { get; set; }
+        public ScenarioTestExecutionPolicy ExecutionPolicy { get; set; }
+        public int TheoryTestCaseLimit { get; set; } = 100;
         public string FileName { get; set; }
         public int LineNumber { get; set; }
-        public int TheoryTestCaseLimit { get; set; } = 100;
     }
 }
