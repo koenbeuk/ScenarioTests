@@ -116,26 +116,28 @@ public void Scenario1(ScenarioContext scenario) {
     // Prefix running for each test case
     var database = CreateTestDatabase();
     Assert.True(database.IsCreated);
-
-    scenario.Fact("Ensure that we start with 0 users", () => {
-        Assert.Equal(0, database.Users.Count());
-    });
-
-    // Add a single users, our subsequent facts will need it...
-    database.Users.Add(new User("Scott"));
-
-    scenario.Fact("Ensure that we added a user", () => {
-        Assert.Equal(1, database.Users.Count());
-    });
-
     
-    // Postfix running for each test case
-    database.Destoy();
-    Assert.True(database.IsDestroyed);
+    try {
+        scenario.Fact("Ensure that we start with 0 users", () => {
+            Assert.Equal(0, database.Users.Count());
+        });
+
+        // Add a single users, our subsequent facts will need it...
+        database.Users.Add(new User("Scott"));
+
+        scenario.Fact("Ensure that we added a user", () => {
+            Assert.Equal(1, database.Users.Count());
+        });
+    }
+    finally {
+        // Postfix running for each test case
+        database.Destoy();
+        Assert.True(database.IsDestroyed);
+    }
 }
 ```
 
-Tests will fail if the database fails to be created or destroyed. Preconditions running before the target test will always be evaluated. Post conditions will only be evaluated based on the ExecutionPolicy of your scenario.
+Tests will fail if the database fails to be created or destroyed. Preconditions running before the target test will always be evaluated. Post conditions will only be evaluated if they are in a catch/finally block or if the ExecutionPolicy of your scenario is set to `EndAfterScenario`.
 
 #### Can I have async facts
 Certainly, there are overloads for facts and theories that return a task; an example:
