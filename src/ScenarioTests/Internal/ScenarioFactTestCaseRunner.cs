@@ -112,7 +112,12 @@ namespace ScenarioTests.Internal
                                 }
                             }
                         }
+
+                        scenarioContext.IsTargetConclusive = true;
+                        scenarioContext.EndScenarioConditionally();
                     });
+
+                    scenarioContext.AutoAbort = scenarioFactTestCase.ExecutionPolicy is ScenarioTestExecutionPolicy.EndAfterConclusion;
 
                     TestMethodArguments = new object[] { scenarioContext };
 
@@ -130,6 +135,14 @@ namespace ScenarioTests.Internal
                     };
 
                     var bufferedMessages = bufferedMessageBus.QueuedMessages;
+
+                    // We should have expected at least one test run. We probably returned before our target test was able to run
+                    if (!testRecorded && result.Failed == 0)
+                    {
+                        bufferedMessageBus.QueueMessage(new TestSkipped(test, scenarioContext.SkippedReason ?? "No applicable tests were able to run"));
+                        result = new RunSummary { Skipped = 1, Total = 1 };
+                    }
+
                     if (bufferedMessages.OfType<TestSkipped>().Any())
                     {
                         bufferedMessages = bufferedMessages.Where(x => x is not TestPassed and not TestFailed);
@@ -138,14 +151,6 @@ namespace ScenarioTests.Internal
                     if (bufferedMessages.OfType<TestFailed>().Any())
                     {
                         bufferedMessages = bufferedMessages.Where(x => x is not TestPassed);
-                    }
-
-
-                    // We should have expected at least one test run. We probably returned before our target test was able to run
-                    if (!testRecorded)
-                    {
-                        bufferedMessageBus.QueueMessage(new TestSkipped(test, scenarioContext.SkippedReason ?? "No applicable tests were able to run"));
-                        result = new RunSummary { Skipped = 1, Total = 1 };
                     }
 
                     var output = string.Join("", bufferedMessages

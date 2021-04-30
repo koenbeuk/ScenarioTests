@@ -38,6 +38,43 @@ namespace ScenarioTests
         /// </summary>
         public string? SkippedReason => _skippedReason;
 
+        /// <summary>
+        /// Get if the target test has since been passed or skipped
+        /// </summary>
+        public bool IsTargetConclusive { get; internal set; }
+
+        internal bool AutoAbort { get; set; }
+
+        internal void EndScenarioConditionally()
+        {
+            if (AutoAbort)
+            {
+                if (IsTargetConclusive || Skipped)
+                {
+                    EndScenario();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Ends the current scenario
+        /// </summary>
+        public void EndScenario()
+        {
+            throw new ScenarioAbortException();
+        }
+
+        /// <summary>
+        /// Ends the current scenario if we've finished the target test or if we're skipped
+        /// </summary>
+        public void EndScenarioIfConclusive()
+        {
+            if (IsTargetConclusive || Skipped)
+            {
+                EndScenario();
+            }
+        }
+
         [DebuggerStepThrough]
         public void Fact(string name, Action invocation)
             => Fact(name, () =>
@@ -67,8 +104,11 @@ namespace ScenarioTests
             {
                 return _recorder(null, invocation);
             }
-
-            return Task.CompletedTask;
+            else
+            {
+                EndScenarioConditionally();
+                return Task.CompletedTask;
+            }
         }
 
         [DebuggerStepThrough]
@@ -94,6 +134,10 @@ namespace ScenarioTests
             {
                 return _recorder(argument, invocation);
             }
+            else
+            {
+                EndScenarioConditionally();
+            }
 
             return Task.CompletedTask;
         }
@@ -102,6 +146,7 @@ namespace ScenarioTests
         public void Skip(string reason)
         {
             _skippedReason = reason;
+            EndScenarioConditionally();
         }
     }
 }

@@ -4,24 +4,36 @@
     {
 		[global::System.Runtime.CompilerServices.CompilerGenerated]
 		[global::System.Diagnostics.DebuggerStepThrough]
-		[global::ScenarioTests.Internal.ScenarioFact(DisplayName = "Scenario_T1", FactName = "T1", FileName = "", LineNumber = 5)]
+		[global::ScenarioTests.Internal.ScenarioFact(DisplayName = "Scenario_T1", FactName = "T1", ExecutionPolicy = global::ScenarioTests.ScenarioTestExecutionPolicy.EndAfterConclusion, FileName = "", LineNumber = 5)]
 		public async System.Threading.Tasks.Task Scenario_T1(global::ScenarioTests.ScenarioContext scenarioContext)
 		{
-			await Scenario(scenarioContext).ConfigureAwait(false);
+			try
+		{
+				await Scenario(scenarioContext).ConfigureAwait(false);
+			}
+			catch(global::ScenarioTests.Internal.ScenarioAbortException) { }
 		}
 		[global::System.Runtime.CompilerServices.CompilerGenerated]
 		[global::System.Diagnostics.DebuggerStepThrough]
-		[global::ScenarioTests.Internal.ScenarioFact(DisplayName = "Scenario_T2", FactName = "T2", FileName = "", LineNumber = 6)]
+		[global::ScenarioTests.Internal.ScenarioFact(DisplayName = "Scenario_T2", FactName = "T2", ExecutionPolicy = global::ScenarioTests.ScenarioTestExecutionPolicy.EndAfterConclusion, FileName = "", LineNumber = 6)]
 		public async System.Threading.Tasks.Task Scenario_T2(global::ScenarioTests.ScenarioContext scenarioContext)
 		{
-			await Scenario(scenarioContext).ConfigureAwait(false);
+			try
+		{
+				await Scenario(scenarioContext).ConfigureAwait(false);
+			}
+			catch(global::ScenarioTests.Internal.ScenarioAbortException) { }
 		}
 		[global::System.Runtime.CompilerServices.CompilerGenerated]
 		[global::System.Diagnostics.DebuggerStepThrough]
-		[global::ScenarioTests.Internal.ScenarioFact(DisplayName = "Scenario_T3", FactName = "T3", FileName = "", LineNumber = 7)]
+		[global::ScenarioTests.Internal.ScenarioFact(DisplayName = "Scenario_T3", FactName = "T3", ExecutionPolicy = global::ScenarioTests.ScenarioTestExecutionPolicy.EndAfterConclusion, FileName = "", LineNumber = 7)]
 		public async System.Threading.Tasks.Task Scenario_T3(global::ScenarioTests.ScenarioContext scenarioContext)
 		{
-			await Scenario(scenarioContext).ConfigureAwait(false);
+			try
+		{
+				await Scenario(scenarioContext).ConfigureAwait(false);
+			}
+			catch(global::ScenarioTests.Internal.ScenarioAbortException) { }
 		}
 
     }

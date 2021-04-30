@@ -36,7 +36,7 @@ namespace ScenarioTests.Generator
 
             WriteLine("[global::System.Runtime.CompilerServices.CompilerGenerated]");
             WriteLine("[global::System.Diagnostics.DebuggerStepThrough]");
-            WriteLine($"[global::ScenarioTests.Internal.ScenarioFact(DisplayName = {Syntax.Literal(testMethodName)}, FactName = {Syntax.Literal(scenarioInvocationDescriptor.Name)}, FileName = {Syntax.Literal(scenarioInvocationDescriptor.FileName)}, LineNumber = {scenarioInvocationDescriptor.LineNumber}{theoryAttributes})]");
+            WriteLine($"[global::ScenarioTests.Internal.ScenarioFact(DisplayName = {Syntax.Literal(testMethodName)}, FactName = {Syntax.Literal(scenarioInvocationDescriptor.Name)}, ExecutionPolicy = global::ScenarioTests.ScenarioTestExecutionPolicy.{scenarioDescriptor.ExecutionPolicy}, FileName = {Syntax.Literal(scenarioInvocationDescriptor.FileName)}, LineNumber = {scenarioInvocationDescriptor.LineNumber}{theoryAttributes})]");
 
             if (scenarioDescriptor.IsAsync)
             {
@@ -47,16 +47,20 @@ namespace ScenarioTests.Generator
                 WriteLine($"public void {scenarioInvocationDescriptor.TestMethodName}(global::ScenarioTests.ScenarioContext scenarioContext)");
             }
             WriteLine("{");
-            
+            WriteLine("\ttry");
+            WriteLine("{");
+
             if (scenarioDescriptor.IsAsync)
             {
-                WriteLine($"\tawait {scenarioDescriptor.MethodName}(scenarioContext).ConfigureAwait(false);");
+                WriteLine($"\t\tawait {scenarioDescriptor.MethodName}(scenarioContext).ConfigureAwait(false);");
             }
             else
             {
-                WriteLine($"\t{scenarioDescriptor.MethodName}(scenarioContext);");
+                WriteLine($"\t\t{scenarioDescriptor.MethodName}(scenarioContext);");
             }
 
+            WriteLine("\t}");
+            WriteLine("\tcatch(global::ScenarioTests.Internal.ScenarioAbortException) { }");
             WriteLine("}");
 
         }

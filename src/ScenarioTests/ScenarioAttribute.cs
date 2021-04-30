@@ -19,6 +19,11 @@ namespace ScenarioTests
         public ScenarioTestMethodNamingPolicy NamingPolicy { get; set; } = ScenarioTestMethodNamingPolicy.Test;
 
         /// <summary>
+        /// Get or set an execution policy for tests in this scenario
+        /// </summary>
+        public ScenarioTestExecutionPolicy ExecutionPolicy { get; set; } = ScenarioTestExecutionPolicy.EndAfterConclusion;
+
+        /// <summary>
         /// Get or set an upper boundary of the max number of theory test cases that can be accepted.
         /// </summary>
         public int TheoryTestCaseLimit { get; set; }
