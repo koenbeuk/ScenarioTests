@@ -68,7 +68,13 @@ partial class ScenarioTests
 ### How it works
 We have a source generator that checks for methods in your test class marked with the `[Scenario]` attribute. When it finds one, it ensures that it has a single argument that accepts a `ScenarioContext`. 
 
-It will then keep on discovering calls in the shape of `ScenarioContext.Fact` or `ScenarioContext.Theory` and generate individual test cases for those. If you add `<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>` in your csproj, you can see the code that gets generated. Each generated test case is harnassed to not affect other test cases. (Each test case will run your scenario from start to bottom).
+The generator will then keep on discovering calls in the shape of `ScenarioContext.Fact` or `ScenarioContext.Theory` and generate individual test methods for those calls. Each generated test case is harnassed to not affect other test cases as it will Invoke the ScenarioMethod with an ScenarioContext instance that is configured to Ignore any tests not named after the Test for which this TestMethod is generated.
+
+If you add `<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>` in your csproj, you can see the code that gets generated.
+
+There are 2 execution policies available (Configured on the Scenario attribute, e.g. `[Scenario(ExecutionPolicy = ScenarioTestExecutionPolicy.EndAfterScenario)]`):
+- `EndAfterScenario` will run the Scenario for a particular test case and it will not complete until the entire scenario has been played out.
+- `EndAfterConclusion` (Default) will run the Scenario for a particular test case up until a satisfactory conclusion has been reached. This can happen either if our test case has been verified or when our test case has been Skipped. This works by raining a `ScenarioAbortException` right after we've concluded an outcome for a particular test case. This exception is then silently ignored. 
 
 Theory test cases are internally isolated. A theory in the shape of:
 
