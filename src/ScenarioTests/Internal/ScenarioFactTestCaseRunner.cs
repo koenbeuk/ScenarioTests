@@ -73,6 +73,7 @@ namespace ScenarioTests.Internal
                         if (skipAdditionalTests)
                         {
                             pendingRestart = true; // when we discovered more tests after a test completed, allow us to restart
+                            scenarioContext.EndScenarioConditionally();
                             return;
                         }
 
@@ -114,7 +115,6 @@ namespace ScenarioTests.Internal
                         }
 
                         scenarioContext.IsTargetConclusive = true;
-                        scenarioContext.EndScenarioConditionally();
                     });
 
                     scenarioContext.AutoAbort = scenarioFactTestCase.ExecutionPolicy is ScenarioTestExecutionPolicy.EndAfterConclusion;
