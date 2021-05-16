@@ -14,6 +14,7 @@ using VerifyXunit;
 using Xunit;
 using Xunit.Abstractions;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Diagnostics.Tracing;
 
 namespace ScenarioTests.Tests
 {
@@ -264,6 +265,25 @@ public partial class C {
             Assert.Single(result.GeneratedTrees);
 
             return Verifier.Verify(result.GeneratedTrees[0].ToString());
+        }
+
+        [Fact]
+        public void Generate_ScenarioWithUnacceptableNames_RaisesDiagnostics()
+        {
+            var compilation = CreateCompilation(@"
+public partial class C {
+    [ScenarioTests.Scenario]
+    public void Scenario(ScenarioTests.ScenarioContext s) {
+        var foo = ""hello"";
+        s.Fact($""{foo}"", () => {
+        });
+    }
+}
+");
+
+            var result = RunGenerator(compilation);
+
+            Assert.Single(result.Diagnostics);
         }
 
         #region Helpers

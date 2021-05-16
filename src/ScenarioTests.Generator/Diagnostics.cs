@@ -20,7 +20,7 @@ namespace ScenarioTests.Generator
         public static readonly DiagnosticDescriptor FactOrTheoryNameNeedsToBeAConstant = new(
             id: "ST0002",
             title: "Any fact or theory names need to be expressed as constant literals",
-            messageFormat: "Scenario '{3}' has a fact/theory expression that lacks a constant literal name",
+            messageFormat: "Scenario '{0}' has a fact/theory expression that lacks a constant literal name",
             category: "Design",
             DiagnosticSeverity.Error,
             isEnabledByDefault: true);

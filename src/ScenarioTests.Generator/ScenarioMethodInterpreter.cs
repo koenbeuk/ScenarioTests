@@ -94,24 +94,27 @@ namespace ScenarioTests.Generator
                         }
                     }
 
-                    var testMethodName = TestMethodNamingStrategy.GetName(methodSymbol.ContainingType.Name, methodSymbol.Name, factName);
-                    var originalTestMethodName = testMethodName;
-                    var queryDuplicated = invocations.Where(x => x.TestMethodName.Equals(testMethodName, StringComparison.Ordinal));
-                    var duplicatedCounter = 0;
-
-                    while (queryDuplicated.Any())
+                    if (factName is not null)
                     {
-                        duplicatedCounter += 1;
-                        testMethodName = $"originalTestMethodName{duplicatedCounter}";
+                        var testMethodName = TestMethodNamingStrategy.GetName(methodSymbol.ContainingType.Name, methodSymbol.Name, factName);
+                        var originalTestMethodName = testMethodName;
+                        var queryDuplicated = invocations.Where(x => x.TestMethodName.Equals(testMethodName, StringComparison.Ordinal));
+                        var duplicatedCounter = 0;
+
+                        while (queryDuplicated.Any())
+                        {
+                            duplicatedCounter += 1;
+                            testMethodName = $"originalTestMethodName{duplicatedCounter}";
+                        }
+
+                        invocations.Add(new ScenarioInvocationDescriptor
+                        {
+                            TestMethodName = testMethodName,
+                            Name = factName,
+                            FileName = methodDeclarationSyntax.SyntaxTree.FilePath,
+                            LineNumber = invocationCandidate.GetLocation().GetMappedLineSpan().StartLinePosition.Line + 1
+                        });
                     }
-
-                    invocations.Add(new ScenarioInvocationDescriptor
-                    {
-                        TestMethodName = testMethodName,
-                        Name = factName,
-                        FileName = methodDeclarationSyntax.SyntaxTree.FilePath,
-                        LineNumber = invocationCandidate.GetLocation().GetMappedLineSpan().StartLinePosition.Line + 1
-                    });
                 }
             }
 
