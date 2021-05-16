@@ -8,7 +8,7 @@
 		public async System.Threading.Tasks.Task Scenario_T1(global::ScenarioTests.ScenarioContext scenarioContext)
 		{
 			try
-		{
+			{
 				await Scenario(scenarioContext).ConfigureAwait(false);
 			}
 			catch(global::ScenarioTests.Internal.ScenarioAbortException) { }
@@ -19,7 +19,7 @@
 		public async System.Threading.Tasks.Task Scenario_T2(global::ScenarioTests.ScenarioContext scenarioContext)
 		{
 			try
-		{
+			{
 				await Scenario(scenarioContext).ConfigureAwait(false);
 			}
 			catch(global::ScenarioTests.Internal.ScenarioAbortException) { }
@@ -30,7 +30,7 @@
 		public async System.Threading.Tasks.Task Scenario_T3(global::ScenarioTests.ScenarioContext scenarioContext)
 		{
 			try
-		{
+			{
 				await Scenario(scenarioContext).ConfigureAwait(false);
 			}
 			catch(global::ScenarioTests.Internal.ScenarioAbortException) { }

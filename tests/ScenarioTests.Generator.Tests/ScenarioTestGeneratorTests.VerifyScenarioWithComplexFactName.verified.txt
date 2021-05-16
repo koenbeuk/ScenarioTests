@@ -8,7 +8,7 @@
 		public void Scenario_Name_with_a_(global::ScenarioTests.ScenarioContext scenarioContext)
 		{
 			try
-		{
+			{
 				Scenario(scenarioContext);
 			}
 			catch(global::ScenarioTests.Internal.ScenarioAbortException) { }

@@ -48,7 +48,7 @@ namespace ScenarioTests.Generator
             }
             WriteLine("{");
             WriteLine("\ttry");
-            WriteLine("{");
+            WriteLine("\t{");
 
             if (scenarioDescriptor.IsAsync)
             {
