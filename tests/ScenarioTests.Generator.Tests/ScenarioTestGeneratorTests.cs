@@ -268,7 +268,7 @@ public partial class C {
         }
 
         [Fact]
-        public void Generate_ScenarioWithUnacceptableNames_RaisesDiagnostics()
+        public void ScenarioWithUnacceptableNames_RaisesDiagnostics()
         {
             var compilation = CreateCompilation(@"
 public partial class C {
@@ -276,6 +276,26 @@ public partial class C {
     public void Scenario(ScenarioTests.ScenarioContext s) {
         var foo = ""hello"";
         s.Fact($""{foo}"", () => {
+        });
+    }
+}
+");
+
+            var result = RunGenerator(compilation);
+
+            Assert.Single(result.Diagnostics);
+        }
+
+        [Fact]
+        public void ScenarioWithDuplicatedFacts_RaisesDiagnostics()
+        {
+            var compilation = CreateCompilation(@"
+public partial class C {
+    [ScenarioTests.Scenario]
+    public void Scenario(ScenarioTests.ScenarioContext s) {
+        s.Fact(""x"", () => {
+        });
+        s.Fact(""x"", () => {
         });
     }
 }

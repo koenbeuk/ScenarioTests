@@ -24,5 +24,13 @@ namespace ScenarioTests.Generator
             category: "Design",
             DiagnosticSeverity.Error,
             isEnabledByDefault: true);
+
+        public static readonly DiagnosticDescriptor FactOrTheoryNameNeedsToBeUnique = new(
+            id: "ST0003",
+            title: "Any fact or theory names need to be unique",
+            messageFormat: "Scenario '{0}' has a fact/theory expression that uses an already used name",
+            category: "Design",
+            DiagnosticSeverity.Error,
+            isEnabledByDefault: true);
     }
 }

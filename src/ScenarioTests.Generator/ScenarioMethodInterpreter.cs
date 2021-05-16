@@ -87,15 +87,21 @@ namespace ScenarioTests.Generator
                         {
                             var diagnostic = Diagnostic.Create(Diagnostics.FactOrTheoryNameNeedsToBeAConstant, invocationCandidate.GetLocation(), methodSymbol.Name);
                             context.ReportDiagnostic(diagnostic);
+                            continue;
                         }
-                        else
-                        {
-                            factName = factIdExpression.Token.ValueText;
-                        }
+                     
+                        factName = factIdExpression.Token.ValueText;
                     }
 
                     if (factName is not null)
                     {
+                        if (invocations.Any(x => x.Name == factName))
+                        {
+                            var diagnostic = Diagnostic.Create(Diagnostics.FactOrTheoryNameNeedsToBeUnique, invocationCandidate.GetLocation(), methodSymbol.Name);
+                            context.ReportDiagnostic(diagnostic);
+                            continue;
+                        }
+
                         var testMethodName = TestMethodNamingStrategy.GetName(methodSymbol.ContainingType.Name, methodSymbol.Name, factName);
                         var originalTestMethodName = testMethodName;
                         var queryDuplicated = invocations.Where(x => x.TestMethodName.Equals(testMethodName, StringComparison.Ordinal));
