@@ -11,7 +11,7 @@ ScenarioTests are a different way of writing tests with XUnit. The goal is to be
 1. Create a new XUnit test project
 2. Install the nuget package from [NuGet](https://www.nuget.org/packages/ScenarioTests.XUnit)
 3. Create a new test class and implement a scenario
-5. View our [samples](https://github.com/koenbeuk/ScenarioTests/blob/master/samples/)
+5. View our [samples](https://github.com/koenbeuk/ScenarioTests/blob/master/samples/) and read the [introduction post](https://onthedrift.com/posts/scenario-tests/)
 
 ### Example
 ```csharp
