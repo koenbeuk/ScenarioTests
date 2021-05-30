@@ -2,7 +2,7 @@
 ScenarioTests are a different way of writing tests with XUnit. The goal is to be able to write tests like you would write notebooks. ScenarioTests are great for documentation and integration/e2e tests.
 
 [![NuGet version (ScenarioTests)](https://img.shields.io/nuget/v/ScenarioTests.XUnit.svg?style=flat-square)](https://www.nuget.org/packages/ScenarioTests.XUnit/)
-[![Build status](https://github.com/koenbeuk/EntityFrameworkCore.Triggered/workflows/.NET%20Core/badge.svg)](https://github.com/koenbeuk/ScenarioTests/actions?query=workflow%3A%22.NET+Core%22)
+[![Build status](https://github.com/koenbeuk/ScenarioTests/workflows/.NET%20Core/badge.svg)](https://github.com/koenbeuk/ScenarioTests/actions?query=workflow%3A%22.NET+Core%22)
 
 ## NuGet packages
 - ScenarioTests.XUnit [![NuGet version](https://img.shields.io/nuget/v/ScenarioTests.XUnit.svg?style=flat-square)](https://www.nuget.org/packages/ScenarioTests.XUnit/) [![NuGet](https://img.shields.io/nuget/dt/ScenarioTests.XUnit.svg?style=flat-square)](https://www.nuget.org/packages/ScenarioTests.XUnit/)
