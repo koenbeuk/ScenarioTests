@@ -16,18 +16,20 @@ namespace ScenarioTests.Internal
         string _factName;
         int _theoryTestCaseLimit;
         ScenarioTestExecutionPolicy _scenarioTestExecutionPolicy;
+        bool _runInIsolation;
 
         [EditorBrowsable(EditorBrowsableState.Never)]
         [Obsolete("Called by the de-serializer; should only be called by deriving classes for de-serialization purposes")]
         public ScenarioFactTestCase() { }
 
-        public ScenarioFactTestCase(IMessageSink diagnosticMessageSink, TestMethodDisplay defaultMethodDisplay, TestMethodDisplayOptions defaultMethodDisplayOptions, ITestMethod testMethod, object[] testMethodArguments, string factName, SourceInformation sourceInformation, int theoryTestCaseLimit, ScenarioTestExecutionPolicy scenarioTestExecutionPolicy) 
+        public ScenarioFactTestCase(IMessageSink diagnosticMessageSink, TestMethodDisplay defaultMethodDisplay, TestMethodDisplayOptions defaultMethodDisplayOptions, ITestMethod testMethod, object[] testMethodArguments, string factName, SourceInformation sourceInformation, int theoryTestCaseLimit, ScenarioTestExecutionPolicy scenarioTestExecutionPolicy, bool runInIsolation) 
             : base(diagnosticMessageSink, defaultMethodDisplay, defaultMethodDisplayOptions, testMethod, testMethodArguments)
         {
             _factName = factName;
             _theoryTestCaseLimit = theoryTestCaseLimit;
             _scenarioTestExecutionPolicy = scenarioTestExecutionPolicy;
-            
+            _runInIsolation = runInIsolation;
+
             SourceInformation = sourceInformation;
         }
 
@@ -36,6 +38,7 @@ namespace ScenarioTests.Internal
             data.AddValue("FactName", _factName);
             data.AddValue("TheoryTestCaseLimits", _theoryTestCaseLimit);
             data.AddValue("ExecutionPolicy", _scenarioTestExecutionPolicy);
+            data.AddValue("RunInIsolation", _runInIsolation);
 
             base.Serialize(data);
         }
@@ -45,6 +48,7 @@ namespace ScenarioTests.Internal
             _factName = data.GetValue<string>("FactName");
             _theoryTestCaseLimit = data.GetValue<int>("TheoryTestCaseLimits");
             _scenarioTestExecutionPolicy = data.GetValue<ScenarioTestExecutionPolicy>("ExecutionPolicy");
+            _runInIsolation = data.GetValue<bool>("RunInIsolation");
 
             base.Deserialize(data);
         }
@@ -52,6 +56,7 @@ namespace ScenarioTests.Internal
         public string FactName => _factName;
         public int TheoryTestCaseLimit => _theoryTestCaseLimit;
         public ScenarioTestExecutionPolicy ExecutionPolicy => _scenarioTestExecutionPolicy;
+        public bool RunInIsolation => _runInIsolation;
 
         public override Task<RunSummary> RunAsync(IMessageSink diagnosticMessageSink, IMessageBus messageBus, object[] constructorArguments, ExceptionAggregator aggregator, CancellationTokenSource cancellationTokenSource) 
             => new ScenarioFactTestCaseRunner(this, DisplayName, SkipReason, constructorArguments, diagnosticMessageSink, messageBus, aggregator, cancellationTokenSource).RunAsync();

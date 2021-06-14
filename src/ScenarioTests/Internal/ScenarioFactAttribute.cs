@@ -16,6 +16,7 @@ namespace ScenarioTests.Internal
     {
         public string FactName { get; set; }
         public ScenarioTestExecutionPolicy ExecutionPolicy { get; set; }
+        public bool RunInIsolation { get; set; }
         public int TheoryTestCaseLimit { get; set; } = 100;
         public string FileName { get; set; }
         public int LineNumber { get; set; }

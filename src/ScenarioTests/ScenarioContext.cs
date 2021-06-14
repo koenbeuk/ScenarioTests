@@ -13,11 +13,11 @@ namespace ScenarioTests
     /// </summary>
     public sealed class ScenarioContext
     {
-        readonly Func<object?, Func<Task>, Task> _recorder;
+        readonly Func<string, object?, Func<Task>, Task> _recorder;
 
         string? _skippedReason;
 
-        public ScenarioContext(string targetName, Func<object, Func<Task>, Task> recorder)
+        public ScenarioContext(string targetName, Func<string, object, Func<Task>, Task> recorder)
         {
             TargetName = targetName;
             _recorder = recorder;
@@ -98,17 +98,10 @@ namespace ScenarioTests
             }).GetAwaiter().GetResult();
 
         [DebuggerStepThrough]
-        public Task Fact(string name, Func<Task> invocation)
+        public async Task Fact(string name, Func<Task> invocation)
         {
-            if (name == TargetName)
-            {
-                return _recorder(null, invocation);
-            }
-            else
-            {
-                EndScenarioConditionally();
-                return Task.CompletedTask;
-            }
+            await _recorder(name, null, invocation);
+            EndScenarioConditionally();
         }
 
         [DebuggerStepThrough]
@@ -128,18 +121,10 @@ namespace ScenarioTests
             }).GetAwaiter().GetResult();
 
         [DebuggerStepThrough]
-        public Task Theory<T1>(string name, T1 argument, Func<Task> invocation)
+        public async Task Theory<T1>(string name, T1 argument, Func<Task> invocation)
         {
-            if (name == TargetName)
-            {
-                return _recorder(argument, invocation);
-            }
-            else
-            {
-                EndScenarioConditionally();
-            }
-
-            return Task.CompletedTask;
+            await _recorder(name, argument, invocation);
+            EndScenarioConditionally();
         }
 
         [DebuggerStepThrough]

@@ -52,6 +52,14 @@ namespace ScenarioTests.Generator
                 .Cast<ScenarioTestExecutionPolicy>()
                 .FirstOrDefault();
 
+            var runInIsolation = scenarioAttributeClass.NamedArguments
+                .Where(x => x.Key == "RunInIsolation")
+                .Where(x => x.Value.Kind == TypedConstantKind.Primitive)
+                .Where(x => x.Value.Value is bool)
+                .Select(x => (bool)x.Value.Value)
+                .DefaultIfEmpty(true)
+                .First();
+
             var theoryTestCaseLimit = scenarioAttributeClass.NamedArguments
                 .Where(x => x.Key == "TheoryTestCaseLimit")
                 .Where(x => x.Value.Kind == TypedConstantKind.Primitive)
@@ -133,6 +141,7 @@ namespace ScenarioTests.Generator
                 IsAsync = !methodSymbol.ReturnsVoid && methodSymbol.ReturnType.AllInterfaces.Any(i => SymbolEqualityComparer.Default.Equals(i, asynResultType)),
                 TheoryTestCaseLimit = theoryTestCaseLimit,
                 ExecutionPolicy = executionPolicy,
+                RunInIsolation = runInIsolation,
                 Invocations = invocations
             };
         }

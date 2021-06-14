@@ -66,55 +66,73 @@ namespace ScenarioTests.Internal
                     object? capturedArgument = null;
                     ScenarioContext scenarioContext = null;
 
-                    scenarioContext = new ScenarioContext(scenarioFactTestCase.FactName, async (object? argument, Func<Task> invocation) =>
+                    scenarioContext = new ScenarioContext(scenarioFactTestCase.FactName, async (string name, object? argument, Func<Task> invocation) =>
                     {
-                        testRecorded = true;
-
-                        if (skipAdditionalTests)
-                        {
-                            pendingRestart = true; // when we discovered more tests after a test completed, allow us to restart
-                            scenarioContext.EndScenarioConditionally();
-                            return;
-                        }
-
-                        if (argument is not null)
-                        {
-                            if (testedArguments.Contains(argument))
-                            {
-                                return;
-                            }
-
-                            testedArguments.Add(argument);
-                            capturedArgument = argument;
-                        }
-
-                        // At this stage we found our first valid test case, any subsequent test case should issue a restart instead
-                        skipAdditionalTests = true;
-
                         if (scenarioContext.Skipped)
                         {
                             bufferedMessageBus.QueueMessage(new TestSkipped(test, scenarioContext.SkippedReason));
                         }
+
+                        if (name == scenarioFactTestCase.FactName)
+                        {
+                            testRecorded = true;
+
+                            if (skipAdditionalTests)
+                            {
+                                pendingRestart = true; // when we discovered more tests after a test completed, allow us to restart
+                                scenarioContext.EndScenarioConditionally();
+                                return;
+                            }
+
+                            if (argument is not null)
+                            {
+                                if (testedArguments.Contains(argument))
+                                {
+                                    return;
+                                }
+
+                                testedArguments.Add(argument);
+                                capturedArgument = argument;
+                            }
+
+                            // At this stage we found our first valid test case, any subsequent test case should issue a restart instead
+                            skipAdditionalTests = true;
+
+                            if (!scenarioContext.Skipped)
+                            {
+                                try
+                                {
+                                    await invocation();
+                                }
+                                catch (Exception ex)
+                                {
+                                    bufferedMessageBus.QueueMessage(new TestFailed(test, 0, string.Empty, ex));
+                                }
+                                finally
+                                {
+                                    if (scenarioContext.Skipped)
+                                    {
+                                        bufferedMessageBus.QueueMessage(new TestSkipped(test, scenarioContext.SkippedReason));
+                                    }
+                                }
+                            }
+
+                            scenarioContext.IsTargetConclusive = true;
+                        }
                         else
                         {
-                            try
+                            if (!scenarioFactTestCase.RunInIsolation)
                             {
-                                await invocation();
-                            }
-                            catch (Exception ex)
-                            {
-                                bufferedMessageBus.QueueMessage(new TestFailed(test, 0, string.Empty, ex));
-                            }
-                            finally
-                            {
-                                if (scenarioContext.Skipped)
+                                try
                                 {
-                                    bufferedMessageBus.QueueMessage(new TestSkipped(test, scenarioContext.SkippedReason));
+                                    await invocation();
+                                }
+                                catch
+                                {
+                                    scenarioContext.Skip("Scenario skipped due to a failing precondition");
                                 }
                             }
                         }
-
-                        scenarioContext.IsTargetConclusive = true;
                     });
 
                     scenarioContext.AutoAbort = scenarioFactTestCase.ExecutionPolicy is ScenarioTestExecutionPolicy.EndAfterConclusion;

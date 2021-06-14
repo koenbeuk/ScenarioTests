@@ -27,5 +27,10 @@ namespace ScenarioTests
         /// Get or set an upper boundary of the max number of theory test cases that can be accepted.
         /// </summary>
         public int TheoryTestCaseLimit { get; set; }
+
+        /// <summary>
+        /// Get or set wether tests should run in Isolation. Defaults to True
+        /// </summary>
+        public bool RunInIsolation { get; set; } = true;
     }
 }
