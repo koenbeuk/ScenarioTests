@@ -24,7 +24,7 @@ namespace ScenarioTests.Generator
         public void Execute(GeneratorExecutionContext context)
         {
             // retrieve the populated receiver 
-            if (context.SyntaxReceiver is not SyntaxReceiver receiver)
+            if (context.SyntaxReceiver is not SyntaxReceiver receiver || receiver.ScenarioCandidates is null)
             {
                 return;
             }

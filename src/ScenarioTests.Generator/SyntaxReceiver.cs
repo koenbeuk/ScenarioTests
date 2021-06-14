@@ -7,7 +7,7 @@ namespace ScenarioTests.Generator
 {
     public class SyntaxReceiver : ISyntaxReceiver
     {
-        public List<MethodDeclarationSyntax> ScenarioCandidates { get; } = new List<MethodDeclarationSyntax>();
+        public List<MethodDeclarationSyntax> ScenarioCandidates { get; private set; }
 
         public void OnVisitSyntaxNode(SyntaxNode syntaxNode)
         {
@@ -20,6 +20,11 @@ namespace ScenarioTests.Generator
 
                 if (hasScenarioAttribute)
                 {
+                    if (ScenarioCandidates is null)
+                    {
+                        ScenarioCandidates = new();
+                    }
+
                     ScenarioCandidates.Add(methodDeclarationSyntax);
                 }
             }
