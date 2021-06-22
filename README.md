@@ -169,13 +169,14 @@ public async Task Scenario1(ScenarioContext scenario) {
     if (!database.Created) {
         scenario.Skip("Was not able to create a test database...");
     }
+    else {
+        await scenario.Fact("Ensure that we start with 0 users", async () => {
+            if (....) {
+                scenario.Skip("We're skipping this test because of... reasons");
+            }
 
-    await scenario.Fact("Ensure that we start with 0 users", async () => {
-        if (....) {
-            scenario.Skip("We're skipping this test because of... reasons");
-        }
-    
-        Assert.Equal(0, await database.Users.CountAsync());
-    });
+            Assert.Equal(0, await database.Users.CountAsync());
+        });
+    }
 }
 ```
