@@ -16,7 +16,7 @@ namespace BasicSample
             _testOutputHelper = testOutputHelper;
         }
 
-        [Scenario(RunInIsolation = true)]
+        [Scenario]
         public void Scenario1(ScenarioContext scenario)
         {
             _testOutputHelper.WriteLine("Setting initial count to 0");

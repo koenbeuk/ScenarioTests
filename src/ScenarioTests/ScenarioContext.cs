@@ -124,7 +124,6 @@ namespace ScenarioTests
         public async Task Theory<T1>(string name, T1 argument, Func<Task> invocation)
         {
             await _recorder(name, argument, invocation);
-            EndScenarioConditionally();
         }
 
         [DebuggerStepThrough]
