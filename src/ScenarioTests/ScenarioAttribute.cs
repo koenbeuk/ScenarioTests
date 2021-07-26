@@ -32,5 +32,15 @@ namespace ScenarioTests
         /// Get or set wether tests should run in Isolation. Defaults to True
         /// </summary>
         public bool RunInIsolation { get; set; } = true;
+
+        /// <summary>
+        /// Get or set the timeout (in milliseconds)
+        /// </summary>
+        /// <remarks>
+        /// WARNING: Using this with parallelization turned on will result in undefined behavior.
+        /// Timeout is only supported when parallelization is disabled, either globally or
+        /// with a parallelization-disabled test collection.
+        /// </remarks>
+        public int Timeout { get; set; }
     }
 }

@@ -67,6 +67,13 @@ namespace ScenarioTests.Generator
                 .OfType<int?>()
                 .FirstOrDefault();
 
+            var timeout = scenarioAttributeClass.NamedArguments
+                .Where(x => x.Key == "Timeout")
+                .Where(x => x.Value.Kind == TypedConstantKind.Primitive)
+                .Select(x => x.Value.Value)
+                .OfType<int?>()
+                .FirstOrDefault();
+
             if (methodSymbol.Parameters.Length != 1 || !SymbolEqualityComparer.Default.Equals(methodSymbol.Parameters[0].Type, scenarioContextTypeSymbol))
             {
                 var diagnostic = Diagnostic.Create(Diagnostics.RequiresSingleArgumentMethodError, methodDeclarationSyntax.GetLocation(), methodSymbol.Name);
@@ -142,6 +149,7 @@ namespace ScenarioTests.Generator
                 TheoryTestCaseLimit = theoryTestCaseLimit,
                 ExecutionPolicy = executionPolicy,
                 RunInIsolation = runInIsolation,
+                Timeout = timeout,
                 Invocations = invocations
             };
         }

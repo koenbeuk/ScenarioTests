@@ -18,6 +18,7 @@ namespace ScenarioTests.Generator
         public int? TheoryTestCaseLimit { get; set; }
         public ScenarioTestExecutionPolicy ExecutionPolicy { get; set; }
         public bool RunInIsolation { get; set; } = true;
+        public int? Timeout { get; set; }    
 
         public List<ScenarioInvocationDescriptor> Invocations { get; set; }
     }

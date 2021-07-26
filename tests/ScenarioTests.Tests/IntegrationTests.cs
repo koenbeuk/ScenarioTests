@@ -190,5 +190,32 @@ namespace ScenarioTests.Tests
                 scenarioContext.EndScenarioIfConclusive();
             });
         }
+
+        [Internal.ScenarioFact(FactName = "X", Timeout = 1000)]
+        [Trait("Negate", "true")]
+        public async Task TimeoutsAreRespectedBeforeOurFact(ScenarioContext scenarioContext)
+        {
+            await Task.Delay(2000);
+
+            scenarioContext.Fact("X", () => { });
+        }
+
+        [Internal.ScenarioFact(FactName = "X", Timeout = 1000)]
+        [Trait("Negate", "true")]
+        public async Task TimeoutsAreRespectedDuringOurFact(ScenarioContext scenarioContext)
+        {
+            await scenarioContext.Fact("X", async () => {
+                await Task.Delay(2000);
+            });
+        }
+
+        [Internal.ScenarioFact(FactName = "X", Timeout = 1000, ExecutionPolicy = ScenarioTestExecutionPolicy.EndAfterScenario)]
+        [Trait("Negate", "true")]
+        public async Task TimeoutsAreRespectedAfterOurFact(ScenarioContext scenarioContext)
+        {
+            scenarioContext.Fact("X", () => { });
+
+            await Task.Delay(2000);
+        }
     }
 }
