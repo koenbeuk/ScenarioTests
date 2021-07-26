@@ -13,6 +13,8 @@ namespace ScenarioTests.Tests
         {
             var context = new ScenarioContext("X2", (_, _, i) => i());
 
+            System.Threading.Thread.Sleep(5000);
+
             context.Fact("X1", () => throw new Exception());
 
             var invoked = false;
@@ -20,6 +22,7 @@ namespace ScenarioTests.Tests
             {
                 invoked = true;
             });
+
 
             context.Fact("X3", () => throw new Exception());
 
