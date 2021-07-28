@@ -4,7 +4,7 @@
     {
 		[global::System.Runtime.CompilerServices.CompilerGenerated]
 		[global::System.Diagnostics.DebuggerStepThrough]
-		[global::ScenarioTests.Internal.ScenarioFact(DisplayName = "Scenario_T1", FactName = "T1", ExecutionPolicy = global::ScenarioTests.ScenarioTestExecutionPolicy.EndAfterConclusion, RunInIsolation = true, FileName = "", LineNumber = 5)]
+		[global::ScenarioTests.Internal.ScenarioFact(DisplayName = "Scenario_T1", FactName = "T1", ExecutionPolicy = global::ScenarioTests.ScenarioTestExecutionPolicy.EndAfterConclusion, RunInIsolation = true, FileName = "", LineNumber = 5, Timeout = 0)]
 		public void Scenario_T1(global::ScenarioTests.ScenarioContext scenarioContext)
 		{
 			try
@@ -15,7 +15,7 @@
 		}
 		[global::System.Runtime.CompilerServices.CompilerGenerated]
 		[global::System.Diagnostics.DebuggerStepThrough]
-		[global::ScenarioTests.Internal.ScenarioFact(DisplayName = "Scenario_T2", FactName = "T2", ExecutionPolicy = global::ScenarioTests.ScenarioTestExecutionPolicy.EndAfterConclusion, RunInIsolation = true, FileName = "", LineNumber = 6)]
+		[global::ScenarioTests.Internal.ScenarioFact(DisplayName = "Scenario_T2", FactName = "T2", ExecutionPolicy = global::ScenarioTests.ScenarioTestExecutionPolicy.EndAfterConclusion, RunInIsolation = true, FileName = "", LineNumber = 6, Timeout = 0)]
 		public void Scenario_T2(global::ScenarioTests.ScenarioContext scenarioContext)
 		{
 			try
