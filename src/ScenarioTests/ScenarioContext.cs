@@ -75,6 +75,11 @@ namespace ScenarioTests
             }
         }
 
+        /// <summary>
+        /// Declares a fact to be run by the test runner
+        /// </summary>
+        /// <param name="name">A unique descriptive name of this test case within the scenario</param>
+        /// <param name="invocation">An implementation that futher arrange/assert/acts based on this fact</param>
         [DebuggerStepThrough]
         public void Fact(string name, Action invocation)
             => Fact(name, () =>
@@ -83,12 +88,7 @@ namespace ScenarioTests
                 return Task.CompletedTask;
             }).GetAwaiter().GetResult();
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="name"></param>
-        /// <param name="invocation"></param>
+        /// <inheritdoc cref="Fact(string, Action)"/>
         [DebuggerStepThrough]
         public void Fact<TResult>(string name, Func<TResult> invocation)
             => Fact(name, () =>
@@ -97,6 +97,7 @@ namespace ScenarioTests
                 return Task.CompletedTask;
             }).GetAwaiter().GetResult();
 
+        /// <inheritdoc cref="Fact(string, Action)"/>
         [DebuggerStepThrough]
         public async Task Fact(string name, Func<Task> invocation)
         {
@@ -104,6 +105,17 @@ namespace ScenarioTests
             EndScenarioConditionally();
         }
 
+        /// <summary>
+        /// Declares a theory be run by the test runner
+        /// </summary>
+        /// <remarks>
+        /// Theories are tests which are fed various bits of data from a data source, 
+        /// If the data source contains multiple rows, then the test method is executed multiple times (once with each data row).
+        /// Each data row is identified with a uniuqe identifier argument.
+        /// </remarks>
+        /// <param name="name">A unique descriptive name of this test case within the scenario</param>
+        /// <param name="argument">A unique value to identify the current data row</param>
+        /// <param name="invocation">An implementation that futher arrange/assert/acts based on this fact</param>
         [DebuggerStepThrough]
         public void Theory<T1>(string name, T1 argument, Action invocation)
             => Theory(name, argument, () =>
@@ -112,6 +124,7 @@ namespace ScenarioTests
                 return Task.CompletedTask;
             }).GetAwaiter().GetResult();
 
+        /// <inheritdoc cref="Theory{T1}(string, T1, Action)"/>
         [DebuggerStepThrough]
         public void Theory<T1, TResult>(string name, T1 argument, Func<TResult> invocation)
             => Theory(name, argument, () =>
@@ -120,12 +133,17 @@ namespace ScenarioTests
                 return Task.CompletedTask;
             }).GetAwaiter().GetResult();
 
+        /// <inheritdoc cref="Theory{T1}(string, T1, Action)"/>
         [DebuggerStepThrough]
         public async Task Theory<T1>(string name, T1 argument, Func<Task> invocation)
         {
             await _recorder(name, argument, invocation);
         }
 
+        /// <summary>
+        /// Marks subsequent tests as skipped so that it they will not be run
+        /// </summary>
+        /// <param name="reason">A reason to be reported</param>
         [DebuggerStepThrough]
         public void Skip(string reason)
         {
