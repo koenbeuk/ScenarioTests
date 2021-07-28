@@ -66,7 +66,9 @@ namespace ScenarioTests.Internal
                     object? capturedArgument = null;
                     ScenarioContext scenarioContext = null;
 
-                    scenarioContext = new ScenarioContext(scenarioFactTestCase.FactName, async (string name, object? argument, Func<Task> invocation) =>
+                    var targetName = scenarioFactTestCase.ExecutionPolicy is ScenarioTestExecutionPolicy.NonIsolated ? null : scenarioFactTestCase.FactName;
+
+                    scenarioContext = new ScenarioContext(targetName, async (string name, object? argument, Func<Task> invocation) =>
                     {
                         if (scenarioContext.Skipped)
                         {

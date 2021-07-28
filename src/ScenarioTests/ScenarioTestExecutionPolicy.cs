@@ -26,6 +26,14 @@ namespace ScenarioTests
         /// Any sybsequent logic and assertion outside that test will still be included in the Test result, with the exception of other Tests.
         /// This behavior is useful if you have some explicit post cleanup/facts that you want to execute for each test.
         /// </remarks>
-        EndAfterScenario
+        EndAfterScenario,
+
+        /// <summary>
+        /// A secnario executes in a non-isolated form. Each invocation of a scenario will invoke all test methods but only report those that are relevant for it
+        /// </summary>
+        /// <remarks>
+        /// When running multiple tests in a scenario, we still ensure that we only run the scenario once. scenario.TargetName will be null as we have no single target to run
+        /// </remarks>
+        NonIsolated
     }
 }

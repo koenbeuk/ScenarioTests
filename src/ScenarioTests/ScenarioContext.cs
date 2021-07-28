@@ -26,7 +26,7 @@ namespace ScenarioTests
         /// <summary>
         /// Get the name of the current fact or theory that is being executed
         /// </summary>
-        public string TargetName { get; }
+        public string? TargetName { get; }
 
         /// <summary>
         /// Get when the current test case has been skipped
