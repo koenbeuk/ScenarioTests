@@ -226,10 +226,7 @@ namespace ScenarioTests.Tests
         [Trait("Negate", "true")]
         public void FailingSharedFactPrecondition(ScenarioContext scenarioContext)
         {
-            scenarioContext.SharedFact("Y", () =>
-            {
-                throw new Exception("Pre");
-            });
+            scenarioContext.SharedFact("Y", () => Assert.False(true));
             scenarioContext.Fact("X", () => { });
         }
 
@@ -238,10 +235,7 @@ namespace ScenarioTests.Tests
         public void FailingSharedFactPostcondition(ScenarioContext scenarioContext)
         {
             scenarioContext.Fact("X", () => { });
-            scenarioContext.SharedFact("Y", () =>
-            {
-                Assert.False(true);
-            });
+            scenarioContext.SharedFact("Y", () => Assert.False(true));
         }
     }
 }

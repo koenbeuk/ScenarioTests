@@ -115,6 +115,7 @@ namespace ScenarioTests
         /// </remarks>
         /// <param name="name">A unique descriptive name of this test case within the scenario</param>
         /// <param name="invocation">An implementation that futher arrange/assert/acts based on this fact</param>
+        [DebuggerStepThrough]
         public void SharedFact(string name, Action invocation)
             => SharedFact(name, () =>
             {
@@ -123,6 +124,7 @@ namespace ScenarioTests
             }).GetAwaiter().GetResult();
 
         /// <inheritdoc cref="SharedFact(string, Action)"/>
+        [DebuggerStepThrough]
         public TResult SharedFact<TResult>(string name, Func<TResult> invocation)
             => SharedFact(name, () =>
             {
@@ -131,6 +133,7 @@ namespace ScenarioTests
             }).GetAwaiter().GetResult();
 
         /// <inheritdoc cref="SharedFact(string, Action)"/>
+        [DebuggerStepThrough]
         public async Task SharedFact(string name, Func<Task> invocation)
             => await SharedFact<object?>(name, async () =>
             {
