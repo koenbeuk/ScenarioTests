@@ -160,11 +160,7 @@ namespace ScenarioTests.Tests
         public void SkippedTest(ScenarioContext scenarioContext)
         {
             scenarioContext.Skip("Foo");
-
-            scenarioContext.Fact("X", () =>
-            {
-                Assert.False(true);
-            });
+            return;
         }
 
         [Internal.ScenarioFact(FactName = "X", ExecutionPolicy = ScenarioTestExecutionPolicy.EndAfterScenario)]
