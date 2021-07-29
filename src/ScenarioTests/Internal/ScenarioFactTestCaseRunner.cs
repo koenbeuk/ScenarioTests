@@ -101,8 +101,6 @@ namespace ScenarioTests.Internal
                             if (!scenarioFactTestCase.RunInIsolation || descriptor.Flags.HasFlag(ScenarioTestCaseFlags.Shared))
                             {
                                 await descriptor.Invocation();
-
-                                Console.WriteLine("Foo");
                             }
                         }
                     });
