@@ -66,14 +66,14 @@ namespace ScenarioTests.Internal
                     object? capturedArgument = null;
                     ScenarioContext scenarioContext = null;
 
-                    scenarioContext = new ScenarioContext(scenarioFactTestCase.FactName, async (string name, object? argument, Func<Task> invocation) =>
+                    scenarioContext = new ScenarioContext(scenarioFactTestCase.FactName, async (ScenarioTestCaseDescriptor descriptor) =>
                     {
                         if (scenarioContext.Skipped)
                         {
                             bufferedMessageBus.QueueMessage(new TestSkipped(test, scenarioContext.SkippedReason));
                         }
 
-                        if (name == scenarioFactTestCase.FactName)
+                        if (descriptor.Name == scenarioFactTestCase.FactName)
                         {
                             testRecorded = true;
 
@@ -84,15 +84,15 @@ namespace ScenarioTests.Internal
                                 return;
                             }
 
-                            if (argument is not null)
+                            if (descriptor.Argument is not null)
                             {
-                                if (testedArguments.Contains(argument))
+                                if (testedArguments.Contains(descriptor.Argument))
                                 {
                                     return;
                                 }
 
-                                testedArguments.Add(argument);
-                                capturedArgument = argument;
+                                testedArguments.Add(descriptor.Argument);
+                                capturedArgument = descriptor.Argument;
                             }
 
                             // At this stage we found our first valid test case, any subsequent test case should issue a restart instead
@@ -102,7 +102,7 @@ namespace ScenarioTests.Internal
                             {
                                 try
                                 {
-                                    await invocation();
+                                    await descriptor.Invocation();
                                 }
                                 catch (Exception ex)
                                 {
@@ -121,11 +121,11 @@ namespace ScenarioTests.Internal
                         }
                         else
                         {
-                            if (!scenarioFactTestCase.RunInIsolation)
+                            if (!scenarioFactTestCase.RunInIsolation || descriptor.Flags.HasFlag(ScenarioTestCaseFlags.Shared))
                             {
                                 try
                                 {
-                                    await invocation();
+                                    await descriptor.Invocation();
                                 }
                                 catch
                                 {

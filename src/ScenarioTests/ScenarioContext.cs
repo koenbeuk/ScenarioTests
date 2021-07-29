@@ -13,11 +13,11 @@ namespace ScenarioTests
     /// </summary>
     public sealed class ScenarioContext
     {
-        readonly Func<string, object?, Func<Task>, Task> _recorder;
+        readonly Func<ScenarioTestCaseDescriptor, Task> _recorder;
 
         string? _skippedReason;
 
-        public ScenarioContext(string targetName, Func<string, object, Func<Task>, Task> recorder)
+        public ScenarioContext(string targetName, Func<ScenarioTestCaseDescriptor, Task> recorder)
         {
             TargetName = targetName;
             _recorder = recorder;
@@ -101,7 +101,7 @@ namespace ScenarioTests
         [DebuggerStepThrough]
         public async Task Fact(string name, Func<Task> invocation)
         {
-            await _recorder(name, null, invocation);
+            await _recorder(new ScenarioTestCaseDescriptor(name, null, ScenarioTestCaseFlags.Default, invocation));
             EndScenarioConditionally();
         }
 
@@ -137,7 +137,7 @@ namespace ScenarioTests
         [DebuggerStepThrough]
         public async Task Theory<T1>(string name, T1 argument, Func<Task> invocation)
         {
-            await _recorder(name, argument, invocation);
+            await _recorder(new ScenarioTestCaseDescriptor(name, argument, ScenarioTestCaseFlags.Default, invocation));
         }
 
         /// <summary>
