@@ -18,7 +18,14 @@ namespace BasicSample
                 Assert.True(true);
             });
 
-            scenario.Fact("We can skip a particular test", () =>
+            scenario.Fact("We can skip a succeeding test", () =>
+            {
+                scenario.Skip("Expecting a skip here");
+
+                Assert.True(true);
+            });
+
+            scenario.Fact("We can also skip a failing test", () =>
             {
                 scenario.Skip("Expecting a skip here");
 

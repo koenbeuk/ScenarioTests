@@ -178,5 +178,81 @@ namespace ScenarioTests.Tests
 
             Assert.Equal(5, invoked);
         }
+
+        [Fact]
+        public void SharedFact_InvokesWhenTargeted()
+        {
+            var context = new ScenarioContext("X", d => d.Invocation());
+            var invoked = false;
+            
+            context.SharedFact("X", () => invoked = true);
+
+            Assert.True(invoked);
+        }
+
+        [Fact]
+        public void SharedFact_InvokesAsAPrecondition_WhenNotTargeted()
+        {
+            var context = new ScenarioContext("X", d => d.Invocation());
+            var invoked = false;
+
+            context.SharedFact("Y", () => invoked = true);
+            // A dummy target
+            context.Fact("X", () => { });
+
+            Assert.True(invoked);
+        }
+
+        [Fact]
+        public void SharedFact_InvokesAsAPostcondition_WhenNotTargeted()
+        {
+            var context = new ScenarioContext("X", d => d.Invocation());
+            var invoked = false;
+
+            // A dummy target
+            context.Fact("X", () => { });
+            context.SharedFact("Y", () => invoked = true);
+
+            Assert.True(invoked);
+        }
+
+        [Fact]
+        public void SharedFact_SkippedWhenNotInLineAndNotTargeted()
+        {
+            var context = new ScenarioContext("X", d => d.Invocation());
+            var invoked = false;
+
+            // The shared fact is never reached
+            if ((bool)(object)false)
+            {
+                context.SharedFact("Y", () => invoked = true);
+            }
+
+            // A dummy target
+            context.Fact("X", () => { });
+
+            Assert.False(invoked);
+        }
+
+        [Fact]
+        public void SharedFact_CanReturnValues()
+        {
+            var context = new ScenarioContext("X", d => d.Invocation());
+
+            var result = context.SharedFact("X", () => 1);
+
+            Assert.Equal(1, result);
+        }
+
+
+        [Fact]
+        public async Task SharedFact_Async_CanReturnValues()
+        {
+            var context = new ScenarioContext("X", d => d.Invocation());
+
+            var result = await context.SharedFact("X", () => Task.FromResult(1));
+
+            Assert.Equal(1, result);
+        }
     }
 }

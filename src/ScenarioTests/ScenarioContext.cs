@@ -106,6 +106,58 @@ namespace ScenarioTests
         }
 
         /// <summary>
+        /// Declares a shared fact to be run by the test runner
+        /// </summary>
+        /// <remarks>
+        /// Shared facts are similar to facts as that they show up as actual test cases.
+        /// In addition, shared facts are also executed for each additional test case which requires them
+        /// such that they can be used as preconditions or postconditions.
+        /// </remarks>
+        /// <param name="name">A unique descriptive name of this test case within the scenario</param>
+        /// <param name="invocation">An implementation that futher arrange/assert/acts based on this fact</param>
+        [DebuggerStepThrough]
+        public void SharedFact(string name, Action invocation)
+            => SharedFact(name, () =>
+            {
+                invocation();
+                return Task.CompletedTask;
+            }).GetAwaiter().GetResult();
+
+        /// <inheritdoc cref="SharedFact(string, Action)"/>
+        [DebuggerStepThrough]
+        public TResult SharedFact<TResult>(string name, Func<TResult> invocation)
+            => SharedFact(name, () =>
+            {
+                var result = invocation();
+                return Task.FromResult(result);
+            }).GetAwaiter().GetResult();
+
+        /// <inheritdoc cref="SharedFact(string, Action)"/>
+        [DebuggerStepThrough]
+        public async Task SharedFact(string name, Func<Task> invocation)
+            => await SharedFact<object?>(name, async () =>
+            {
+                await invocation();
+                return null;
+            });
+
+        /// <inheritdoc cref="SharedFact(string, Action)"/>
+        [DebuggerStepThrough]
+        public async Task<TResult> SharedFact<TResult>(string name, Func<Task<TResult>> invocation)
+        {
+            TResult capturedResult = default;
+
+            await _recorder(new ScenarioTestCaseDescriptor(name, null, ScenarioTestCaseFlags.Shared, async () =>
+            {
+                capturedResult = await invocation();
+            }));
+
+            EndScenarioConditionally();
+
+            return capturedResult;
+        }
+
+        /// <summary>
         /// Declares a theory be run by the test runner
         /// </summary>
         /// <remarks>

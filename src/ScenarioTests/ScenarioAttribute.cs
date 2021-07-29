@@ -31,6 +31,7 @@ namespace ScenarioTests
         /// <summary>
         /// Get or set wether tests should run in Isolation. Defaults to True
         /// </summary>
+        [Obsolete("RunInIsolation will no longer be supported in future versions. Instead use SharedFacts")]
         public bool RunInIsolation { get; set; } = true;
 
         /// <summary>
