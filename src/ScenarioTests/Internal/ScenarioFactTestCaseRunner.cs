@@ -68,11 +68,7 @@ namespace ScenarioTests.Internal
 
                     scenarioContext = new ScenarioContext(scenarioFactTestCase.FactName, async (ScenarioTestCaseDescriptor descriptor) =>
                     {
-                        if (scenarioContext.Skipped)
-                        {
-                            bufferedMessageBus.QueueMessage(new TestSkipped(test, scenarioContext.SkippedReason));
-                        }
-
+                        // If we're hitting our target test
                         if (descriptor.Name == scenarioFactTestCase.FactName)
                         {
                             testRecorded = true;
@@ -97,40 +93,16 @@ namespace ScenarioTests.Internal
 
                             // At this stage we found our first valid test case, any subsequent test case should issue a restart instead
                             skipAdditionalTests = true;
-
-                            if (!scenarioContext.Skipped)
-                            {
-                                try
-                                {
-                                    await descriptor.Invocation();
-                                }
-                                catch (Exception ex)
-                                {
-                                    bufferedMessageBus.QueueMessage(new TestFailed(test, 0, string.Empty, ex));
-                                }
-                                finally
-                                {
-                                    if (scenarioContext.Skipped)
-                                    {
-                                        bufferedMessageBus.QueueMessage(new TestSkipped(test, scenarioContext.SkippedReason));
-                                    }
-                                }
-                            }
-
+                            await descriptor.Invocation();
                             scenarioContext.IsTargetConclusive = true;
                         }
                         else
                         {
                             if (!scenarioFactTestCase.RunInIsolation || descriptor.Flags.HasFlag(ScenarioTestCaseFlags.Shared))
                             {
-                                try
-                                {
-                                    await descriptor.Invocation();
-                                }
-                                catch
-                                {
-                                    scenarioContext.Skip("Scenario skipped due to a failing precondition");
-                                }
+                                await descriptor.Invocation();
+
+                                Console.WriteLine("Foo");
                             }
                         }
                     });

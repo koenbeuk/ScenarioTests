@@ -10,7 +10,9 @@ namespace BasicSample
 {
     public partial class DontFeelIsolated
     {
+#pragma warning disable CS0618 // Type or member is obsolete
         [Scenario(RunInIsolation = false)]
+#pragma warning restore CS0618 // Type or member is obsolete
         public static void PlayScenario(ScenarioContext scenario)
         {
             var counter = 0;

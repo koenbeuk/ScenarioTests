@@ -99,10 +99,20 @@ namespace ScenarioTests.Tests
 
         [Internal.ScenarioFact(FactName = "X", ExecutionPolicy = ScenarioTestExecutionPolicy.EndAfterScenario)]
         [Trait("Negate", "true")]
-        public void FailingTestMethod(ScenarioContext scenarioContext)
+        public void FailingPrecondition(ScenarioContext scenarioContext)
         {
-            if ((Boolean)(object)true)
-                throw new Exception();
+            Assert.True(false);
+
+            scenarioContext.Fact("X", () => { });
+        }
+
+
+        [Internal.ScenarioFact(FactName = "X", ExecutionPolicy = ScenarioTestExecutionPolicy.EndAfterScenario)]
+        [Trait("Negate", "true")]
+        public void PreException(ScenarioContext scenarioContext)
+        {
+            if ((bool)(object)true)
+                throw new Exception("Pre");
 
             scenarioContext.Fact("X", () =>
             {
@@ -110,19 +120,13 @@ namespace ScenarioTests.Tests
             });
         }
 
-
         [Internal.ScenarioFact(FactName = "X", ExecutionPolicy = ScenarioTestExecutionPolicy.EndAfterScenario)]
         [Trait("Negate", "true")]
-        public async Task FailingAsyncTestMethod(ScenarioContext scenarioContext)
+        public void PostException(ScenarioContext scenarioContext)
         {
-            if ((bool)(object)true)
-                throw new Exception();
+            scenarioContext.Fact("X", () => { });
 
-            await Task.CompletedTask;
-            scenarioContext.Fact("X", () =>
-            {
-                Assert.False(true);
-            });
+            throw new Exception("Post");
         }
 
 
@@ -135,7 +139,7 @@ namespace ScenarioTests.Tests
                 Assert.False(true);
             });
 
-            throw new Exception();
+            throw new Exception("Post");
         }
 
 
@@ -149,7 +153,7 @@ namespace ScenarioTests.Tests
                 Assert.False(true);
             });
 
-            throw new Exception();
+            throw new Exception("Post");
         }
 
         [Internal.ScenarioFact(FactName = "X", ExecutionPolicy = ScenarioTestExecutionPolicy.EndAfterScenario)]
@@ -216,6 +220,28 @@ namespace ScenarioTests.Tests
             scenarioContext.Fact("X", () => { });
 
             await Task.Delay(2000);
+        }
+
+        [Internal.ScenarioFact(FactName = "X", ExecutionPolicy = ScenarioTestExecutionPolicy.EndAfterScenario)]
+        [Trait("Negate", "true")]
+        public void FailingSharedFactPrecondition(ScenarioContext scenarioContext)
+        {
+            scenarioContext.SharedFact("Y", () =>
+            {
+                throw new Exception("Pre");
+            });
+            scenarioContext.Fact("X", () => { });
+        }
+
+        [Internal.ScenarioFact(FactName = "X", ExecutionPolicy = ScenarioTestExecutionPolicy.EndAfterScenario)]
+        [Trait("Negate", "true")]
+        public void FailingSharedFactPostcondition(ScenarioContext scenarioContext)
+        {
+            scenarioContext.Fact("X", () => { });
+            scenarioContext.SharedFact("Y", () =>
+            {
+                Assert.False(true);
+            });
         }
     }
 }
