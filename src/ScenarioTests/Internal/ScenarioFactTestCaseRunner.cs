@@ -82,6 +82,7 @@ namespace ScenarioTests.Internal
 
                             if (descriptor.Argument is not null)
                             {
+                                // If we've already received this test case, don't run it again
                                 if (testedArguments.Contains(descriptor.Argument))
                                 {
                                     return;
@@ -93,11 +94,18 @@ namespace ScenarioTests.Internal
 
                             // At this stage we found our first valid test case, any subsequent test case should issue a restart instead
                             skipAdditionalTests = true;
-                            await descriptor.Invocation();
-                            scenarioContext.IsTargetConclusive = true;
+                            try
+                            {
+                                await descriptor.Invocation();
+                            }
+                            finally
+                            {
+                                scenarioContext.IsTargetConclusive = true;
+                            }
                         }
                         else
                         {
+                            // We may be hitting a shared fact, those need to be invoked as well but not recorded as our primary target
                             if (!scenarioFactTestCase.RunInIsolation || descriptor.Flags.HasFlag(ScenarioTestCaseFlags.Shared))
                             {
                                 await descriptor.Invocation();
@@ -131,11 +139,19 @@ namespace ScenarioTests.Internal
                         result = new RunSummary { Skipped = 1, Total = 1 };
                     }
 
+                    // If we skipped this test, make sure that this is reported accordingly
+                    if (scenarioContext.Skipped && !bufferedMessages.OfType<TestSkipped>().Any())
+                    {
+                        bufferedMessages = bufferedMessages.Concat(new[] { new TestSkipped(testInvocationTest, scenarioContext.SkippedReason) });
+                    }
+
+                    // If we have indeed skipped this test, make sure that we're not reporting it as passed or failed
                     if (bufferedMessages.OfType<TestSkipped>().Any())
                     {
                         bufferedMessages = bufferedMessages.Where(x => x is not TestPassed and not TestFailed);
                     }
 
+                    // If we have a failure in post conditions, don't mark this test case as passed
                     if (bufferedMessages.OfType<TestFailed>().Any())
                     {
                         bufferedMessages = bufferedMessages.Where(x => x is not TestPassed);

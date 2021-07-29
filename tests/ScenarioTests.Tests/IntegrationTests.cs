@@ -169,7 +169,7 @@ namespace ScenarioTests.Tests
             Assert.Throws<ScenarioAbortException>(() =>
             {
                 scenarioContext.EndScenario();
-
+                
                 scenarioContext.Fact("X", () =>
                 {
                     Assert.False(true);
