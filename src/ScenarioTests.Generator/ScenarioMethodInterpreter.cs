@@ -88,7 +88,7 @@ namespace ScenarioTests.Generator
                 var invocationSymbol = semanticModel.GetSymbolInfo(invocationCandidate).Symbol as IMethodSymbol;
                 if (invocationSymbol is not null && SymbolEqualityComparer.Default.Equals(invocationSymbol.ContainingType, scenarioContextTypeSymbol))
                 {
-                    if (invocationSymbol.Name is not "Fact" and not "Theory")
+                    if (invocationSymbol.Name is not "Fact" and not "SharedFact" and not "Theory")
                     {
                         // We only want to generate test cases for facts and theories
                         continue;

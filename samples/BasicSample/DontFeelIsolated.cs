@@ -34,5 +34,28 @@ namespace BasicSample
                 Assert.Equal(2, counter);
             });
         }
+
+        [Scenario]
+        public static void PlayScenarioWithSharedFacts(ScenarioContext scenario)
+        {
+            var counter = 0;
+
+            scenario.SharedFact("We can start with a default value", () =>
+            {
+                Assert.Equal(0, counter);
+            });
+
+            scenario.SharedFact("We can Increase to 1", () =>
+            {
+                counter++;
+                Assert.Equal(1, counter);
+            });
+
+            scenario.SharedFact("We can Increase to 2", () =>
+            {
+                counter++;
+                Assert.Equal(2, counter);
+            });
+        }
     }
 }

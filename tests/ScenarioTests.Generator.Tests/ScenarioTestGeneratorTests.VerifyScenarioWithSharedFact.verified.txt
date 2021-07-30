@@ -1,0 +1,17 @@
+
+    [global::Xunit.TestCaseOrderer("ScenarioTests.Internal.ScenarioFactTestCaseOrderer", "ScenarioTests")]
+    public partial class C
+    {
+		[global::System.Runtime.CompilerServices.CompilerGenerated]
+		[global::System.Diagnostics.DebuggerStepThrough]
+		[global::ScenarioTests.Internal.ScenarioFact(DisplayName = "Scenario_x", FactName = "x", ExecutionPolicy = global::ScenarioTests.ScenarioTestExecutionPolicy.EndAfterConclusion, RunInIsolation = true, FileName = "", LineNumber = 5, Timeout = 0)]
+		public void Scenario_x(global::ScenarioTests.ScenarioContext scenarioContext)
+		{
+			try
+			{
+				Scenario(scenarioContext);
+			}
+			catch(global::ScenarioTests.Internal.ScenarioAbortException) { }
+		}
+
+    }
