@@ -17,11 +17,13 @@ namespace ScenarioTests
 
         string? _skippedReason;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public ScenarioContext(string targetName, Func<ScenarioTestCaseDescriptor, Task> recorder)
         {
             TargetName = targetName;
             _recorder = recorder;
         }
+#pragma warning restore CS1591 
 
         /// <summary>
         /// Get the name of the current fact or theory that is being executed

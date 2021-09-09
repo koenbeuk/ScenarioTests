@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace ScenarioTests
 {
+
+    /// <summary>
+    /// Configure how the names of tests should be generated
+    /// </summary>
     public enum ScenarioTestMethodNamingPolicy
     {
         /// <summary>

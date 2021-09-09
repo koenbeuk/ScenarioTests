@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace ScenarioTests
 {
+    /// <summary>
+    /// Configure when a test in the scenario should end
+    /// </summary>
     public enum ScenarioTestExecutionPolicy
     {
         /// <summary>

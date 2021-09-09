@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Sdk;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
 namespace ScenarioTests.Internal
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
