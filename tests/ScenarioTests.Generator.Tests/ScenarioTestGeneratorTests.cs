@@ -348,6 +348,30 @@ public partial class C {
             return Verifier.Verify(result.GeneratedTrees[0].ToString());
         }
 
+        [Fact]
+        public Task ReusedTypeName()
+        {
+            var compilation = CreateCompilation(@"
+namespace System
+{
+    public partial class C {
+        [ScenarioTests.Scenario]
+        public async global::System.Threading.Tasks.Task Scenario(ScenarioTests.ScenarioContext s) {
+            await s.Fact(""x"", () => global::System.Threading.Tasks.Task.CompletedTask );
+        }
+    }
+}
+", expectedToCompile: true);
+
+            var result = RunGenerator(compilation);
+
+            Assert.Empty(result.Diagnostics);
+            Assert.Single(result.GeneratedTrees);
+
+            return Verifier.Verify(result.GeneratedTrees[0].ToString());
+        }
+
+
 
         #region Helpers
 

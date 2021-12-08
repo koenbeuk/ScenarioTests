@@ -40,7 +40,7 @@ namespace ScenarioTests.Generator
 
             if (scenarioDescriptor.IsAsync)
             {
-                WriteLine($"public async System.Threading.Tasks.Task {scenarioInvocationDescriptor.TestMethodName}(global::ScenarioTests.ScenarioContext scenarioContext)");
+                WriteLine($"public async global::System.Threading.Tasks.Task {scenarioInvocationDescriptor.TestMethodName}(global::ScenarioTests.ScenarioContext scenarioContext)");
             }
             else
             {
