@@ -1,11 +1,13 @@
+namespace System
+{
 
     [global::Xunit.TestCaseOrderer("ScenarioTests.Internal.ScenarioFactTestCaseOrderer", "ScenarioTests")]
     public partial class C
     {
 		[global::System.Runtime.CompilerServices.CompilerGenerated]
 		[global::System.Diagnostics.DebuggerStepThrough]
-		[global::ScenarioTests.Internal.ScenarioFact(DisplayName = "Scenario_T1", FactName = "T1", ExecutionPolicy = global::ScenarioTests.ScenarioTestExecutionPolicy.EndAfterConclusion, RunInIsolation = true, FileName = "", LineNumber = 5, Timeout = 0)]
-		public async global::System.Threading.Tasks.Task Scenario_T1(global::ScenarioTests.ScenarioContext scenarioContext)
+		[global::ScenarioTests.Internal.ScenarioFact(DisplayName = "Scenario_x", FactName = "x", ExecutionPolicy = global::ScenarioTests.ScenarioTestExecutionPolicy.EndAfterConclusion, RunInIsolation = true, FileName = "", LineNumber = 7, Timeout = 0)]
+		public async global::System.Threading.Tasks.Task Scenario_x(global::ScenarioTests.ScenarioContext scenarioContext)
 		{
 			try
 			{
@@ -15,3 +17,4 @@
 		}
 
     }
+}
