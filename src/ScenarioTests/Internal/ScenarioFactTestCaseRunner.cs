@@ -98,6 +98,16 @@ namespace ScenarioTests.Internal
                             {
                                 await descriptor.Invocation();
                             }
+                            catch (Exception)
+                            {
+                                // If we caught an exception but we're in a theory, we will want to try for additional test cases
+                                if (descriptor.Argument is not null)
+                                {
+                                    pendingRestart = true;
+                                }
+
+                                throw;
+                            }
                             finally
                             {
                                 scenarioContext.IsTargetConclusive = true;
