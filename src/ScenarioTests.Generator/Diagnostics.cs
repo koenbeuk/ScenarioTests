@@ -12,7 +12,7 @@ namespace ScenarioTests.Generator
         public static readonly DiagnosticDescriptor RequiresSingleArgumentMethodError = new(
             id: "ST0001",
             title: "Scenario should accept a single argument of type ScenarioContext",
-            messageFormat: "Scenario '{0}' should accept a single argument of type ScenarioContext.",
+            messageFormat: "Scenario '{0}' should accept a single argument of type ScenarioContext",
             category: "Design",
             DiagnosticSeverity.Error,
             isEnabledByDefault: true);
